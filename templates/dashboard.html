@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIST Scalp Bot Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(17, 25, 40, 0.65);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --glow-blue: rgba(59, 130, 246, 0.15);
+            --glow-purple: rgba(139, 92, 246, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.25s ease;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header Style */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .logo-icon {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 8px rgba(59, 130, 246, 0.4));
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #ffffff, #e5e7eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status-section {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .status-indicator {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-refresh {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-refresh:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Hero Metrics Card Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, transparent);
+        }
+
+        .metric-card.blue::before {
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+        }
+
+        .metric-card.green::before {
+            background: linear-gradient(90deg, var(--accent-green), #34d399);
+        }
+
+        .metric-card.purple::before {
+            background: linear-gradient(90deg, var(--accent-purple), #a78bfa);
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .metric-subtext {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* Main Dashboard Layout Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1.6fr 1fr;
+            }
+        }
+
+        .dashboard-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(12px);
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            height: 100%;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .card-title i {
+            color: var(--accent-blue);
+        }
+
+        /* Portfolio Visualization Section */
+        .portfolio-split {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .portfolio-split {
+                grid-template-columns: 1.2fr 0.8fr;
+            }
+        }
+
+        .chart-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            min-height: 220px;
+        }
+
+        /* Tables Styling */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.88rem;
+        }
+
+        th {
+            background: rgba(255, 255, 255, 0.03);
+            color: var(--text-secondary);
+            font-weight: 600;
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 0.9rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+
+        tr.clickable-row {
+            cursor: pointer;
+        }
+
+        tr.clickable-row:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .badge-buy {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .badge-sell {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .text-green {
+            color: var(--accent-green) !important;
+            font-weight: 600;
+        }
+
+        .text-red {
+            color: var(--accent-red) !important;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 2rem;
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .empty-state i {
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Right column widgets layout */
+        .right-widgets {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Console Output styles */
+        .console-line {
+            line-height: 1.5;
+            margin-bottom: 0.4rem;
+        }
+        .console-info { color: #60a5fa; }
+        .console-success { color: #34d399; }
+        .console-warn { color: #f59e0b; }
+        .console-error { color: #f87171; }
+        .console-text { color: #e5e7eb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo-section">
+                <i class="fa-solid fa-chart-line logo-icon"></i>
+                <div>
+                    <h1>BIST Scalp Bot</h1>
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px;">TradingView Webhook & Otomatik Tarama</p>
+                </div>
+            </div>
+            <div class="status-section">
+                <div class="status-indicator" id="modeIndicator" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: var(--accent-blue);">
+                    <i class="fa-solid fa-flask" style="margin-right: 2px;"></i>
+                    Sanal Mod (Demo)
+                </div>
+                <button class="btn-refresh" id="scanBtn" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15)); border: 1px solid rgba(139, 92, 246, 0.3); color: #c084fc;">
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+                    Analiz Başlat
+                </button>
+                <button class="btn-refresh" id="refreshBtn">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    Yenile
+                </button>
+            </div>
+        </header>
+
+        <!-- Dynamic Scan Console Card (Hidden by default) -->
+        <div class="dashboard-card" id="scanConsoleCard" style="display: none; margin-bottom: 2rem;">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="fa-solid fa-terminal" style="color: var(--accent-purple);"></i> Duayen Borsacı Analiz Raporu
+                </h2>
+                <button class="btn-refresh" id="closeConsoleBtn" style="padding: 0.2rem 0.8rem; font-size: 0.75rem;">Konsolu Kapat</button>
+            </div>
+            <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--card-border); border-radius: 8px; padding: 1rem; font-family: monospace; font-size: 0.85rem; max-height: 250px; overflow-y: auto;" id="consoleOutput">
+                <!-- Log streams -->
+            </div>
+        </div>
+
+        <!-- Hero Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card blue">
+                <span class="metric-label">
+                    <i class="fa-solid fa-wallet"></i> Toplam Varlık Değeri (NAV)
+                </span>
+                <span class="metric-value" id="navVal">100,000.00 TL</span>
+                <span class="metric-subtext">Sanal Başlangıç Sermayesi: 100k TL</span>
+            </div>
+            <div class="metric-card purple">
+                <span class="metric-label">
+                    <i class="fa-solid fa-money-bill-wave"></i> Nakit Bakiye (TRY)
+                </span>
+                <span class="metric-value" id="cashVal">100,000.00 TL</span>
+                <span class="metric-subtext">Yedek Akçe</span>
+            </div>
+            <div class="metric-card">
+                <span class="metric-label">
+                    <i class="fa-solid fa-briefcase"></i> Hisse Senedi Değeri
+                </span>
+                <span class="metric-value" id="stockVal">0.00 TL</span>
+                <span class="metric-subtext">Portföydeki Aktif Varlıklar</span>
+            </div>
+            <div class="metric-card green" id="pnlCard">
+                <span class="metric-label">
+                    <i class="fa-solid fa-arrow-trend-up"></i> Toplam Kâr / Zarar
+                </span>
+                <span class="metric-value" id="totalPnl">0.00 TL</span>
+                <span class="metric-subtext" id="totalPnlPercent">0.00%</span>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="dashboard-grid">
+            <!-- Left Card: Portfolio distribution and details -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fa-solid fa-pie-chart"></i> Varlık Dağılımı ve Detayları
+                    </h2>
+                </div>
+                <div class="portfolio-split">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Varlık</th>
+                                    <th>Miktar</th>
+                                    <th>Ort. Maliyet</th>
+                                    <th>Güncel Fiyat</th>
+                                    <th>Değer</th>
+                                    <th>Kâr / Zarar (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="portfolioTableBody">
+                                <!-- Dynamic portfolio rows will go here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="portfolioChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column Widgets -->
+            <div class="right-widgets">
+                <!-- Widget: Signals -->
+                <div class="dashboard-card" style="max-height: 400px; overflow: hidden;">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fa-solid fa-bolt"></i> Son Gelen Sinyaller
+                        </h2>
+                    </div>
+                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Zaman</th>
+                                    <th>Hisse</th>
+                                    <th>Yön</th>
+                                    <th>Fiyat</th>
+                                    <th>Miktar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="signalsTableBody">
+                                <!-- Dynamic signals here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Widget: Trades -->
+                <div class="dashboard-card" style="max-height: 400px; overflow: hidden;">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fa-solid fa-receipt"></i> Son İşlemler (Trades)
+                        </h2>
+                    </div>
+                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Zaman</th>
+                                    <th>Hisse</th>
+                                    <th>Yön</th>
+                                    <th>Fiyat</th>
+                                    <th>Miktar</th>
+                                    <th>Toplam</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tradesTableBody">
+                                <!-- Dynamic trades here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script to fetch and render dashboard data -->
+    <script>
+        let myChart = null;
+
+        // Sayfa yuklendiginde ve butonla yenile
+        document.addEventListener('DOMContentLoaded', () => {
+            updateConfig();
+            updateDashboardData();
+            
+            document.getElementById('refreshBtn').addEventListener('click', () => {
+                const icon = document.querySelector('#refreshBtn i');
+                icon.classList.add('fa-spin');
+                updateDashboardData().finally(() => {
+                    setTimeout(() => {
+                        icon.classList.remove('fa-spin');
+                    }, 500);
+                });
+            });
+
+            // Analiz baslat butonu
+            document.getElementById('scanBtn').addEventListener('click', () => {
+                triggerMarketScan();
+            });
+
+            // Konsol kapat
+            document.getElementById('closeConsoleBtn').addEventListener('click', () => {
+                document.getElementById('scanConsoleCard').style.display = 'none';
+            });
+        });
+
+        // Config verilerini cekip Mod Gostergesini guncelle
+        async function updateConfig() {
+            try {
+                const res = await fetch('/config');
+                const data = await res.json();
+                const modeIndicator = document.getElementById('modeIndicator');
+                if (data.demo_mode) {
+                    modeIndicator.style.background = 'rgba(59, 130, 246, 0.1)';
+                    modeIndicator.style.borderColor = 'rgba(59, 130, 246, 0.2)';
+                    modeIndicator.style.color = 'var(--accent-blue)';
+                    modeIndicator.innerHTML = '<i class="fa-solid fa-flask" style="margin-right: 2px;"></i> Sanal Mod (Demo)';
+                } else {
+                    modeIndicator.style.background = 'rgba(239, 68, 68, 0.1)';
+                    modeIndicator.style.borderColor = 'rgba(239, 68, 68, 0.2)';
+                    modeIndicator.style.color = 'var(--accent-red)';
+                    modeIndicator.innerHTML = '<i class="fa-solid fa-fire-flame-curved" style="margin-right: 2px;"></i> GERÇEK MOD';
+                }
+            } catch (e) {
+                console.error("Mod bilgisi alinamadi:", e);
+            }
+        }
+
+        // Dashboard Verilerini Cek
+        async function updateDashboardData() {
+            try {
+                const [portRes, tradeRes, sigRes] = await Promise.all([
+                    fetch('/portfolio'),
+                    fetch('/trades?limit=20'),
+                    fetch('/signals?limit=20')
+                ]);
+
+                const portData = await portRes.json();
+                const tradeData = await tradeRes.json();
+                const sigData = await sigRes.json();
+
+                renderPortfolio(portData.portfolio || []);
+                renderTrades(tradeData.trades || []);
+                renderSignals(sigData.signals || []);
+
+            } catch (e) {
+                console.error("Veriler yuklenirken hata:", e);
+            }
+        }
+
+        // Portfolio tablosu ve kartlarini ciz
+        function renderPortfolio(portfolio) {
+            const tableBody = document.getElementById('portfolioTableBody');
+            tableBody.innerHTML = '';
+
+            let cashVal = 0;
+            let stockVal = 0;
+
+            const chartLabels = [];
+            const chartValues = [];
+            const chartColors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#14b8a6'];
+
+            if (portfolio.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="6" class="empty-state"><i class="fa-solid fa-folder-open"></i>Portföyünüz şu an boş.</td></tr>`;
+                return;
+            }
+
+            // TRY bulup ayiralim
+            portfolio.forEach(item => {
+                if (item.ticker === 'TRY') {
+                    cashVal = item.quantity;
+                } else {
+                    stockVal += item.current_value;
+                    
+                    // Chart data
+                    chartLabels.push(item.ticker);
+                    chartValues.push(item.current_value);
+                }
+            });
+
+            // Varliklari sirala (Hisse senedi degerine gore)
+            const sortedPortfolio = [...portfolio].sort((a, b) => b.current_value - a.current_value);
+
+            sortedPortfolio.forEach(item => {
+                const tr = document.createElement('tr');
+                
+                let pnlClass = '';
+                let pnlText = '0.00%';
+                
+                if (item.ticker !== 'TRY') {
+                    pnlText = `${item.pnl_percent >= 0 ? '+' : ''}${item.pnl_percent.toFixed(2)}%`;
+                    pnlClass = item.pnl_percent > 0 ? 'text-green' : (item.pnl_percent < 0 ? 'text-red' : '');
+                }
+
+                tr.innerHTML = `
+                    <td style="font-weight: 600;">#${item.ticker}</td>
+                    <td>${item.quantity.toLocaleString('tr-TR', { maximumFractionDigits: 2 })}</td>
+                    <td>${item.average_cost.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL</td>
+                    <td>${item.current_price.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL</td>
+                    <td style="font-weight: 500;">${item.current_value.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL</td>
+                    <td class="${pnlClass}">${pnlText}</td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            // Toplam Varlik (NAV)
+            const totalNav = cashVal + stockVal;
+            
+            // Kartlari Guncelle
+            document.getElementById('navVal').innerText = `${totalNav.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL`;
+            document.getElementById('cashVal').innerText = `${cashVal.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL`;
+            document.getElementById('stockVal').innerText = `${stockVal.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL`;
+
+            // Toplam Kar/Zarar
+            // Varsayilan ilk sermaye 100k TL
+            const initialCapital = 100000.0;
+            const netProfit = totalNav - initialCapital;
+            const profitPercent = (netProfit / initialCapital) * 100;
+
+            const totalPnlElement = document.getElementById('totalPnl');
+            const totalPnlPercentElement = document.getElementById('totalPnlPercent');
+            const pnlCard = document.getElementById('pnlCard');
+
+            totalPnlElement.innerText = `${netProfit >= 0 ? '+' : ''}${netProfit.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL`;
+            totalPnlPercentElement.innerText = `${netProfit >= 0 ? '+' : ''}${profitPercent.toFixed(2)}%`;
+
+            if (netProfit > 0) {
+                totalPnlElement.className = 'metric-value text-green';
+                totalPnlPercentElement.className = 'metric-subtext text-green';
+                pnlCard.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                pnlCard.style.boxShadow = '0 0 15px rgba(16, 185, 129, 0.08)';
+            } else if (netProfit < 0) {
+                totalPnlElement.className = 'metric-value text-red';
+                totalPnlPercentElement.className = 'metric-subtext text-red';
+                pnlCard.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+                pnlCard.style.boxShadow = '0 0 15px rgba(239, 68, 68, 0.08)';
+            } else {
+                totalPnlElement.className = 'metric-value';
+                totalPnlPercentElement.className = 'metric-subtext';
+                pnlCard.style.borderColor = 'var(--card-border)';
+                pnlCard.style.boxShadow = 'none';
+            }
+
+            // Doughnut Chart Guncelle
+            if (stockVal > 0) {
+                chartLabels.push('Nakit (TRY)');
+                chartValues.push(cashVal);
+                renderChart(chartLabels, chartValues, chartColors);
+            } else {
+                // Sadece nakit varsa
+                renderChart(['Nakit (TRY)'], [cashVal], ['rgba(59, 130, 246, 0.4)']);
+            }
+        }
+
+        // Chart.js doughnut ciz
+        function renderChart(labels, data, colors) {
+            const ctx = document.getElementById('portfolioChart').getContext('2d');
+            
+            if (myChart) {
+                myChart.destroy();
+            }
+
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors,
+                        borderWidth: 1,
+                        borderColor: 'rgba(255, 255, 255, 0.08)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#9ca3af',
+                                font: {
+                                    family: 'Outfit',
+                                    size: 11
+                                },
+                                padding: 15,
+                                boxWidth: 12
+                            }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        // Son Islemleri Ciz
+        function renderTrades(trades) {
+            const tableBody = document.getElementById('tradesTableBody');
+            tableBody.innerHTML = '';
+
+            if (trades.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="6" class="empty-state"><i class="fa-solid fa-clock-rotate-left"></i>Henüz hiç işlem gerçekleşmedi.</td></tr>`;
+                return;
+            }
+
+            trades.forEach(trade => {
+                const tr = document.createElement('tr');
+                tr.className = 'clickable-row';
+                tr.setAttribute('onclick', `toggleReasoning('trade-${trade.id}')`);
+
+                const actionBadge = trade.action === 'AL' 
+                    ? '<span class="badge badge-buy"><i class="fa-solid fa-arrow-trend-up"></i> AL</span>'
+                    : '<span class="badge badge-sell"><i class="fa-solid fa-arrow-trend-down"></i> SAT</span>';
+
+                const formattedTime = trade.timestamp.split(' ')[1] || trade.timestamp;
+                const infoIcon = trade.reasoning ? ' <i class="fa-solid fa-circle-info" style="font-size:0.75rem; color:var(--accent-purple); margin-left:4px;"></i>' : '';
+
+                tr.innerHTML = `
+                    <td style="color: var(--text-secondary);">${formattedTime}</td>
+                    <td style="font-weight: 600;">#${trade.ticker}${infoIcon}</td>
+                    <td>${actionBadge}</td>
+                    <td>${trade.price.toFixed(2)} TL</td>
+                    <td>${trade.quantity.toFixed(0)}</td>
+                    <td style="font-weight: 500;">${trade.total_value.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL</td>
+                `;
+                tableBody.appendChild(tr);
+
+                // Add hidden reasoning row if exists
+                if (trade.reasoning) {
+                    const rTr = document.createElement('tr');
+                    rTr.id = `reasoning-trade-${trade.id}`;
+                    rTr.style.display = 'none';
+                    rTr.innerHTML = `
+                        <td colspan="6" style="padding: 0.8rem 1.5rem; background: rgba(139, 92, 246, 0.03); border-left: 3px solid var(--accent-purple); white-space: normal; line-height: 1.5; color: var(--text-secondary);">
+                            <strong>30 Yıllık Borsacı Yorumu:</strong> <em>${trade.reasoning}</em>
+                        </td>
+                    `;
+                    tableBody.appendChild(rTr);
+                }
+            });
+        }
+
+        // Son Sinyalleri Ciz
+        function renderSignals(signals) {
+            const tableBody = document.getElementById('signalsTableBody');
+            tableBody.innerHTML = '';
+
+            if (signals.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="5" class="empty-state"><i class="fa-solid fa-tower-broadcast"></i>Henüz sinyal alınmadı.</td></tr>`;
+                return;
+            }
+
+            signals.forEach(sig => {
+                const tr = document.createElement('tr');
+                tr.className = 'clickable-row';
+                tr.setAttribute('onclick', `toggleReasoning('sig-${sig.id}')`);
+
+                const actionBadge = sig.action === 'AL' 
+                    ? '<span class="badge badge-buy"><i class="fa-solid fa-arrow-trend-up"></i> AL</span>'
+                    : '<span class="badge badge-sell"><i class="fa-solid fa-arrow-trend-down"></i> SAT</span>';
+
+                const formattedTime = sig.timestamp.split(' ')[1] || sig.timestamp;
+                const infoIcon = sig.reasoning ? ' <i class="fa-solid fa-circle-info" style="font-size:0.75rem; color:var(--accent-purple); margin-left:4px;"></i>' : '';
+
+                tr.innerHTML = `
+                    <td style="color: var(--text-secondary);">${formattedTime}</td>
+                    <td style="font-weight: 600;">#${sig.ticker}${infoIcon}</td>
+                    <td>${actionBadge}</td>
+                    <td>${sig.price.toFixed(2)} TL</td>
+                    <td>${sig.quantity.toFixed(0)}</td>
+                `;
+                tableBody.appendChild(tr);
+
+                // Add hidden reasoning row if exists
+                if (sig.reasoning) {
+                    const rTr = document.createElement('tr');
+                    rTr.id = `reasoning-sig-${sig.id}`;
+                    rTr.style.display = 'none';
+                    rTr.innerHTML = `
+                        <td colspan="5" style="padding: 0.8rem 1.5rem; background: rgba(59, 130, 246, 0.03); border-left: 3px solid var(--accent-blue); white-space: normal; line-height: 1.5; color: var(--text-secondary);">
+                            <strong>Teknik Gerekçe:</strong> <em>${sig.reasoning}</em>
+                        </td>
+                    `;
+                    tableBody.appendChild(rTr);
+                }
+            });
+        }
+
+        // Toggle details row
+        function toggleReasoning(id) {
+            const element = document.getElementById(`reasoning-${id}`);
+            if (element) {
+                if (element.style.display === 'none') {
+                    element.style.display = 'table-row';
+                } else {
+                    element.style.display = 'none';
+                }
+            }
+        }
+
+        // Manuel Tarama Tetikleme & Raporlama
+        async function triggerMarketScan() {
+            const consoleCard = document.getElementById('scanConsoleCard');
+            const consoleOut = document.getElementById('consoleOutput');
+            const scanBtn = document.getElementById('scanBtn');
+            const scanIcon = document.querySelector('#scanBtn i');
+
+            // Konsolu göster ve temizle
+            consoleCard.style.display = 'block';
+            consoleOut.innerHTML = '';
+            
+            // Buton durumunu ayarla
+            scanBtn.disabled = true;
+            scanBtn.style.opacity = '0.7';
+            scanBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Tarama Yapılıyor...';
+
+            writeToConsole("INFO", "BIST 30 hisseleri için teknik analiz taraması başlatıldı (EMA, RSI, MACD, Bollinger, Hacim)...");
+            writeToConsole("INFO", "Yahoo Finance üzerinden veriler çekiliyor. Lütfen bekleyin, bu işlem yaklaşık 5-10 saniye sürebilir...");
+
+            try {
+                const start = Date.now();
+                const res = await fetch('/scan');
+                const data = await res.json();
+                const duration = ((Date.now() - start) / 1000).toFixed(2);
+
+                writeToConsole("SUCCESS", `Tarama tamamlandı! Süre: ${duration} saniye. Taranan Hisse: ${data.total_scanned}. Üretilen Sinyal: ${data.signals_generated_count}`);
+
+                // Sinyal listesini yaz
+                if (data.signals_generated_count > 0) {
+                    data.signals.forEach(sig => {
+                        const style = sig.action === "AL" ? "SUCCESS" : "ERROR";
+                        writeToConsole(style, `[SİNYAL] #${sig.ticker} için ${sig.action} işlemi gerçekleştirildi. Fiyat: ${sig.price.toFixed(2)} TL | Miktar: ${sig.quantity.toFixed(0)} Lot`);
+                        writeToConsole("TEXT", `└ Gerekçe: "${sig.reasoning}"`);
+                    });
+                } else {
+                    writeToConsole("WARN", "BIST 30 üzerinde alım veya satım koşullarını sağlayan aktif hisse senedi bulunamadı (Tüm hisseler beklemede).");
+                }
+
+                // Hisse detaylarının özetini konsola dök
+                writeToConsole("INFO", "--- Detaylı İndikatör Raporu ---");
+                data.details.forEach(item => {
+                    const statusText = item.action === "HOLD" ? "NÖTR" : item.action;
+                    const statusClass = item.action === "AL" ? "SUCCESS" : (item.action === "SAT" ? "ERROR" : "TEXT");
+                    writeToConsole(statusClass, `Hisse: #${item.ticker} | Karar: ${statusText} | Detay: ${item.reasoning}`);
+                });
+
+                // Dashboard verilerini anında yenile
+                updateDashboardData();
+
+            } catch (e) {
+                console.error(e);
+                writeToConsole("ERROR", "Tarama işlemi sırasında sunucu hatası oluştu: " + e.message);
+            } finally {
+                scanBtn.disabled = false;
+                scanBtn.style.opacity = '1';
+                scanBtn.innerHTML = '<i class="fa-solid fa-magnifying-glass-chart"></i> Analiz Başlat';
+            }
+        }
+
+        // Console logger helper
+        function writeToConsole(type, message) {
+            const consoleOut = document.getElementById('consoleOutput');
+            const line = document.createElement('div');
+            line.className = 'console-line';
+            
+            const timestamp = new Date().toLocaleTimeString('tr-TR');
+            const timeSpan = `<span style="color: var(--text-secondary); margin-right: 8px;">[${timestamp}]</span>`;
+            
+            let colorClass = 'console-text';
+            if (type === "INFO") colorClass = 'console-info';
+            if (type === "SUCCESS") colorClass = 'console-success';
+            if (type === "WARN") colorClass = 'console-warn';
+            if (type === "ERROR") colorClass = 'console-error';
+
+            line.innerHTML = `${timeSpan}<span class="${colorClass}">${message}</span>`;
+            consoleOut.appendChild(line);
+            
+            // Auto scroll to bottom
+            consoleOut.scrollTop = consoleOut.scrollHeight;
+        }
+
+        // Sayfayi her 10 saniyede bir otomatik yenile
+        setInterval(updateDashboardData, 10000);
+    </script>
+</body>
+</html>

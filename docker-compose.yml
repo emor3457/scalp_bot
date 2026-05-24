@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  borsa_bot:
+    build: .
+    container_name: borsa_scalp_bot
+    restart: always
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      # Veritabanlari ve session dosyalarinin silinmemesi icin klasoru bagliyoruz
+      - .:/app
+    ports:
+      - "8000:8000"
