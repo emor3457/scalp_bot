@@ -1,0 +1,595 @@
+2026-05-23 18:26:58,314 - INFO - Webhook isteği alındı. Kaynak IP: 127.0.0.1
+2026-05-23 18:26:58,314 - INFO - Sinyal Detayları -> Hisse: KRONT | Yön: AL | Fiyat: 75.5 | Miktar: 100.0
+2026-05-23 18:30:47,407 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-23 18:38:25,999 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-23 18:38:31,565 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:38:31,576 - INFO - Islem Basarili -> Hisse: KRONT | Yon: AL | Fiyat: 75.0 | Miktar: 100.0 | Toplam: 7500.0 TL
+2026-05-23 18:38:31,583 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:38:31,593 - INFO - Islem Basarili -> Hisse: KRONT | Yon: SAT | Fiyat: 80.0 | Miktar: 50.0 | Toplam: 4000.0 TL
+2026-05-23 18:38:31,597 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:38:31,603 - WARNING - Bakiye yetersiz! Gerekli: 200000.0 TL, Mevcut: 96500.0 TL. Islem iptal edildi.
+2026-05-23 18:38:31,604 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:38:31,610 - WARNING - Hisse miktari yetersiz! Satilmak istenen: 10.0, Mevcut: 0.0. Islem iptal edildi.
+2026-05-23 18:40:39,498 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-23 18:41:20,881 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-23 18:41:33,843 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:41:33,853 - INFO - Islem Basarili -> Hisse: KRONT | Yon: AL | Fiyat: 75.0 | Miktar: 100.0 | Toplam: 7500.0 TL
+2026-05-23 18:41:33,861 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:41:33,870 - INFO - Islem Basarili -> Hisse: KRONT | Yon: SAT | Fiyat: 80.0 | Miktar: 50.0 | Toplam: 4000.0 TL
+2026-05-23 18:41:33,875 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:41:33,880 - WARNING - Bakiye yetersiz! Gerekli: 200000.0 TL, Mevcut: 93000.0 TL. Islem iptal edildi.
+2026-05-23 18:41:33,881 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:41:33,888 - WARNING - Hisse miktari yetersiz! Satilmak istenen: 10.0, Mevcut: 0.0. Islem iptal edildi.
+2026-05-23 18:43:57,119 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-23 18:44:33,941 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-23 18:44:45,675 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:44:45,686 - INFO - Islem Basarili -> Hisse: KRONT | Yon: AL | Fiyat: 75.0 | Miktar: 100.0 | Toplam: 7500.0 TL
+2026-05-23 18:44:45,687 - WARNING - Telegram ayarlari yapilmamis veya eksik. Bildirim gonderilmedi.
+2026-05-23 18:44:45,695 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:44:45,706 - INFO - Islem Basarili -> Hisse: KRONT | Yon: SAT | Fiyat: 80.0 | Miktar: 50.0 | Toplam: 4000.0 TL
+2026-05-23 18:44:45,706 - WARNING - Telegram ayarlari yapilmamis veya eksik. Bildirim gonderilmedi.
+2026-05-23 18:44:45,711 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:44:45,717 - WARNING - Bakiye yetersiz! Gerekli: 200000.0 TL, Mevcut: 89500.0 TL. Islem iptal edildi.
+2026-05-23 18:44:45,717 - WARNING - Telegram ayarlari yapilmamis veya eksik. Bildirim gonderilmedi.
+2026-05-23 18:44:45,717 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:44:45,724 - WARNING - Hisse miktari yetersiz! Satilmak istenen: 10.0, Mevcut: 0.0. Islem iptal edildi.
+2026-05-23 18:44:45,725 - WARNING - Telegram ayarlari yapilmamis veya eksik. Bildirim gonderilmedi.
+2026-05-23 18:50:23,453 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:50:23,462 - INFO - Islem Basarili -> Hisse: KRONT | Yon: AL | Fiyat: 75.0 | Miktar: 100.0 | Toplam: 7500.0 TL
+2026-05-23 18:50:23,463 - WARNING - Telegram ayarlari yapilmamis veya eksik. Bildirim gonderilmedi.
+2026-05-23 18:50:23,470 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:50:23,481 - INFO - Islem Basarili -> Hisse: KRONT | Yon: SAT | Fiyat: 80.0 | Miktar: 50.0 | Toplam: 4000.0 TL
+2026-05-23 18:50:23,481 - WARNING - Telegram ayarlari yapilmamis veya eksik. Bildirim gonderilmedi.
+2026-05-23 18:50:23,485 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:50:23,490 - WARNING - Bakiye yetersiz! Gerekli: 200000.0 TL, Mevcut: 86000.0 TL. Islem iptal edildi.
+2026-05-23 18:50:23,491 - WARNING - Telegram ayarlari yapilmamis veya eksik. Bildirim gonderilmedi.
+2026-05-23 18:50:23,492 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:50:23,498 - WARNING - Hisse miktari yetersiz! Satilmak istenen: 10.0, Mevcut: 0.0. Islem iptal edildi.
+2026-05-23 18:50:23,499 - WARNING - Telegram ayarlari yapilmamis veya eksik. Bildirim gonderilmedi.
+2026-05-23 18:50:44,912 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-23 18:50:50,320 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:50:50,330 - INFO - Islem Basarili -> Hisse: KRONT | Yon: AL | Fiyat: 75.0 | Miktar: 100.0 | Toplam: 7500.0 TL
+2026-05-23 18:50:50,361 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:50:50,372 - INFO - Islem Basarili -> Hisse: KRONT | Yon: SAT | Fiyat: 80.0 | Miktar: 50.0 | Toplam: 4000.0 TL
+2026-05-23 18:50:50,377 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:50:50,382 - WARNING - Bakiye yetersiz! Gerekli: 200000.0 TL, Mevcut: 82500.0 TL. Islem iptal edildi.
+2026-05-23 18:50:50,384 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:50:50,390 - WARNING - Hisse miktari yetersiz! Satilmak istenen: 10.0, Mevcut: 0.0. Islem iptal edildi.
+2026-05-23 18:50:53,723 - ERROR - Telegram bildirimi gonderilemedi: HTTP Error 400: Bad Request
+2026-05-23 18:50:53,725 - ERROR - Telegram bildirimi gonderilemedi: HTTP Error 400: Bad Request
+2026-05-23 18:50:53,725 - ERROR - Telegram bildirimi gonderilemedi: HTTP Error 400: Bad Request
+2026-05-23 18:50:53,726 - ERROR - Telegram bildirimi gonderilemedi: HTTP Error 400: Bad Request
+2026-05-23 18:53:00,266 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:53:00,277 - INFO - Islem Basarili -> Hisse: KRONT | Yon: AL | Fiyat: 75.0 | Miktar: 100.0 | Toplam: 7500.0 TL
+2026-05-23 18:53:00,286 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:53:00,296 - INFO - Islem Basarili -> Hisse: KRONT | Yon: SAT | Fiyat: 80.0 | Miktar: 50.0 | Toplam: 4000.0 TL
+2026-05-23 18:53:00,301 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:53:00,306 - WARNING - Bakiye yetersiz! Gerekli: 200000.0 TL, Mevcut: 79000.0 TL. Islem iptal edildi.
+2026-05-23 18:53:00,308 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:53:00,314 - WARNING - Hisse miktari yetersiz! Satilmak istenen: 10.0, Mevcut: 0.0. Islem iptal edildi.
+2026-05-23 18:53:00,516 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 18:53:00,552 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 18:53:00,604 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 18:53:00,633 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 18:56:20,878 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-23 18:57:07,396 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-23 18:57:14,452 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:57:14,461 - INFO - Islem Basarili -> Hisse: KRONT | Yon: AL | Fiyat: 75.0 | Miktar: 100.0 | Toplam: 7500.0 TL
+2026-05-23 18:57:14,491 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:57:14,501 - INFO - Islem Basarili -> Hisse: KRONT | Yon: SAT | Fiyat: 80.0 | Miktar: 50.0 | Toplam: 4000.0 TL
+2026-05-23 18:57:14,507 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:57:14,513 - WARNING - Bakiye yetersiz! Gerekli: 200000.0 TL, Mevcut: 75500.0 TL. Islem iptal edildi.
+2026-05-23 18:57:14,515 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:57:14,524 - WARNING - Hisse miktari yetersiz! Satilmak istenen: 10.0, Mevcut: 0.0. Islem iptal edildi.
+2026-05-23 18:57:14,755 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 18:57:14,756 - INFO - Tarayici otomasyonu baslatiliyor... Emir -> Hisse: KRONT | Yon: AL | Fiyat: 75.0 | Miktar: 100.0
+2026-05-23 18:57:14,757 - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-19' coro=<Connection.run() done, defined at C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_connection.py:305> exception=NotImplementedError()>
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 312, in run
+    await self._transport.connect()
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_transport.py", line 133, in connect
+    raise exc
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_transport.py", line 120, in connect
+    self._proc = await asyncio.create_subprocess_exec(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\subprocess.py", line 224, in create_subprocess_exec
+    transport, protocol = await loop.subprocess_exec(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\base_events.py", line 1756, in subprocess_exec
+    transport = await self._make_subprocess_transport(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\base_events.py", line 528, in _make_subprocess_transport
+    raise NotImplementedError
+NotImplementedError
+2026-05-23 18:57:14,788 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 18:57:14,788 - INFO - Tarayici otomasyonu baslatiliyor... Emir -> Hisse: KRONT | Yon: SAT | Fiyat: 80.0 | Miktar: 50.0
+2026-05-23 18:57:14,789 - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Connection.run() done, defined at C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_connection.py:305> exception=NotImplementedError()>
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 312, in run
+    await self._transport.connect()
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_transport.py", line 133, in connect
+    raise exc
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_transport.py", line 120, in connect
+    self._proc = await asyncio.create_subprocess_exec(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\subprocess.py", line 224, in create_subprocess_exec
+    transport, protocol = await loop.subprocess_exec(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\base_events.py", line 1756, in subprocess_exec
+    transport = await self._make_subprocess_transport(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\base_events.py", line 528, in _make_subprocess_transport
+    raise NotImplementedError
+NotImplementedError
+2026-05-23 18:57:14,820 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 18:57:14,885 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 18:58:02,963 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-23 18:58:24,205 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:58:24,214 - INFO - Islem Basarili -> Hisse: KRONT | Yon: AL | Fiyat: 75.0 | Miktar: 100.0 | Toplam: 7500.0 TL
+2026-05-23 18:58:24,245 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:58:24,255 - INFO - Islem Basarili -> Hisse: KRONT | Yon: SAT | Fiyat: 80.0 | Miktar: 50.0 | Toplam: 4000.0 TL
+2026-05-23 18:58:24,261 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:58:24,265 - WARNING - Bakiye yetersiz! Gerekli: 200000.0 TL, Mevcut: 72000.0 TL. Islem iptal edildi.
+2026-05-23 18:58:24,268 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 18:58:24,274 - WARNING - Hisse miktari yetersiz! Satilmak istenen: 10.0, Mevcut: 0.0. Islem iptal edildi.
+2026-05-23 18:58:24,515 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 18:58:24,515 - INFO - Tarayici otomasyonu baslatiliyor... Emir -> Hisse: KRONT | Yon: AL | Fiyat: 75.0 | Miktar: 100.0
+2026-05-23 18:58:24,515 - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-19' coro=<Connection.run() done, defined at C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_connection.py:305> exception=NotImplementedError()>
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 312, in run
+    await self._transport.connect()
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_transport.py", line 133, in connect
+    raise exc
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_transport.py", line 120, in connect
+    self._proc = await asyncio.create_subprocess_exec(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\subprocess.py", line 224, in create_subprocess_exec
+    transport, protocol = await loop.subprocess_exec(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\base_events.py", line 1756, in subprocess_exec
+    transport = await self._make_subprocess_transport(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\base_events.py", line 528, in _make_subprocess_transport
+    raise NotImplementedError
+NotImplementedError
+2026-05-23 18:58:24,565 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 18:58:24,608 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 18:58:24,608 - INFO - Tarayici otomasyonu baslatiliyor... Emir -> Hisse: KRONT | Yon: SAT | Fiyat: 80.0 | Miktar: 50.0
+2026-05-23 18:58:24,609 - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-20' coro=<Connection.run() done, defined at C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_connection.py:305> exception=NotImplementedError()>
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 312, in run
+    await self._transport.connect()
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_transport.py", line 133, in connect
+    raise exc
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_transport.py", line 120, in connect
+    self._proc = await asyncio.create_subprocess_exec(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\subprocess.py", line 224, in create_subprocess_exec
+    transport, protocol = await loop.subprocess_exec(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\base_events.py", line 1756, in subprocess_exec
+    transport = await self._make_subprocess_transport(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\base_events.py", line 528, in _make_subprocess_transport
+    raise NotImplementedError
+NotImplementedError
+2026-05-23 18:58:24,637 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 19:17:15,188 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-23 19:17:22,380 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 19:17:22,390 - INFO - Islem Basarili -> Hisse: KRONT | Yon: AL | Fiyat: 75.0 | Miktar: 100.0 | Toplam: 7500.0 TL
+2026-05-23 19:17:22,422 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 19:17:22,432 - INFO - Islem Basarili -> Hisse: KRONT | Yon: SAT | Fiyat: 80.0 | Miktar: 50.0 | Toplam: 4000.0 TL
+2026-05-23 19:17:22,437 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 19:17:22,443 - WARNING - Bakiye yetersiz! Gerekli: 200000.0 TL, Mevcut: 68500.0 TL. Islem iptal edildi.
+2026-05-23 19:17:22,445 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 19:17:22,451 - WARNING - Hisse miktari yetersiz! Satilmak istenen: 10.0, Mevcut: 0.0. Islem iptal edildi.
+2026-05-23 19:17:22,632 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 19:17:22,633 - INFO - Tarayici otomasyonu baslatiliyor... Emir -> Hisse: KRONT | Yon: AL | Fiyat: 75.0 | Miktar: 100.0
+2026-05-23 19:17:22,664 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 19:17:22,702 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 19:17:22,702 - INFO - Tarayici otomasyonu baslatiliyor... Emir -> Hisse: KRONT | Yon: SAT | Fiyat: 80.0 | Miktar: 50.0
+2026-05-23 19:17:22,748 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 21:13:15,349 - ERROR - Future exception was never retrieved
+future: <Future finished exception=NotImplementedError()>
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 415, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 56, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\fastapi\applications.py", line 1159, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\applications.py", line 90, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\fastapi\routing.py", line 121, in app
+    await response(scope, receive, send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\responses.py", line 170, in __call__
+    await self.background()
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\background.py", line 36, in __call__
+    await task()
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\background.py", line 23, in __call__
+    await run_in_threadpool(self.func, *self.args, **self.kwargs)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\anyio\to_thread.py", line 63, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2518, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 1002, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\order_executor.py", line 19, in execute_order
+    with sync_playwright() as p:
+         ^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\sync_api\_context_manager.py", line 77, in __enter__
+    dispatcher_fiber.switch()
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\sync_api\_context_manager.py", line 56, in greenlet_main
+    self._loop.run_until_complete(self._connection.run_as_sync())
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 303, in run_as_sync
+    await self.run()
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 312, in run
+    await self._transport.connect()
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_transport.py", line 133, in connect
+    raise exc
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_transport.py", line 120, in connect
+    self._proc = await asyncio.create_subprocess_exec(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\subprocess.py", line 224, in create_subprocess_exec
+    transport, protocol = await loop.subprocess_exec(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\base_events.py", line 1756, in subprocess_exec
+    transport = await self._make_subprocess_transport(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\base_events.py", line 528, in _make_subprocess_transport
+    raise NotImplementedError
+NotImplementedError
+2026-05-23 21:13:15,352 - ERROR - Future exception was never retrieved
+future: <Future finished exception=NotImplementedError()>
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\uvicorn\protocols\http\h11_impl.py", line 415, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 56, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\fastapi\applications.py", line 1159, in __call__
+    await super().__call__(scope, receive, send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\applications.py", line 90, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\routing.py", line 680, in app
+    await route.handle(scope, receive, send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\routing.py", line 276, in handle
+    await self.app(scope, receive, send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\fastapi\routing.py", line 134, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\fastapi\routing.py", line 121, in app
+    await response(scope, receive, send)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\responses.py", line 170, in __call__
+    await self.background()
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\background.py", line 36, in __call__
+    await task()
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\background.py", line 23, in __call__
+    await run_in_threadpool(self.func, *self.args, **self.kwargs)
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\starlette\concurrency.py", line 32, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\anyio\to_thread.py", line 63, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 2518, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\anyio\_backends\_asyncio.py", line 1002, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\order_executor.py", line 19, in execute_order
+    with sync_playwright() as p:
+         ^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\sync_api\_context_manager.py", line 77, in __enter__
+    dispatcher_fiber.switch()
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\sync_api\_context_manager.py", line 56, in greenlet_main
+    self._loop.run_until_complete(self._connection.run_as_sync())
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\base_events.py", line 691, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 303, in run_as_sync
+    await self.run()
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_connection.py", line 312, in run
+    await self._transport.connect()
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_transport.py", line 133, in connect
+    raise exc
+  File "C:\Users\User\Desktop\Programlama\borsa_scalper\.venv\Lib\site-packages\playwright\_impl\_transport.py", line 120, in connect
+    self._proc = await asyncio.create_subprocess_exec(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\subprocess.py", line 224, in create_subprocess_exec
+    transport, protocol = await loop.subprocess_exec(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\base_events.py", line 1756, in subprocess_exec
+    transport = await self._make_subprocess_transport(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\AppData\Roaming\uv\python\cpython-3.12-windows-x86_64-none\Lib\asyncio\base_events.py", line 528, in _make_subprocess_transport
+    raise NotImplementedError
+NotImplementedError
+2026-05-23 21:13:16,279 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-23 21:15:19,905 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-23 21:15:32,706 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 21:15:32,715 - INFO - Islem Basarili (Simule) -> Hisse: KRONT | Yon: AL | Fiyat: 75.0 | Miktar: 100.0 | Toplam: 7500.0 TL
+2026-05-23 21:15:32,715 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-05-23 21:15:32,746 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 21:15:32,758 - INFO - Islem Basarili (Simule) -> Hisse: KRONT | Yon: SAT | Fiyat: 80.0 | Miktar: 50.0 | Toplam: 4000.0 TL
+2026-05-23 21:15:32,758 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-05-23 21:15:32,763 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 21:15:32,769 - WARNING - Bakiye yetersiz! Gerekli: 200000.0 TL, Mevcut: 65000.0 TL. Islem iptal edildi.
+2026-05-23 21:15:32,771 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 21:15:32,778 - WARNING - Hisse miktari yetersiz! Satilmak istenen: 10.0, Mevcut: 0.0. Islem iptal edildi.
+2026-05-23 21:15:32,997 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 21:15:33,040 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 21:15:33,103 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 21:15:33,128 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 21:20:28,299 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-23 21:24:43,540 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-23 21:24:45,724 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-23 21:24:48,384 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-23 21:24:48,387 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 21:24:48,397 - INFO - Islem Basarili (Simule) -> Hisse: KRONT | Yon: AL | Fiyat: 75.0 | Miktar: 100.0 | Toplam: 7500.0 TL
+2026-05-23 21:24:48,397 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-05-23 21:24:48,429 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 21:24:48,440 - INFO - Islem Basarili (Simule) -> Hisse: KRONT | Yon: SAT | Fiyat: 80.0 | Miktar: 50.0 | Toplam: 4000.0 TL
+2026-05-23 21:24:48,440 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-05-23 21:24:48,446 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 21:24:48,452 - WARNING - Bakiye yetersiz! Gerekli: 200000.0 TL, Mevcut: 61500.0 TL. Islem iptal edildi.
+2026-05-23 21:24:48,453 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-05-23 21:24:48,460 - WARNING - Hisse miktari yetersiz! Satilmak istenen: 10.0, Mevcut: 0.0. Islem iptal edildi.
+2026-05-23 21:24:48,662 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 21:24:48,698 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 21:24:48,766 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 21:24:48,791 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-05-23 21:29:47,476 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-23 21:29:48,069 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-23 21:30:09,422 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-23 21:33:41,173 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-23 21:33:41,174 - INFO - Periyodik BIST tarama motoru arka planda baslatildi.
+2026-05-23 21:33:47,483 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-23 21:33:48,219 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-23 21:33:55,866 - INFO - Manuel BIST taramasi tetiklendi...
+2026-05-23 21:33:55,866 - INFO - BIST 30 hisseleri taranıyor...
+2026-05-23 21:33:55,866 - INFO - Teknik analiz icin veri indiriliyor -> THYAO.IS
+2026-05-23 21:33:56,075 - INFO - Teknik analiz icin veri indiriliyor -> EREGL.IS
+2026-05-23 21:33:56,186 - INFO - Teknik analiz icin veri indiriliyor -> ASELS.IS
+2026-05-23 21:33:56,316 - INFO - Auto-Analyst Islem Basarili -> Hisse: ASELS | Yon: AL | Fiyat: 410.75 | Miktar: 14.0 | Toplam: 5750.5 TL
+2026-05-23 21:33:56,316 - ERROR - Auto-Analyst Telegram gonderim hatasi: There is no current event loop in thread 'asyncio_0'.
+2026-05-23 21:33:56,817 - INFO - Teknik analiz icin veri indiriliyor -> YKBNK.IS
+2026-05-23 21:33:56,929 - INFO - Teknik analiz icin veri indiriliyor -> AKBNK.IS
+2026-05-23 21:33:57,099 - INFO - Teknik analiz icin veri indiriliyor -> TUPRS.IS
+2026-05-23 21:33:57,220 - INFO - Teknik analiz icin veri indiriliyor -> KCHOL.IS
+2026-05-23 21:33:57,334 - INFO - Teknik analiz icin veri indiriliyor -> SAHOL.IS
+2026-05-23 21:33:57,471 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-05-23 21:33:57,526 - INFO - Teknik analiz icin veri indiriliyor -> GARAN.IS
+2026-05-23 21:33:57,700 - INFO - Teknik analiz icin veri indiriliyor -> ISCTR.IS
+2026-05-23 21:33:57,716 - INFO - Fiyat basariyla guncellendi -> ASELS: 410.0 TL
+2026-05-23 21:33:57,814 - INFO - Teknik analiz icin veri indiriliyor -> BIMAS.IS
+2026-05-23 21:33:58,035 - INFO - Teknik analiz icin veri indiriliyor -> SISE.IS
+2026-05-23 21:33:58,155 - INFO - Teknik analiz icin veri indiriliyor -> PGSUS.IS
+2026-05-23 21:33:58,267 - INFO - Teknik analiz icin veri indiriliyor -> EKGYO.IS
+2026-05-23 21:33:58,389 - INFO - Teknik analiz icin veri indiriliyor -> TCELL.IS
+2026-05-23 21:33:58,502 - INFO - Tarama tamamlandı. Taranan: 15 | Sinyal: 1
+2026-05-23 21:34:27,111 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-23 21:34:27,112 - INFO - Periyodik BIST tarama motoru arka planda baslatildi.
+2026-05-23 21:34:27,514 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-23 21:34:28,541 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-23 21:34:28,542 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-05-23 21:34:28,803 - INFO - Fiyat basariyla guncellendi -> ASELS: 410.0 TL
+2026-05-24 08:12:55,947 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-24 08:12:55,955 - INFO - Periyodik BIST tarama motoru arka planda baslatildi.
+2026-05-24 08:13:56,533 - INFO - Manuel BIST taramasi tetiklendi...
+2026-05-24 08:13:56,533 - INFO - BIST 30 hisseleri taranıyor...
+2026-05-24 08:13:56,533 - INFO - Teknik analiz icin veri indiriliyor -> THYAO.IS
+2026-05-24 08:13:59,240 - INFO - Teknik analiz icin veri indiriliyor -> EREGL.IS
+2026-05-24 08:13:59,355 - INFO - Teknik analiz icin veri indiriliyor -> ASELS.IS
+2026-05-24 08:13:59,481 - INFO - Auto-Analyst Islem Basarili -> Hisse: ASELS | Yon: AL | Fiyat: 410.75 | Miktar: 13.0 | Toplam: 5339.75 TL
+2026-05-24 08:13:59,481 - ERROR - Auto-Analyst Telegram gonderim hatasi: There is no current event loop in thread 'asyncio_0'.
+2026-05-24 08:13:59,983 - INFO - Teknik analiz icin veri indiriliyor -> YKBNK.IS
+2026-05-24 08:14:00,103 - INFO - Teknik analiz icin veri indiriliyor -> AKBNK.IS
+2026-05-24 08:14:00,221 - INFO - Teknik analiz icin veri indiriliyor -> TUPRS.IS
+2026-05-24 08:14:00,344 - INFO - Teknik analiz icin veri indiriliyor -> KCHOL.IS
+2026-05-24 08:14:00,460 - INFO - Teknik analiz icin veri indiriliyor -> SAHOL.IS
+2026-05-24 08:14:00,583 - INFO - Teknik analiz icin veri indiriliyor -> GARAN.IS
+2026-05-24 08:14:00,706 - INFO - Teknik analiz icin veri indiriliyor -> ISCTR.IS
+2026-05-24 08:14:00,830 - INFO - Teknik analiz icin veri indiriliyor -> BIMAS.IS
+2026-05-24 08:14:00,953 - INFO - Teknik analiz icin veri indiriliyor -> SISE.IS
+2026-05-24 08:14:01,069 - INFO - Teknik analiz icin veri indiriliyor -> PGSUS.IS
+2026-05-24 08:14:01,189 - INFO - Teknik analiz icin veri indiriliyor -> EKGYO.IS
+2026-05-24 08:14:01,308 - INFO - Teknik analiz icin veri indiriliyor -> TCELL.IS
+2026-05-24 08:14:01,430 - INFO - Tarama tamamlandı. Taranan: 15 | Sinyal: 1
+2026-05-24 08:31:21,326 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-24 08:31:21,327 - INFO - Periyodik BIST tarama motoru arka planda baslatildi.
+2026-05-24 08:32:12,604 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-24 08:32:13,036 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-24 08:32:13,037 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-05-24 08:32:13,632 - INFO - Fiyat basariyla guncellendi -> ASELS: 410.0 TL
+2026-05-24 08:32:22,140 - INFO - Manuel BIST taramasi tetiklendi...
+2026-05-24 08:32:22,140 - INFO - BIST 30 hisseleri taranıyor...
+2026-05-24 08:32:22,140 - INFO - Teknik analiz icin veri indiriliyor -> THYAO.IS
+2026-05-24 08:32:22,340 - INFO - Teknik analiz icin veri indiriliyor -> EREGL.IS
+2026-05-24 08:32:22,463 - INFO - Teknik analiz icin veri indiriliyor -> ASELS.IS
+2026-05-24 08:32:22,592 - INFO - Auto-Analyst Islem Basarili -> Hisse: ASELS | Yon: AL | Fiyat: 410.75 | Miktar: 12.0 | Toplam: 4929.0 TL
+2026-05-24 08:32:22,592 - ERROR - Auto-Analyst Telegram gonderim hatasi: There is no current event loop in thread 'asyncio_0'.
+2026-05-24 08:32:23,093 - INFO - Teknik analiz icin veri indiriliyor -> YKBNK.IS
+2026-05-24 08:32:23,217 - INFO - Teknik analiz icin veri indiriliyor -> AKBNK.IS
+2026-05-24 08:32:23,327 - INFO - Teknik analiz icin veri indiriliyor -> TUPRS.IS
+2026-05-24 08:32:23,446 - INFO - Teknik analiz icin veri indiriliyor -> KCHOL.IS
+2026-05-24 08:32:23,556 - INFO - Teknik analiz icin veri indiriliyor -> SAHOL.IS
+2026-05-24 08:32:23,673 - INFO - Teknik analiz icin veri indiriliyor -> GARAN.IS
+2026-05-24 08:32:23,785 - INFO - Teknik analiz icin veri indiriliyor -> ISCTR.IS
+2026-05-24 08:32:23,901 - INFO - Teknik analiz icin veri indiriliyor -> BIMAS.IS
+2026-05-24 08:32:24,016 - INFO - Teknik analiz icin veri indiriliyor -> SISE.IS
+2026-05-24 08:32:24,135 - INFO - Teknik analiz icin veri indiriliyor -> PGSUS.IS
+2026-05-24 08:32:24,253 - INFO - Teknik analiz icin veri indiriliyor -> EKGYO.IS
+2026-05-24 08:32:24,369 - INFO - Teknik analiz icin veri indiriliyor -> TCELL.IS
+2026-05-24 08:32:24,495 - INFO - Tarama tamamlandı. Taranan: 15 | Sinyal: 1
+2026-05-24 08:38:11,672 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-24 08:38:12,097 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-24 08:38:12,097 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-05-24 08:38:12,326 - INFO - Fiyat basariyla guncellendi -> ASELS: 410.0 TL
+2026-05-24 08:41:23,177 - INFO - Manuel BIST taramasi tetiklendi...
+2026-05-24 08:41:23,177 - INFO - BIST 30 hisseleri taranıyor...
+2026-05-24 08:41:23,177 - INFO - Teknik analiz icin veri indiriliyor -> THYAO.IS
+2026-05-24 08:41:23,455 - INFO - Teknik analiz icin veri indiriliyor -> EREGL.IS
+2026-05-24 08:41:23,572 - INFO - Teknik analiz icin veri indiriliyor -> ASELS.IS
+2026-05-24 08:41:23,704 - INFO - Auto-Analyst Islem Basarili -> Hisse: ASELS | Yon: AL | Fiyat: 410.75 | Miktar: 11.0 | Toplam: 4518.25 TL
+2026-05-24 08:41:23,704 - ERROR - Auto-Analyst Telegram gonderim hatasi: There is no current event loop in thread 'asyncio_0'.
+2026-05-24 08:41:24,205 - INFO - Teknik analiz icin veri indiriliyor -> YKBNK.IS
+2026-05-24 08:41:24,321 - INFO - Teknik analiz icin veri indiriliyor -> AKBNK.IS
+2026-05-24 08:41:24,436 - INFO - Teknik analiz icin veri indiriliyor -> TUPRS.IS
+2026-05-24 08:41:24,545 - INFO - Teknik analiz icin veri indiriliyor -> KCHOL.IS
+2026-05-24 08:41:24,656 - INFO - Teknik analiz icin veri indiriliyor -> SAHOL.IS
+2026-05-24 08:41:24,772 - INFO - Teknik analiz icin veri indiriliyor -> GARAN.IS
+2026-05-24 08:41:24,897 - INFO - Teknik analiz icin veri indiriliyor -> ISCTR.IS
+2026-05-24 08:41:25,032 - INFO - Teknik analiz icin veri indiriliyor -> BIMAS.IS
+2026-05-24 08:41:25,146 - INFO - Teknik analiz icin veri indiriliyor -> SISE.IS
+2026-05-24 08:41:25,258 - INFO - Teknik analiz icin veri indiriliyor -> PGSUS.IS
+2026-05-24 08:41:25,373 - INFO - Teknik analiz icin veri indiriliyor -> EKGYO.IS
+2026-05-24 08:41:25,483 - INFO - Teknik analiz icin veri indiriliyor -> TCELL.IS
+2026-05-24 08:41:25,596 - INFO - Tarama tamamlandı. Taranan: 15 | Sinyal: 1
+2026-05-24 08:43:12,680 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-24 08:43:13,013 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-24 08:43:13,013 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-05-24 08:43:13,250 - INFO - Fiyat basariyla guncellendi -> ASELS: 410.0 TL
+2026-05-24 08:44:16,202 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-24 08:44:16,203 - INFO - Periyodik BIST tarama motoru arka planda baslatildi.
+2026-05-24 08:44:37,434 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-24 08:44:37,435 - INFO - Periyodik BIST tarama motoru arka planda baslatildi.
+2026-05-24 08:45:11,691 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-24 08:45:12,512 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-24 08:45:12,512 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-05-24 08:45:12,757 - INFO - Fiyat basariyla guncellendi -> ASELS: 410.0 TL
+2026-05-24 08:51:11,668 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-24 08:51:12,013 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-24 08:51:12,013 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-05-24 08:51:12,281 - INFO - Fiyat basariyla guncellendi -> ASELS: 410.0 TL
+2026-05-24 08:57:11,679 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-24 08:57:12,042 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-24 08:57:12,042 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-05-24 08:57:12,330 - INFO - Fiyat basariyla guncellendi -> ASELS: 410.0 TL
+2026-05-24 09:02:11,684 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-24 09:02:11,988 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-24 09:03:11,679 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-05-24 09:03:11,924 - INFO - Fiyat basariyla guncellendi -> ASELS: 410.0 TL
+2026-05-24 09:07:11,685 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-24 09:07:11,999 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-24 09:08:54,962 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-05-24 09:08:55,348 - INFO - Fiyat basariyla guncellendi -> ASELS: 410.0 TL
+2026-05-24 09:11:00,109 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-24 09:11:00,110 - INFO - Periyodik BIST tarama motoru arka planda baslatildi.
+2026-05-24 09:11:02,689 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-24 09:11:04,294 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-24 09:11:04,294 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-05-24 09:11:04,545 - INFO - Fiyat basariyla guncellendi -> ASELS: 410.0 TL
+2026-05-24 09:50:30,884 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-24 09:50:30,885 - INFO - Periyodik BIST tarama motoru arka planda baslatildi.
+2026-05-24 09:50:56,249 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-24 09:50:57,053 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-24 09:50:57,053 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-05-24 09:50:57,304 - INFO - Fiyat basariyla guncellendi -> ASELS: 410.0 TL
+2026-05-24 09:51:02,061 - INFO - Manuel BIST taramasi tetiklendi...
+2026-05-24 09:51:02,062 - INFO - BIST 30 hisseleri taranıyor...
+2026-05-24 09:51:02,062 - INFO - Veri Terminali uzerinden canli derinlik ve islemler cekiliyor...
+2026-05-24 09:51:02,065 - INFO - Connecting to 149.154.167.91:443/TcpFull...
+2026-05-24 09:51:02,135 - INFO - Connection to 149.154.167.91:443/TcpFull complete!
+2026-05-24 09:51:02,948 - INFO - Disconnecting from 149.154.167.91:443/TcpFull...
+2026-05-24 09:51:02,948 - INFO - Disconnection from 149.154.167.91:443/TcpFull complete!
+2026-05-24 09:51:05,645 - INFO - Teknik analiz icin veri indiriliyor -> THYAO.IS
+2026-05-24 09:51:05,858 - INFO - Teknik analiz icin veri indiriliyor -> EREGL.IS
+2026-05-24 09:51:05,972 - INFO - Teknik analiz icin veri indiriliyor -> ASELS.IS
+2026-05-24 09:51:06,082 - INFO - Teknik analiz icin veri indiriliyor -> YKBNK.IS
+2026-05-24 09:51:06,200 - INFO - Teknik analiz icin veri indiriliyor -> AKBNK.IS
+2026-05-24 09:51:06,319 - INFO - Teknik analiz icin veri indiriliyor -> TUPRS.IS
+2026-05-24 09:51:06,435 - INFO - Teknik analiz icin veri indiriliyor -> KCHOL.IS
+2026-05-24 09:51:06,562 - INFO - Teknik analiz icin veri indiriliyor -> SAHOL.IS
+2026-05-24 09:51:06,671 - INFO - Teknik analiz icin veri indiriliyor -> GARAN.IS
+2026-05-24 09:51:06,792 - INFO - Teknik analiz icin veri indiriliyor -> ISCTR.IS
+2026-05-24 09:51:06,916 - INFO - Teknik analiz icin veri indiriliyor -> BIMAS.IS
+2026-05-24 09:51:07,078 - INFO - Teknik analiz icin veri indiriliyor -> SISE.IS
+2026-05-24 09:51:07,199 - INFO - Teknik analiz icin veri indiriliyor -> PGSUS.IS
+2026-05-24 09:51:07,320 - INFO - Teknik analiz icin veri indiriliyor -> EKGYO.IS
+2026-05-24 09:51:07,451 - INFO - Teknik analiz icin veri indiriliyor -> TCELL.IS
+2026-05-24 09:51:07,570 - INFO - Tarama tamamlandı. Taranan: 15 | Sinyal: 0
+2026-05-24 09:56:11,668 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-24 09:56:12,069 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-24 09:56:12,069 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-05-24 09:56:12,324 - INFO - Fiyat basariyla guncellendi -> ASELS: 410.0 TL
+2026-05-24 10:01:11,675 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-24 10:01:11,977 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-24 10:02:11,675 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-05-24 10:02:11,942 - INFO - Fiyat basariyla guncellendi -> ASELS: 410.0 TL
+2026-05-24 10:06:16,210 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-24 10:06:16,638 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-24 10:38:44,264 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-24 10:38:44,266 - INFO - Periyodik BIST tarama motoru arka planda baslatildi.
+2026-05-24 10:38:54,143 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-24 10:38:54,939 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-24 10:38:54,939 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-05-24 10:38:55,162 - INFO - Fiyat basariyla guncellendi -> ASELS: 410.0 TL
+2026-05-24 10:40:11,676 - INFO - Yahoo Finance'ten fiyat cekiliyor -> CUSAN.IS
+2026-05-24 10:40:12,127 - INFO - Fiyat basariyla guncellendi -> CUSAN: 23.899999618530273 TL
+2026-05-24 10:40:26,058 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-05-24 10:40:26,060 - INFO - Periyodik BIST tarama motoru arka planda baslatildi.
+2026-05-24 10:41:11,685 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-05-24 10:41:12,519 - INFO - Fiyat basariyla guncellendi -> KRONT: 17.780000686645508 TL
+2026-05-24 10:41:12,519 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-05-24 10:41:12,754 - INFO - Fiyat basariyla guncellendi -> ASELS: 410.0 TL
+2026-05-24 10:41:12,754 - INFO - Yahoo Finance'ten fiyat cekiliyor -> CUSAN.IS
+2026-05-24 10:41:12,960 - INFO - Fiyat basariyla guncellendi -> CUSAN: 23.899999618530273 TL
