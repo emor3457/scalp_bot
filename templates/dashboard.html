@@ -410,7 +410,7 @@
                     <i class="fa-solid fa-wallet"></i> Toplam Varlık Değeri (NAV)
                 </span>
                 <span class="metric-value" id="navVal">100,000.00 TL</span>
-                <span class="metric-subtext">Sanal Başlangıç Sermayesi: 100k TL</span>
+                <span class="metric-subtext">Sanal Başlangıç Sermayesi: 500k TL</span>
             </div>
             <div class="metric-card purple">
                 <span class="metric-label">
@@ -662,8 +662,8 @@
             document.getElementById('stockVal').innerText = `${stockVal.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL`;
 
             // Toplam Kar/Zarar
-            // Varsayilan ilk sermaye 100k TL
-            const initialCapital = 100000.0;
+            // Varsayilan ilk sermaye 500k TL
+            const initialCapital = 500000.0;
             const netProfit = totalNav - initialCapital;
             const profitPercent = (netProfit / initialCapital) * 100;
 
