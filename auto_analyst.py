@@ -12,9 +12,11 @@ logger = logging.getLogger("BistScalpBot")
 main_loop = None
 
 BIST30_TICKERS = [
-    "THYAO", "EREGL", "ASELS", "YKBNK", "AKBNK", 
-    "TUPRS", "KCHOL", "SAHOL", "GARAN", "ISCTR", 
-    "BIMAS", "SISE", "PGSUS", "EKGYO", "TCELL"
+    "THYAO", "EREGL", "ASELS", "YKBNK", "AKBNK", "TUPRS", "KCHOL", "SAHOL", "GARAN", "ISCTR",
+    "BIMAS", "SISE", "PGSUS", "EKGYO", "TCELL", "FROTO", "TOASO", "PETKM", "KOZAA", "KOZAL",
+    "TAVHL", "ENKAI", "SASA", "HEKTS", "GUBRF", "DOAS", "ODAS", "KRDMD", "VESTL", "ARCLK",
+    "ALARK", "ASTOR", "SMRTG", "ALFAS", "GESAN", "KMPUR", "ENJSA", "TTRAK", "YYLGD", "GWIND",
+    "TKFEN", "MGROS", "CCOLA", "AEFES", "SOKM", "OTKAR", "KORDS", "BRISA", "SELEC", "ALBRK"
 ]
 
 def calculate_indicators(df: pd.DataFrame) -> pd.DataFrame:
