@@ -5,7 +5,6 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 import database
-import veri_terminal
 
 logger = logging.getLogger("BistScalpBot")
 
@@ -63,17 +62,17 @@ def calculate_indicators(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
-def analyze_ticker(ticker: str, live_data: dict) -> dict:
+def analyze_ticker(ticker: str) -> dict:
     """
-    Belirli bir BIST hissesi icin yfinance (gecmis) ve veri_terminali (canli) 
-    verilerini harmanlayarak teknik + derinlik analizi yapar.
+    Belirli bir BIST hissesi icin yfinance verilerini (5 dakikalik) kullanarak 
+    salt teknik analiz yapar (Hacim patlamalari ve momentum).
     """
     yahoo_ticker = f"{ticker}.IS"
     try:
         logger.info(f"Teknik analiz icin veri indiriliyor -> {yahoo_ticker}")
         stock = yf.Ticker(yahoo_ticker)
-        # Scalp islemi icin 15 dakikalik veriler kullanalim
-        df = stock.history(period="5d", interval="15m")
+        # Scalp islemi icin 5 dakikalik kisa vade veriler kullanalim
+        df = stock.history(period="5d", interval="5m")
         
         if df.empty or len(df) < 50:
             logger.warning(f"{ticker} icin yetersiz veri (Satir sayisi: {len(df)})")
@@ -98,19 +97,6 @@ def analyze_ticker(ticker: str, live_data: dict) -> dict:
         # Gecmis indikator degerleri (crossover tespiti icin)
         prev_macd, prev_macd_sig = float(prev['MACD']), float(prev['MACD_Signal'])
         prev_rsi = float(prev['RSI'])
-
-        # Canli veri analizi
-        live_price = live_data.get('price')
-        if live_price and live_price > 0:
-            close = live_price  # Yfinance yerine canli fiyati kullan
-            volume = live_data.get('volume', volume)
-            
-        ob = veri_terminal.analyze_order_book(live_data.get('depth', {}))
-        tf = veri_terminal.analyze_trade_flow(live_data.get('trades', []))
-        
-        pressure = ob.get('pressure', 'NEUTRAL')
-        bid_ratio = ob.get('bid_ratio', 50.0)
-        flow = tf.get('flow', 'NEUTRAL')
 
         # Temel durum analizleri
         is_bullish_trend = close > ema50 and ema9 > ema21
@@ -150,9 +136,10 @@ def analyze_ticker(ticker: str, live_data: dict) -> dict:
         quantity = 0.0
 
         # ALIM KARARI (BUY)
-        # Teknik sinyaller + Canli Derinlik/Islem Akiş Teyidi
+        # Teknik sinyaller (Volume Spikes + Momentum)
         is_technical_buy = is_bullish_trend and (macd_crossed_above or rsi_crossed_above_30 or (touches_lower and rsi < 40))
-        is_flow_buy = (pressure == 'BUY' or flow == 'BUY' or bid_ratio >= 60.0)
+        # Hacim patlamasi ve para girisi teyidi
+        is_flow_buy = vol_ratio >= 1.5 and rsi > 50  # Hacim ortalamanin 1.5 kati ve RSI 50 uzeri momentumlu
         
         if is_technical_buy and is_flow_buy:
             action = "AL"
@@ -164,25 +151,22 @@ def analyze_ticker(ticker: str, live_data: dict) -> dict:
             
             if quantity >= 1.0:
                 reasoning = (
-                    f"Dostlar, #{ticker} senedinde teknik formasyon canli tahta verisiyle teyit edildi. "
+                    f"Dostlar, #{ticker} senedinde 5 dakikalık grafikte ani Hacim Patlaması tespit edildi. "
                     f"Fiyat, EMA 50 ({ema50:.2f} TL) üzerinde ve MACD pozitif. "
-                    f"Canlı Derinlik: Alıcı baskısı %{bid_ratio:.1f} seviyesinde ({pressure}). "
-                    f"Kurumsal İşlem Akışı: {flow} yönlü para girişi görülüyor. "
-                    f"Bu seviyelerden scalp yönlü pozisyon açmak son derece makuldür."
+                    f"Hacim: Ortalamanın %{vol_pct:.0f} üzerinde. RSI: {rsi:.1f}. "
+                    f"Kısa vadeli para girişi tespit edildiği için bu seviyelerden scalp yönlü pozisyon açmak makuldür."
                 )
             else:
                 action = "HOLD"
                 reasoning = f"#{ticker} için AL sinyali var ancak bakiye yetersiz."
 
         # SATIM KARARI (SELL)
-        elif held_qty > 0 and (is_bearish_trend or macd_crossed_below or rsi_crossed_below_70 or touches_upper or pressure == 'SELL'):
+        elif held_qty > 0 and (is_bearish_trend or macd_crossed_below or rsi_crossed_below_70 or touches_upper):
             action = "SAT"
             quantity = held_qty
             
             trigger_reason = ""
-            if pressure == 'SELL':
-                trigger_reason = f"Canlı Emir Defterinde Satıcı baskısı (%{100-bid_ratio:.1f}) arttı."
-            elif macd_crossed_below:
+            if macd_crossed_below:
                 trigger_reason = "MACD tetik çizgisini tepede aşağı kesti."
             elif rsi_crossed_below_70:
                 trigger_reason = f"RSI {rsi:.1f} seviyesinde asiri alim bolgesinden geri cekildi."
@@ -218,23 +202,14 @@ def scan_all_and_report() -> dict:
     Tum BIST 30 secili hisselerini tarar ve bir analiz ozet raporu doner.
     Al/Sat sinyali olusan hisseleri veritabanina ve simulyasyona iletir.
     """
-    logger.info("BIST 30 hisseleri taranıyor...")
+    logger.info("Hisseler taranıyor...")
     results = []
     signals_sent = []
     
     start_time = time.time()
     
-    # Canli veri_terminal'inden toplu veriyi alalim (asenkron fonksiyonu senkron cagiriyoruz)
-    logger.info("Veri Terminali uzerinden canli derinlik ve islemler cekiliyor...")
-    try:
-        live_data_dict = asyncio.run(veri_terminal.fetch_bulk_stock_data(BIST30_TICKERS, timeout=8))
-    except Exception as e:
-        logger.error(f"Veri Terminali baglanti hatasi: {e}")
-        live_data_dict = {}
-    
     for ticker in BIST30_TICKERS:
-        live_data = live_data_dict.get(ticker, {})
-        analysis = analyze_ticker(ticker, live_data)
+        analysis = analyze_ticker(ticker)
         results.append(analysis)
         
         # Sinyal olustuysa dogrudan simule et/kaydet
