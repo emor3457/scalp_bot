@@ -62,7 +62,7 @@ def init_db():
     # Baslangic bakiyesi "TRY" tanimlama (eger yoksa)
     cursor.execute("SELECT * FROM portfolio WHERE ticker = 'TRY'")
     if not cursor.fetchone():
-        cursor.execute("INSERT INTO portfolio (ticker, quantity, average_cost) VALUES ('TRY', 100000.0, 1.0)")
+        cursor.execute("INSERT INTO portfolio (ticker, quantity, average_cost) VALUES ('TRY', 500000.0, 1.0)")
         
     conn.commit()
     conn.close()
