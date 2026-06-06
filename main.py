@@ -40,8 +40,9 @@ async def periodic_scan_loop():
         try:
             import datetime
             now = datetime.datetime.now()
-            # Hafta ici mi ve borsa acik mi kontrol et (Pazartesi=0, Cuma=4, 10:00 - 18:00)
-            if now.weekday() < 5 and (10 <= now.hour < 18):
+            # Hafta ici mi ve borsa acik mi kontrol et (Pazartesi=0, Cuma=4)
+            # Google Cloud sunucusu UTC (0) saat dilimindedir. Turkiye saati (UTC+3) ile 10:00-18:00 arasi UTC 07:00-15:00'e denk gelir.
+            if now.weekday() < 5 and (7 <= now.hour < 15):
                 logger.info("Periyodik BIST taramasi baslatiliyor...")
                 await asyncio.to_thread(auto_analyst.scan_all_and_report)
             else:
