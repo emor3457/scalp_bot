@@ -200,14 +200,16 @@ async def receive_webhook(
     alert: WebhookAlert, 
     request: Request, 
     background_tasks: BackgroundTasks,
-    x_webhook_token: str = Header(None, alias="X-Webhook-Token")
+    x_webhook_token: str = Header(None, alias="X-Webhook-Token"),
+    token: str = None
 ):
     client_host = request.client.host if request.client else "unknown"
     logger.info(f"Webhook istegi alindi. Kaynak IP: {client_host}")
     
-    # Token dogrulamasi
+    # Token dogrulamasi (Header veya Query Parametresi)
     webhook_secret = os.getenv("WEBHOOK_SECRET_TOKEN", "").strip()
-    if webhook_secret and x_webhook_token != webhook_secret:
+    provided_token = x_webhook_token or token
+    if webhook_secret and provided_token != webhook_secret:
         logger.warning(f"Yetkisiz webhook istegi engellendi. Kaynak IP: {client_host}")
         raise HTTPException(status_code=401, detail="Yetkisiz erisim. Gecersiz token.")
 

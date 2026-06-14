@@ -103,6 +103,11 @@ def run_tests():
     status, res = send_request(f"{base_url}/webhook", al_data, 'POST', extra_headers=yetkisiz_headers)
     print(f"Durum: {status} (Beklenen: 401) | Yanit: {json.dumps(res, indent=2)}\n")
 
+    print("=== 10. GUVENLIK TESTI: URL QUERY PARAMETRESI ILE TOKEN (TradingView Uyumu) ===")
+    status, res = send_request(f"{base_url}/webhook?token={token}", al_data, 'POST')
+    print(f"Durum: {status} (Beklenen: 200) | Yanit: {json.dumps(res, indent=2)}\n")
+
 if __name__ == "__main__":
     run_tests()
+
 
