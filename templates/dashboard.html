@@ -14,17 +14,17 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-color: #0b0f19;
-            --card-bg: rgba(17, 25, 40, 0.65);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --text-primary: #f3f4f6;
-            --text-secondary: #9ca3af;
-            --accent-blue: #3b82f6;
-            --accent-purple: #8b5cf6;
+            --bg-color: #050505;
+            --card-bg: rgba(10, 15, 20, 0.7);
+            --card-border: rgba(16, 185, 129, 0.15);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-purple: #818cf8;
             --accent-green: #10b981;
-            --accent-red: #ef4444;
-            --glow-blue: rgba(59, 130, 246, 0.15);
-            --glow-purple: rgba(139, 92, 246, 0.15);
+            --accent-red: #f87171;
+            --glow-blue: rgba(56, 189, 248, 0.12);
+            --glow-green: rgba(16, 185, 129, 0.12);
         }
 
         * {
@@ -41,8 +41,8 @@
             min-height: 100vh;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 40%);
+                radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.08) 0%, transparent 45%);
             background-attachment: fixed;
         }
 
@@ -70,10 +70,10 @@
 
         .logo-icon {
             font-size: 2.2rem;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 8px rgba(59, 130, 246, 0.4));
+            filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.4));
         }
 
         h1 {
@@ -229,7 +229,7 @@
         }
 
         .card-title i {
-            color: var(--accent-blue);
+            color: var(--accent-green);
         }
 
         /* Portfolio Visualization Section */
