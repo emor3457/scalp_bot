@@ -593,3 +593,889 @@ NotImplementedError
 2026-05-24 10:41:12,754 - INFO - Fiyat basariyla guncellendi -> ASELS: 410.0 TL
 2026-05-24 10:41:12,754 - INFO - Yahoo Finance'ten fiyat cekiliyor -> CUSAN.IS
 2026-05-24 10:41:12,960 - INFO - Fiyat basariyla guncellendi -> CUSAN: 23.899999618530273 TL
+2026-06-14 15:34:42,152 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-06-14 15:34:42,161 - INFO - Periyodik BIST tarama motoru arka planda baslatildi.
+2026-06-14 15:34:46,684 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-06-14 15:34:48,184 - INFO - Fiyat basariyla guncellendi -> KRONT: 20.420000076293945 TL
+2026-06-14 15:34:48,184 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-06-14 15:34:48,623 - INFO - Fiyat basariyla guncellendi -> ASELS: 371.25 TL
+2026-06-14 15:34:48,623 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BASGZ.IS
+2026-06-14 15:34:49,219 - INFO - Fiyat basariyla guncellendi -> BASGZ: 49.20000076293945 TL
+2026-06-14 15:34:49,219 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BULGS.IS
+2026-06-14 15:34:49,863 - INFO - Fiyat basariyla guncellendi -> BULGS: 40.060001373291016 TL
+2026-06-14 15:34:49,863 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ZGYO.IS
+2026-06-14 15:34:50,563 - INFO - Fiyat basariyla guncellendi -> ZGYO: 40.099998474121094 TL
+2026-06-14 15:34:50,563 - INFO - Yahoo Finance'ten fiyat cekiliyor -> YAYLA.IS
+2026-06-14 15:34:51,147 - INFO - Fiyat basariyla guncellendi -> YAYLA: 22.780000686645508 TL
+2026-06-14 15:34:51,148 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TUKAS.IS
+2026-06-14 15:34:51,802 - INFO - Fiyat basariyla guncellendi -> TUKAS: 2.369999885559082 TL
+2026-06-14 15:34:51,802 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ALFAS.IS
+2026-06-14 15:34:52,399 - INFO - Fiyat basariyla guncellendi -> ALFAS: 58.400001525878906 TL
+2026-06-14 15:34:52,399 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AKSGY.IS
+2026-06-14 15:34:53,098 - INFO - Fiyat basariyla guncellendi -> AKSGY: 9.119999885559082 TL
+2026-06-14 15:34:53,098 - INFO - Yahoo Finance'ten fiyat cekiliyor -> SOKE.IS
+2026-06-14 15:34:53,762 - INFO - Fiyat basariyla guncellendi -> SOKE: 15.329999923706055 TL
+2026-06-14 15:34:53,762 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BEGYO.IS
+2026-06-14 15:34:54,352 - INFO - Fiyat basariyla guncellendi -> BEGYO: 4.079999923706055 TL
+2026-06-14 15:34:54,352 - INFO - Yahoo Finance'ten fiyat cekiliyor -> CUSAN.IS
+2026-06-14 15:34:54,959 - INFO - Fiyat basariyla guncellendi -> CUSAN: 24.100000381469727 TL
+2026-06-14 15:34:54,959 - INFO - Yahoo Finance'ten fiyat cekiliyor -> GEDZA.IS
+2026-06-14 15:34:55,563 - INFO - Fiyat basariyla guncellendi -> GEDZA: 33.70000076293945 TL
+2026-06-14 15:34:55,563 - INFO - Yahoo Finance'ten fiyat cekiliyor -> LMKDC.IS
+2026-06-14 15:34:56,164 - INFO - Fiyat basariyla guncellendi -> LMKDC: 28.360000610351562 TL
+2026-06-14 15:34:56,164 - INFO - Yahoo Finance'ten fiyat cekiliyor -> LYDYE.IS
+2026-06-14 15:34:56,745 - INFO - Fiyat basariyla guncellendi -> LYDYE: 13752.5 TL
+2026-06-14 15:34:56,745 - INFO - Yahoo Finance'ten fiyat cekiliyor -> DEVA.IS
+2026-06-14 15:34:57,369 - INFO - Fiyat basariyla guncellendi -> DEVA: 65.05000305175781 TL
+2026-06-14 15:34:57,369 - INFO - Yahoo Finance'ten fiyat cekiliyor -> COSMO.IS
+2026-06-14 15:34:58,176 - INFO - Fiyat basariyla guncellendi -> COSMO: 154.0 TL
+2026-06-14 15:34:58,176 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ZRGYO.IS
+2026-06-14 15:34:58,773 - INFO - Fiyat basariyla guncellendi -> ZRGYO: 16.600000381469727 TL
+2026-06-14 15:34:58,773 - INFO - Yahoo Finance'ten fiyat cekiliyor -> REEDR.IS
+2026-06-14 15:34:59,424 - INFO - Fiyat basariyla guncellendi -> REEDR: 7.829999923706055 TL
+2026-06-14 15:34:59,425 - INFO - Yahoo Finance'ten fiyat cekiliyor -> DNISI.IS
+2026-06-14 15:35:00,030 - INFO - Fiyat basariyla guncellendi -> DNISI: 20.979999542236328 TL
+2026-06-14 15:35:00,030 - INFO - Yahoo Finance'ten fiyat cekiliyor -> MEPET.IS
+2026-06-14 15:35:00,622 - INFO - Fiyat basariyla guncellendi -> MEPET: 29.1200008392334 TL
+2026-06-14 15:35:00,622 - INFO - Yahoo Finance'ten fiyat cekiliyor -> PETUN.IS
+2026-06-14 15:35:01,339 - INFO - Fiyat basariyla guncellendi -> PETUN: 12.119999885559082 TL
+2026-06-14 15:35:01,339 - INFO - Yahoo Finance'ten fiyat cekiliyor -> SKYMD.IS
+2026-06-14 15:35:01,985 - INFO - Fiyat basariyla guncellendi -> SKYMD: 13.430000305175781 TL
+2026-06-14 15:35:01,985 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AKCNS.IS
+2026-06-14 15:35:02,434 - INFO - Fiyat basariyla guncellendi -> AKCNS: 217.10000610351562 TL
+2026-06-14 15:35:02,434 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TUCLK.IS
+2026-06-14 15:35:03,044 - INFO - Fiyat basariyla guncellendi -> TUCLK: 4.179999828338623 TL
+2026-06-14 15:35:03,044 - INFO - Yahoo Finance'ten fiyat cekiliyor -> GATEG.IS
+2026-06-14 15:35:03,627 - INFO - Fiyat basariyla guncellendi -> GATEG: 297.75 TL
+2026-06-14 15:35:03,628 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ECOGR.IS
+2026-06-14 15:35:04,263 - INFO - Fiyat basariyla guncellendi -> ECOGR: 37.86000061035156 TL
+2026-06-14 15:35:04,263 - INFO - Yahoo Finance'ten fiyat cekiliyor -> PRKME.IS
+2026-06-14 15:35:04,951 - INFO - Fiyat basariyla guncellendi -> PRKME: 17.260000228881836 TL
+2026-06-14 15:35:04,951 - INFO - Yahoo Finance'ten fiyat cekiliyor -> DERHL.IS
+2026-06-14 15:35:05,554 - INFO - Fiyat basariyla guncellendi -> DERHL: 13.25 TL
+2026-06-14 15:35:05,555 - INFO - Yahoo Finance'ten fiyat cekiliyor -> RUBNS.IS
+2026-06-14 15:35:06,150 - INFO - Fiyat basariyla guncellendi -> RUBNS: 27.540000915527344 TL
+2026-06-14 15:35:06,150 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ERSU.IS
+2026-06-14 15:35:06,758 - INFO - Fiyat basariyla guncellendi -> ERSU: 27.700000762939453 TL
+2026-06-14 15:35:06,758 - INFO - Yahoo Finance'ten fiyat cekiliyor -> PSDTC.IS
+2026-06-14 15:35:07,454 - INFO - Fiyat basariyla guncellendi -> PSDTC: 119.4000015258789 TL
+2026-06-14 15:35:07,454 - INFO - Yahoo Finance'ten fiyat cekiliyor -> INVEO.IS
+2026-06-14 15:35:08,054 - INFO - Fiyat basariyla guncellendi -> INVEO: 7.989999771118164 TL
+2026-06-14 15:35:08,055 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AVHOL.IS
+2026-06-14 15:35:08,718 - INFO - Fiyat basariyla guncellendi -> AVHOL: 49.099998474121094 TL
+2026-06-14 15:35:08,719 - INFO - Yahoo Finance'ten fiyat cekiliyor -> EBEBK.IS
+2026-06-14 15:35:09,333 - INFO - Fiyat basariyla guncellendi -> EBEBK: 85.4000015258789 TL
+2026-06-14 15:35:09,333 - INFO - Yahoo Finance'ten fiyat cekiliyor -> HURGZ.IS
+2026-06-14 15:35:09,947 - INFO - Fiyat basariyla guncellendi -> HURGZ: 7.0 TL
+2026-06-14 15:35:09,947 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BANVT.IS
+2026-06-14 15:35:10,618 - INFO - Fiyat basariyla guncellendi -> BANVT: 151.5 TL
+2026-06-14 15:35:10,618 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ARZUM.IS
+2026-06-14 15:35:11,267 - INFO - Fiyat basariyla guncellendi -> ARZUM: 2.190000057220459 TL
+2026-06-14 15:35:11,267 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ENSRI.IS
+2026-06-14 15:35:11,868 - INFO - Fiyat basariyla guncellendi -> ENSRI: 10.399999618530273 TL
+2026-06-14 15:35:11,868 - INFO - Yahoo Finance'ten fiyat cekiliyor -> EKGYO.IS
+2026-06-14 15:35:12,299 - INFO - Fiyat basariyla guncellendi -> EKGYO: 19.90999984741211 TL
+2026-06-14 15:35:12,299 - INFO - Yahoo Finance'ten fiyat cekiliyor -> SERNT.IS
+2026-06-14 15:35:12,908 - INFO - Fiyat basariyla guncellendi -> SERNT: 9.1899995803833 TL
+2026-06-14 15:35:12,908 - INFO - Yahoo Finance'ten fiyat cekiliyor -> OZATD.IS
+2026-06-14 15:35:13,517 - INFO - Fiyat basariyla guncellendi -> OZATD: 1614.0 TL
+2026-06-14 15:35:13,517 - INFO - Yahoo Finance'ten fiyat cekiliyor -> GEREL.IS
+2026-06-14 15:35:14,174 - INFO - Fiyat basariyla guncellendi -> GEREL: 39.20000076293945 TL
+2026-06-14 15:35:14,174 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TERA.IS
+2026-06-14 15:35:14,783 - INFO - Fiyat basariyla guncellendi -> TERA: 217.5 TL
+2026-06-14 15:35:14,783 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TGSAS.IS
+2026-06-14 15:35:15,675 - INFO - Fiyat basariyla guncellendi -> TGSAS: 173.0 TL
+2026-06-14 15:35:15,675 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRTEK.IS
+2026-06-14 15:35:16,289 - INFO - Fiyat basariyla guncellendi -> KRTEK: 23.299999237060547 TL
+2026-06-14 15:35:16,289 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BIGEN.IS
+2026-06-14 15:35:16,944 - INFO - Fiyat basariyla guncellendi -> BIGEN: 54.099998474121094 TL
+2026-06-14 15:35:16,944 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ISBTR.IS
+2026-06-14 15:35:17,678 - INFO - Fiyat basariyla guncellendi -> ISBTR: 419915.0 TL
+2026-06-14 15:35:17,678 - INFO - Yahoo Finance'ten fiyat cekiliyor -> CCOLA.IS
+2026-06-14 15:35:18,111 - INFO - Fiyat basariyla guncellendi -> CCOLA: 82.5 TL
+2026-06-14 15:35:18,111 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BARMA.IS
+2026-06-14 15:35:18,713 - INFO - Fiyat basariyla guncellendi -> BARMA: 73.0999984741211 TL
+2026-06-14 15:35:18,713 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BMSCH.IS
+2026-06-14 15:35:19,326 - INFO - Fiyat basariyla guncellendi -> BMSCH: 16.280000686645508 TL
+2026-06-14 15:35:19,326 - INFO - Yahoo Finance'ten fiyat cekiliyor -> EKOS.IS
+2026-06-14 15:35:19,923 - INFO - Fiyat basariyla guncellendi -> EKOS: 7.449999809265137 TL
+2026-06-14 15:35:19,923 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ALKA.IS
+2026-06-14 15:35:20,613 - INFO - Fiyat basariyla guncellendi -> ALKA: 9.550000190734863 TL
+2026-06-14 15:35:20,613 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KZGYO.IS
+2026-06-14 15:35:21,204 - INFO - Fiyat basariyla guncellendi -> KZGYO: 23.459999084472656 TL
+2026-06-14 15:35:21,204 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ENKAI.IS
+2026-06-14 15:35:21,637 - INFO - Fiyat basariyla guncellendi -> ENKAI: 93.0 TL
+2026-06-14 15:35:21,637 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ALARK.IS
+2026-06-14 15:35:22,067 - INFO - Fiyat basariyla guncellendi -> ALARK: 107.0 TL
+2026-06-14 15:35:22,067 - INFO - Yahoo Finance'ten fiyat cekiliyor -> VESBE.IS
+2026-06-14 15:35:22,510 - INFO - Fiyat basariyla guncellendi -> VESBE: 6.269999980926514 TL
+2026-06-14 15:35:22,510 - INFO - Yahoo Finance'ten fiyat cekiliyor -> MARKA.IS
+2026-06-14 15:35:23,230 - INFO - Fiyat basariyla guncellendi -> MARKA: 70.80000305175781 TL
+2026-06-14 15:35:23,230 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TATGD.IS
+2026-06-14 15:35:23,860 - INFO - Fiyat basariyla guncellendi -> TATGD: 19.450000762939453 TL
+2026-06-14 15:35:23,860 - INFO - Yahoo Finance'ten fiyat cekiliyor -> GESAN.IS
+2026-06-14 15:35:24,271 - INFO - Fiyat basariyla guncellendi -> GESAN: 85.75 TL
+2026-06-14 15:35:24,272 - INFO - Yahoo Finance'ten fiyat cekiliyor -> UFUK.IS
+2026-06-14 15:35:24,908 - INFO - Fiyat basariyla guncellendi -> UFUK: 1300.0 TL
+2026-06-14 15:35:24,908 - INFO - Yahoo Finance'ten fiyat cekiliyor -> LINK.IS
+2026-06-14 15:35:25,510 - INFO - Fiyat basariyla guncellendi -> LINK: 7.400000095367432 TL
+2026-06-14 15:35:25,510 - INFO - Yahoo Finance'ten fiyat cekiliyor -> MGROS.IS
+2026-06-14 15:35:25,924 - INFO - Fiyat basariyla guncellendi -> MGROS: 672.5 TL
+2026-06-14 15:35:25,924 - INFO - Yahoo Finance'ten fiyat cekiliyor -> MNDRS.IS
+2026-06-14 15:35:26,544 - INFO - Fiyat basariyla guncellendi -> MNDRS: 11.390000343322754 TL
+2026-06-14 15:35:26,544 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ANSGR.IS
+2026-06-14 15:35:27,338 - INFO - Fiyat basariyla guncellendi -> ANSGR: 27.920000076293945 TL
+2026-06-14 15:35:27,338 - INFO - Yahoo Finance'ten fiyat cekiliyor -> FONET.IS
+2026-06-14 15:35:28,100 - INFO - Fiyat basariyla guncellendi -> FONET: 5.369999885559082 TL
+2026-06-14 15:35:28,100 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KOPOL.IS
+2026-06-14 15:35:29,016 - INFO - Fiyat basariyla guncellendi -> KOPOL: 6.150000095367432 TL
+2026-06-14 15:35:29,016 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TRENJ.IS
+2026-06-14 15:35:29,908 - INFO - Fiyat basariyla guncellendi -> TRENJ: 83.55000305175781 TL
+2026-06-14 15:35:29,908 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KTLEV.IS
+2026-06-14 15:35:30,862 - INFO - Fiyat basariyla guncellendi -> KTLEV: 172.39999389648438 TL
+2026-06-14 15:35:30,862 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AKSEN.IS
+2026-06-14 15:35:31,260 - INFO - Fiyat basariyla guncellendi -> AKSEN: 79.8499984741211 TL
+2026-06-14 15:35:31,261 - INFO - Yahoo Finance'ten fiyat cekiliyor -> INDES.IS
+2026-06-14 15:35:31,915 - INFO - Fiyat basariyla guncellendi -> INDES: 11.25 TL
+2026-06-14 15:35:31,915 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AKSUE.IS
+2026-06-14 15:35:32,522 - INFO - Fiyat basariyla guncellendi -> AKSUE: 36.91999816894531 TL
+2026-06-14 15:35:32,522 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TEHOL.IS
+2026-06-14 15:35:33,123 - INFO - Fiyat basariyla guncellendi -> TEHOL: 32.400001525878906 TL
+2026-06-14 15:35:33,123 - INFO - Yahoo Finance'ten fiyat cekiliyor -> DYOBY.IS
+2026-06-14 15:35:33,715 - INFO - Fiyat basariyla guncellendi -> DYOBY: 14.920000076293945 TL
+2026-06-14 15:35:33,715 - INFO - Yahoo Finance'ten fiyat cekiliyor -> GZNMI.IS
+2026-06-14 15:35:34,302 - INFO - Fiyat basariyla guncellendi -> GZNMI: 68.8499984741211 TL
+2026-06-14 15:35:34,302 - INFO - Yahoo Finance'ten fiyat cekiliyor -> PAGYO.IS
+2026-06-14 15:35:34,925 - INFO - Fiyat basariyla guncellendi -> PAGYO: 132.3000030517578 TL
+2026-06-14 15:35:34,925 - INFO - Yahoo Finance'ten fiyat cekiliyor -> INTEK.IS
+2026-06-14 15:35:35,517 - INFO - Fiyat basariyla guncellendi -> INTEK: 227.0 TL
+2026-06-14 15:35:35,517 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AVOD.IS
+2026-06-14 15:35:36,103 - INFO - Fiyat basariyla guncellendi -> AVOD: 4.360000133514404 TL
+2026-06-14 15:35:36,103 - INFO - Yahoo Finance'ten fiyat cekiliyor -> DCTTR.IS
+2026-06-14 15:35:36,714 - INFO - Fiyat basariyla guncellendi -> DCTTR: 12.0 TL
+2026-06-14 15:35:36,714 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KLSER.IS
+2026-06-14 15:35:37,302 - INFO - Fiyat basariyla guncellendi -> KLSER: 28.200000762939453 TL
+2026-06-14 15:35:37,303 - INFO - Yahoo Finance'ten fiyat cekiliyor -> HLGYO.IS
+2026-06-14 15:35:37,971 - INFO - Fiyat basariyla guncellendi -> HLGYO: 6.289999961853027 TL
+2026-06-14 15:35:37,971 - INFO - Yahoo Finance'ten fiyat cekiliyor -> HEDEF.IS
+2026-06-14 15:35:38,558 - INFO - Fiyat basariyla guncellendi -> HEDEF: 115.0 TL
+2026-06-14 15:35:38,558 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TRMET.IS
+2026-06-14 15:35:39,836 - INFO - Fiyat basariyla guncellendi -> TRMET: 106.4000015258789 TL
+2026-06-14 15:35:39,836 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KOCMT.IS
+2026-06-14 15:35:40,481 - INFO - Fiyat basariyla guncellendi -> KOCMT: 2.5199999809265137 TL
+2026-06-14 15:35:40,481 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ESEN.IS
+2026-06-14 15:35:41,082 - INFO - Fiyat basariyla guncellendi -> ESEN: 3.740000009536743 TL
+2026-06-14 15:35:41,084 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AKSA.IS
+2026-06-14 15:35:41,515 - INFO - Fiyat basariyla guncellendi -> AKSA: 11.119999885559082 TL
+2026-06-14 15:35:41,515 - INFO - Yahoo Finance'ten fiyat cekiliyor -> PINSU.IS
+2026-06-14 15:35:42,125 - INFO - Fiyat basariyla guncellendi -> PINSU: 11.1899995803833 TL
+2026-06-14 15:35:42,125 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRDMB.IS
+2026-06-14 15:35:42,808 - INFO - Fiyat basariyla guncellendi -> KRDMB: 111.80000305175781 TL
+2026-06-14 15:35:42,808 - INFO - Yahoo Finance'ten fiyat cekiliyor -> FZLGY.IS
+2026-06-14 15:35:43,421 - INFO - Fiyat basariyla guncellendi -> FZLGY: 17.950000762939453 TL
+2026-06-14 15:35:43,421 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TKFEN.IS
+2026-06-14 15:35:43,903 - INFO - Fiyat basariyla guncellendi -> TKFEN: 139.0 TL
+2026-06-14 15:35:43,903 - INFO - Yahoo Finance'ten fiyat cekiliyor -> SEYKM.IS
+2026-06-14 15:35:44,516 - INFO - Fiyat basariyla guncellendi -> SEYKM: 4.619999885559082 TL
+2026-06-14 15:35:44,516 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TTRAK.IS
+2026-06-14 15:35:45,144 - INFO - Fiyat basariyla guncellendi -> TTRAK: 441.25 TL
+2026-06-14 15:35:45,144 - INFO - Yahoo Finance'ten fiyat cekiliyor -> DGGYO.IS
+2026-06-14 15:35:45,847 - INFO - Fiyat basariyla guncellendi -> DGGYO: 31.399999618530273 TL
+2026-06-14 15:35:45,847 - INFO - Yahoo Finance'ten fiyat cekiliyor -> CVKMD.IS
+2026-06-14 15:35:46,506 - INFO - Fiyat basariyla guncellendi -> CVKMD: 40.220001220703125 TL
+2026-06-14 15:35:46,506 - INFO - Yahoo Finance'ten fiyat cekiliyor -> SISE.IS
+2026-06-14 15:35:46,963 - INFO - Fiyat basariyla guncellendi -> SISE: 44.7599983215332 TL
+2026-06-14 15:35:46,963 - INFO - Yahoo Finance'ten fiyat cekiliyor -> VBTYZ.IS
+2026-06-14 15:35:47,564 - INFO - Fiyat basariyla guncellendi -> VBTYZ: 32.2400016784668 TL
+2026-06-14 15:35:47,564 - INFO - Yahoo Finance'ten fiyat cekiliyor -> HKTM.IS
+2026-06-14 15:35:48,156 - INFO - Fiyat basariyla guncellendi -> HKTM: 13.760000228881836 TL
+2026-06-14 15:35:48,157 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AGYO.IS
+2026-06-14 15:35:48,787 - INFO - Fiyat basariyla guncellendi -> AGYO: 8.699999809265137 TL
+2026-06-14 15:35:48,787 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ULUUN.IS
+2026-06-14 15:35:49,398 - INFO - Fiyat basariyla guncellendi -> ULUUN: 8.270000457763672 TL
+2026-06-14 15:35:49,398 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ORMA.IS
+2026-06-14 15:35:50,042 - INFO - Fiyat basariyla guncellendi -> ORMA: 198.5 TL
+2026-06-14 15:35:50,042 - INFO - Yahoo Finance'ten fiyat cekiliyor -> RYSAS.IS
+2026-06-14 15:35:50,645 - INFO - Fiyat basariyla guncellendi -> RYSAS: 25.079999923706055 TL
+2026-06-14 15:35:50,645 - INFO - Yahoo Finance'ten fiyat cekiliyor -> LIDER.IS
+2026-06-14 15:35:51,433 - INFO - Fiyat basariyla guncellendi -> LIDER: 108.9000015258789 TL
+2026-06-14 15:35:51,444 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 15:35:51,464 - INFO - Islem Basarili (Simule) -> Hisse: KRONT | Yon: AL | Fiyat: 75.0 | Miktar: 100.0 | Toplam: 7500.0 TL
+2026-06-14 15:35:51,464 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-06-14 15:35:51,518 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 15:35:51,533 - INFO - Islem Basarili (Simule) -> Hisse: KRONT | Yon: SAT | Fiyat: 80.0 | Miktar: 50.0 | Toplam: 4000.0 TL
+2026-06-14 15:35:51,534 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-06-14 15:35:51,549 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 15:35:51,565 - WARNING - Bakiye yetersiz! Gerekli: 200000.0 TL, Mevcut: 39641.29000000008 TL. Islem iptal edildi.
+2026-06-14 15:35:51,569 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 15:35:51,579 - WARNING - Hisse miktari yetersiz! Satilmak istenen: 10.0, Mevcut: 0.0. Islem iptal edildi.
+2026-06-14 15:35:51,583 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 15:35:51,584 - WARNING - Yetkisiz webhook istegi engellendi. Kaynak IP: 127.0.0.1
+2026-06-14 15:35:51,895 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 15:35:51,946 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 15:35:51,984 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 15:35:52,051 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 15:36:45,572 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-06-14 15:36:45,575 - INFO - Periyodik BIST tarama motoru arka planda baslatildi.
+2026-06-14 15:36:50,575 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-06-14 15:36:51,812 - INFO - Fiyat basariyla guncellendi -> KRONT: 20.420000076293945 TL
+2026-06-14 15:36:51,812 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-06-14 15:36:52,123 - INFO - Fiyat basariyla guncellendi -> ASELS: 371.25 TL
+2026-06-14 15:36:52,123 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BASGZ.IS
+2026-06-14 15:36:52,360 - INFO - Fiyat basariyla guncellendi -> BASGZ: 49.20000076293945 TL
+2026-06-14 15:36:52,360 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BULGS.IS
+2026-06-14 15:36:52,701 - INFO - Fiyat basariyla guncellendi -> BULGS: 40.060001373291016 TL
+2026-06-14 15:36:52,701 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ZGYO.IS
+2026-06-14 15:36:52,930 - INFO - Fiyat basariyla guncellendi -> ZGYO: 40.099998474121094 TL
+2026-06-14 15:36:52,931 - INFO - Yahoo Finance'ten fiyat cekiliyor -> YAYLA.IS
+2026-06-14 15:36:53,158 - INFO - Fiyat basariyla guncellendi -> YAYLA: 22.780000686645508 TL
+2026-06-14 15:36:53,158 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TUKAS.IS
+2026-06-14 15:36:53,439 - INFO - Fiyat basariyla guncellendi -> TUKAS: 2.369999885559082 TL
+2026-06-14 15:36:53,439 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ALFAS.IS
+2026-06-14 15:36:53,668 - INFO - Fiyat basariyla guncellendi -> ALFAS: 58.400001525878906 TL
+2026-06-14 15:36:53,668 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AKSGY.IS
+2026-06-14 15:36:53,911 - INFO - Fiyat basariyla guncellendi -> AKSGY: 9.119999885559082 TL
+2026-06-14 15:36:53,911 - INFO - Yahoo Finance'ten fiyat cekiliyor -> SOKE.IS
+2026-06-14 15:36:54,203 - INFO - Fiyat basariyla guncellendi -> SOKE: 15.329999923706055 TL
+2026-06-14 15:36:54,203 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BEGYO.IS
+2026-06-14 15:36:54,493 - INFO - Fiyat basariyla guncellendi -> BEGYO: 4.079999923706055 TL
+2026-06-14 15:36:54,493 - INFO - Yahoo Finance'ten fiyat cekiliyor -> CUSAN.IS
+2026-06-14 15:36:54,727 - INFO - Fiyat basariyla guncellendi -> CUSAN: 24.100000381469727 TL
+2026-06-14 15:36:54,727 - INFO - Yahoo Finance'ten fiyat cekiliyor -> GEDZA.IS
+2026-06-14 15:36:54,966 - INFO - Fiyat basariyla guncellendi -> GEDZA: 33.70000076293945 TL
+2026-06-14 15:36:54,966 - INFO - Yahoo Finance'ten fiyat cekiliyor -> LMKDC.IS
+2026-06-14 15:36:55,204 - INFO - Fiyat basariyla guncellendi -> LMKDC: 28.360000610351562 TL
+2026-06-14 15:36:55,204 - INFO - Yahoo Finance'ten fiyat cekiliyor -> LYDYE.IS
+2026-06-14 15:36:55,458 - INFO - Fiyat basariyla guncellendi -> LYDYE: 13752.5 TL
+2026-06-14 15:36:55,458 - INFO - Yahoo Finance'ten fiyat cekiliyor -> DEVA.IS
+2026-06-14 15:36:55,773 - INFO - Fiyat basariyla guncellendi -> DEVA: 65.05000305175781 TL
+2026-06-14 15:36:55,775 - INFO - Yahoo Finance'ten fiyat cekiliyor -> COSMO.IS
+2026-06-14 15:36:56,056 - INFO - Fiyat basariyla guncellendi -> COSMO: 154.0 TL
+2026-06-14 15:36:56,056 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ZRGYO.IS
+2026-06-14 15:36:56,295 - INFO - Fiyat basariyla guncellendi -> ZRGYO: 16.600000381469727 TL
+2026-06-14 15:36:56,295 - INFO - Yahoo Finance'ten fiyat cekiliyor -> REEDR.IS
+2026-06-14 15:36:56,519 - INFO - Fiyat basariyla guncellendi -> REEDR: 7.829999923706055 TL
+2026-06-14 15:36:56,519 - INFO - Yahoo Finance'ten fiyat cekiliyor -> DNISI.IS
+2026-06-14 15:36:56,747 - INFO - Fiyat basariyla guncellendi -> DNISI: 20.979999542236328 TL
+2026-06-14 15:36:56,747 - INFO - Yahoo Finance'ten fiyat cekiliyor -> MEPET.IS
+2026-06-14 15:36:56,978 - INFO - Fiyat basariyla guncellendi -> MEPET: 29.1200008392334 TL
+2026-06-14 15:36:56,978 - INFO - Yahoo Finance'ten fiyat cekiliyor -> PETUN.IS
+2026-06-14 15:36:57,238 - INFO - Fiyat basariyla guncellendi -> PETUN: 12.119999885559082 TL
+2026-06-14 15:36:57,238 - INFO - Yahoo Finance'ten fiyat cekiliyor -> SKYMD.IS
+2026-06-14 15:36:57,471 - INFO - Fiyat basariyla guncellendi -> SKYMD: 13.430000305175781 TL
+2026-06-14 15:36:57,471 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AKCNS.IS
+2026-06-14 15:36:57,720 - INFO - Fiyat basariyla guncellendi -> AKCNS: 217.10000610351562 TL
+2026-06-14 15:36:57,720 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TUCLK.IS
+2026-06-14 15:36:57,948 - INFO - Fiyat basariyla guncellendi -> TUCLK: 4.179999828338623 TL
+2026-06-14 15:36:57,948 - INFO - Yahoo Finance'ten fiyat cekiliyor -> GATEG.IS
+2026-06-14 15:36:58,167 - INFO - Fiyat basariyla guncellendi -> GATEG: 297.75 TL
+2026-06-14 15:36:58,167 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ECOGR.IS
+2026-06-14 15:36:58,389 - INFO - Fiyat basariyla guncellendi -> ECOGR: 37.86000061035156 TL
+2026-06-14 15:36:58,389 - INFO - Yahoo Finance'ten fiyat cekiliyor -> PRKME.IS
+2026-06-14 15:36:58,647 - INFO - Fiyat basariyla guncellendi -> PRKME: 17.260000228881836 TL
+2026-06-14 15:36:58,647 - INFO - Yahoo Finance'ten fiyat cekiliyor -> DERHL.IS
+2026-06-14 15:36:58,873 - INFO - Fiyat basariyla guncellendi -> DERHL: 13.25 TL
+2026-06-14 15:36:58,873 - INFO - Yahoo Finance'ten fiyat cekiliyor -> RUBNS.IS
+2026-06-14 15:36:59,108 - INFO - Fiyat basariyla guncellendi -> RUBNS: 27.540000915527344 TL
+2026-06-14 15:36:59,110 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ERSU.IS
+2026-06-14 15:36:59,338 - INFO - Fiyat basariyla guncellendi -> ERSU: 27.700000762939453 TL
+2026-06-14 15:36:59,338 - INFO - Yahoo Finance'ten fiyat cekiliyor -> PSDTC.IS
+2026-06-14 15:36:59,581 - INFO - Fiyat basariyla guncellendi -> PSDTC: 119.4000015258789 TL
+2026-06-14 15:36:59,581 - INFO - Yahoo Finance'ten fiyat cekiliyor -> INVEO.IS
+2026-06-14 15:36:59,823 - INFO - Fiyat basariyla guncellendi -> INVEO: 7.989999771118164 TL
+2026-06-14 15:36:59,823 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AVHOL.IS
+2026-06-14 15:37:00,059 - INFO - Fiyat basariyla guncellendi -> AVHOL: 49.099998474121094 TL
+2026-06-14 15:37:00,060 - INFO - Yahoo Finance'ten fiyat cekiliyor -> EBEBK.IS
+2026-06-14 15:37:00,302 - INFO - Fiyat basariyla guncellendi -> EBEBK: 85.4000015258789 TL
+2026-06-14 15:37:00,302 - INFO - Yahoo Finance'ten fiyat cekiliyor -> HURGZ.IS
+2026-06-14 15:37:00,531 - INFO - Fiyat basariyla guncellendi -> HURGZ: 7.0 TL
+2026-06-14 15:37:00,532 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BANVT.IS
+2026-06-14 15:37:00,775 - INFO - Fiyat basariyla guncellendi -> BANVT: 151.5 TL
+2026-06-14 15:37:00,775 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ARZUM.IS
+2026-06-14 15:37:01,010 - INFO - Fiyat basariyla guncellendi -> ARZUM: 2.190000057220459 TL
+2026-06-14 15:37:01,010 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ENSRI.IS
+2026-06-14 15:37:01,240 - INFO - Fiyat basariyla guncellendi -> ENSRI: 10.399999618530273 TL
+2026-06-14 15:37:01,240 - INFO - Yahoo Finance'ten fiyat cekiliyor -> EKGYO.IS
+2026-06-14 15:37:01,498 - INFO - Fiyat basariyla guncellendi -> EKGYO: 19.90999984741211 TL
+2026-06-14 15:37:01,498 - INFO - Yahoo Finance'ten fiyat cekiliyor -> SERNT.IS
+2026-06-14 15:37:01,844 - INFO - Fiyat basariyla guncellendi -> SERNT: 9.1899995803833 TL
+2026-06-14 15:37:01,844 - INFO - Yahoo Finance'ten fiyat cekiliyor -> OZATD.IS
+2026-06-14 15:37:02,107 - INFO - Fiyat basariyla guncellendi -> OZATD: 1614.0 TL
+2026-06-14 15:37:02,107 - INFO - Yahoo Finance'ten fiyat cekiliyor -> GEREL.IS
+2026-06-14 15:37:02,332 - INFO - Fiyat basariyla guncellendi -> GEREL: 39.20000076293945 TL
+2026-06-14 15:37:02,332 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TERA.IS
+2026-06-14 15:37:02,576 - INFO - Fiyat basariyla guncellendi -> TERA: 217.5 TL
+2026-06-14 15:37:02,576 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TGSAS.IS
+2026-06-14 15:37:02,811 - INFO - Fiyat basariyla guncellendi -> TGSAS: 173.0 TL
+2026-06-14 15:37:02,811 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRTEK.IS
+2026-06-14 15:37:03,038 - INFO - Fiyat basariyla guncellendi -> KRTEK: 23.299999237060547 TL
+2026-06-14 15:37:03,038 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BIGEN.IS
+2026-06-14 15:37:03,258 - INFO - Fiyat basariyla guncellendi -> BIGEN: 54.099998474121094 TL
+2026-06-14 15:37:03,258 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ISBTR.IS
+2026-06-14 15:37:03,507 - INFO - Fiyat basariyla guncellendi -> ISBTR: 419915.0 TL
+2026-06-14 15:37:03,507 - INFO - Yahoo Finance'ten fiyat cekiliyor -> CCOLA.IS
+2026-06-14 15:37:03,788 - INFO - Fiyat basariyla guncellendi -> CCOLA: 82.5 TL
+2026-06-14 15:37:03,788 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BARMA.IS
+2026-06-14 15:37:04,305 - INFO - Fiyat basariyla guncellendi -> BARMA: 73.0999984741211 TL
+2026-06-14 15:37:04,305 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BMSCH.IS
+2026-06-14 15:37:04,534 - INFO - Fiyat basariyla guncellendi -> BMSCH: 16.280000686645508 TL
+2026-06-14 15:37:04,534 - INFO - Yahoo Finance'ten fiyat cekiliyor -> EKOS.IS
+2026-06-14 15:37:04,760 - INFO - Fiyat basariyla guncellendi -> EKOS: 7.449999809265137 TL
+2026-06-14 15:37:04,760 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ALKA.IS
+2026-06-14 15:37:04,997 - INFO - Fiyat basariyla guncellendi -> ALKA: 9.550000190734863 TL
+2026-06-14 15:37:04,998 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KZGYO.IS
+2026-06-14 15:37:05,217 - INFO - Fiyat basariyla guncellendi -> KZGYO: 23.459999084472656 TL
+2026-06-14 15:37:05,218 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ENKAI.IS
+2026-06-14 15:37:05,528 - INFO - Fiyat basariyla guncellendi -> ENKAI: 93.0 TL
+2026-06-14 15:37:05,530 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ALARK.IS
+2026-06-14 15:37:05,778 - INFO - Fiyat basariyla guncellendi -> ALARK: 107.0 TL
+2026-06-14 15:37:05,778 - INFO - Yahoo Finance'ten fiyat cekiliyor -> VESBE.IS
+2026-06-14 15:37:06,020 - INFO - Fiyat basariyla guncellendi -> VESBE: 6.269999980926514 TL
+2026-06-14 15:37:06,021 - INFO - Yahoo Finance'ten fiyat cekiliyor -> MARKA.IS
+2026-06-14 15:37:06,261 - INFO - Fiyat basariyla guncellendi -> MARKA: 70.80000305175781 TL
+2026-06-14 15:37:06,261 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TATGD.IS
+2026-06-14 15:37:06,559 - INFO - Fiyat basariyla guncellendi -> TATGD: 19.450000762939453 TL
+2026-06-14 15:37:06,559 - INFO - Yahoo Finance'ten fiyat cekiliyor -> GESAN.IS
+2026-06-14 15:37:06,785 - INFO - Fiyat basariyla guncellendi -> GESAN: 85.75 TL
+2026-06-14 15:37:06,785 - INFO - Yahoo Finance'ten fiyat cekiliyor -> UFUK.IS
+2026-06-14 15:37:07,023 - INFO - Fiyat basariyla guncellendi -> UFUK: 1300.0 TL
+2026-06-14 15:37:07,023 - INFO - Yahoo Finance'ten fiyat cekiliyor -> LINK.IS
+2026-06-14 15:37:07,327 - INFO - Fiyat basariyla guncellendi -> LINK: 7.400000095367432 TL
+2026-06-14 15:37:07,327 - INFO - Yahoo Finance'ten fiyat cekiliyor -> MGROS.IS
+2026-06-14 15:37:07,581 - INFO - Fiyat basariyla guncellendi -> MGROS: 672.5 TL
+2026-06-14 15:37:07,582 - INFO - Yahoo Finance'ten fiyat cekiliyor -> MNDRS.IS
+2026-06-14 15:37:07,827 - INFO - Fiyat basariyla guncellendi -> MNDRS: 11.390000343322754 TL
+2026-06-14 15:37:07,827 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ANSGR.IS
+2026-06-14 15:37:08,152 - INFO - Fiyat basariyla guncellendi -> ANSGR: 27.920000076293945 TL
+2026-06-14 15:37:08,152 - INFO - Yahoo Finance'ten fiyat cekiliyor -> FONET.IS
+2026-06-14 15:37:08,385 - INFO - Fiyat basariyla guncellendi -> FONET: 5.369999885559082 TL
+2026-06-14 15:37:08,385 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KOPOL.IS
+2026-06-14 15:37:08,628 - INFO - Fiyat basariyla guncellendi -> KOPOL: 6.150000095367432 TL
+2026-06-14 15:37:08,630 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TRENJ.IS
+2026-06-14 15:37:08,857 - INFO - Fiyat basariyla guncellendi -> TRENJ: 83.55000305175781 TL
+2026-06-14 15:37:08,857 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KTLEV.IS
+2026-06-14 15:37:09,090 - INFO - Fiyat basariyla guncellendi -> KTLEV: 172.39999389648438 TL
+2026-06-14 15:37:09,090 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AKSEN.IS
+2026-06-14 15:37:09,400 - INFO - Fiyat basariyla guncellendi -> AKSEN: 79.8499984741211 TL
+2026-06-14 15:37:09,400 - INFO - Yahoo Finance'ten fiyat cekiliyor -> INDES.IS
+2026-06-14 15:37:09,670 - INFO - Fiyat basariyla guncellendi -> INDES: 11.25 TL
+2026-06-14 15:37:09,670 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AKSUE.IS
+2026-06-14 15:37:09,920 - INFO - Fiyat basariyla guncellendi -> AKSUE: 36.91999816894531 TL
+2026-06-14 15:37:09,921 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TEHOL.IS
+2026-06-14 15:37:10,146 - INFO - Fiyat basariyla guncellendi -> TEHOL: 32.400001525878906 TL
+2026-06-14 15:37:10,146 - INFO - Yahoo Finance'ten fiyat cekiliyor -> DYOBY.IS
+2026-06-14 15:37:10,371 - INFO - Fiyat basariyla guncellendi -> DYOBY: 14.920000076293945 TL
+2026-06-14 15:37:10,371 - INFO - Yahoo Finance'ten fiyat cekiliyor -> GZNMI.IS
+2026-06-14 15:37:10,597 - INFO - Fiyat basariyla guncellendi -> GZNMI: 68.8499984741211 TL
+2026-06-14 15:37:10,597 - INFO - Yahoo Finance'ten fiyat cekiliyor -> PAGYO.IS
+2026-06-14 15:37:11,089 - INFO - Fiyat basariyla guncellendi -> PAGYO: 132.3000030517578 TL
+2026-06-14 15:37:11,089 - INFO - Yahoo Finance'ten fiyat cekiliyor -> INTEK.IS
+2026-06-14 15:37:11,341 - INFO - Fiyat basariyla guncellendi -> INTEK: 227.0 TL
+2026-06-14 15:37:11,341 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AVOD.IS
+2026-06-14 15:37:11,592 - INFO - Fiyat basariyla guncellendi -> AVOD: 4.360000133514404 TL
+2026-06-14 15:37:11,592 - INFO - Yahoo Finance'ten fiyat cekiliyor -> DCTTR.IS
+2026-06-14 15:37:11,879 - INFO - Fiyat basariyla guncellendi -> DCTTR: 12.0 TL
+2026-06-14 15:37:11,879 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KLSER.IS
+2026-06-14 15:37:12,130 - INFO - Fiyat basariyla guncellendi -> KLSER: 28.200000762939453 TL
+2026-06-14 15:37:12,130 - INFO - Yahoo Finance'ten fiyat cekiliyor -> HLGYO.IS
+2026-06-14 15:37:12,368 - INFO - Fiyat basariyla guncellendi -> HLGYO: 6.289999961853027 TL
+2026-06-14 15:37:12,368 - INFO - Yahoo Finance'ten fiyat cekiliyor -> HEDEF.IS
+2026-06-14 15:37:12,648 - INFO - Fiyat basariyla guncellendi -> HEDEF: 115.0 TL
+2026-06-14 15:37:12,648 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TRMET.IS
+2026-06-14 15:37:12,878 - INFO - Fiyat basariyla guncellendi -> TRMET: 106.4000015258789 TL
+2026-06-14 15:37:12,878 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KOCMT.IS
+2026-06-14 15:37:13,111 - INFO - Fiyat basariyla guncellendi -> KOCMT: 2.5199999809265137 TL
+2026-06-14 15:37:13,111 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ESEN.IS
+2026-06-14 15:37:13,334 - INFO - Fiyat basariyla guncellendi -> ESEN: 3.740000009536743 TL
+2026-06-14 15:37:13,334 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AKSA.IS
+2026-06-14 15:37:13,584 - INFO - Fiyat basariyla guncellendi -> AKSA: 11.119999885559082 TL
+2026-06-14 15:37:13,584 - INFO - Yahoo Finance'ten fiyat cekiliyor -> PINSU.IS
+2026-06-14 15:37:13,888 - INFO - Fiyat basariyla guncellendi -> PINSU: 11.1899995803833 TL
+2026-06-14 15:37:13,888 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRDMB.IS
+2026-06-14 15:37:14,130 - INFO - Fiyat basariyla guncellendi -> KRDMB: 111.80000305175781 TL
+2026-06-14 15:37:14,130 - INFO - Yahoo Finance'ten fiyat cekiliyor -> FZLGY.IS
+2026-06-14 15:37:14,360 - INFO - Fiyat basariyla guncellendi -> FZLGY: 17.950000762939453 TL
+2026-06-14 15:37:14,360 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TKFEN.IS
+2026-06-14 15:37:14,621 - INFO - Fiyat basariyla guncellendi -> TKFEN: 139.0 TL
+2026-06-14 15:37:14,621 - INFO - Yahoo Finance'ten fiyat cekiliyor -> SEYKM.IS
+2026-06-14 15:37:14,848 - INFO - Fiyat basariyla guncellendi -> SEYKM: 4.619999885559082 TL
+2026-06-14 15:37:14,848 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TTRAK.IS
+2026-06-14 15:37:15,149 - INFO - Fiyat basariyla guncellendi -> TTRAK: 441.25 TL
+2026-06-14 15:37:15,149 - INFO - Yahoo Finance'ten fiyat cekiliyor -> DGGYO.IS
+2026-06-14 15:37:15,379 - INFO - Fiyat basariyla guncellendi -> DGGYO: 31.399999618530273 TL
+2026-06-14 15:37:15,379 - INFO - Yahoo Finance'ten fiyat cekiliyor -> CVKMD.IS
+2026-06-14 15:37:15,616 - INFO - Fiyat basariyla guncellendi -> CVKMD: 40.220001220703125 TL
+2026-06-14 15:37:15,616 - INFO - Yahoo Finance'ten fiyat cekiliyor -> SISE.IS
+2026-06-14 15:37:15,893 - INFO - Fiyat basariyla guncellendi -> SISE: 44.7599983215332 TL
+2026-06-14 15:37:15,893 - INFO - Yahoo Finance'ten fiyat cekiliyor -> VBTYZ.IS
+2026-06-14 15:37:16,121 - INFO - Fiyat basariyla guncellendi -> VBTYZ: 32.2400016784668 TL
+2026-06-14 15:37:16,121 - INFO - Yahoo Finance'ten fiyat cekiliyor -> HKTM.IS
+2026-06-14 15:37:16,347 - INFO - Fiyat basariyla guncellendi -> HKTM: 13.760000228881836 TL
+2026-06-14 15:37:16,347 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AGYO.IS
+2026-06-14 15:37:16,670 - INFO - Fiyat basariyla guncellendi -> AGYO: 8.699999809265137 TL
+2026-06-14 15:37:16,670 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ULUUN.IS
+2026-06-14 15:37:16,914 - INFO - Fiyat basariyla guncellendi -> ULUUN: 8.270000457763672 TL
+2026-06-14 15:37:16,914 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ORMA.IS
+2026-06-14 15:37:17,195 - INFO - Fiyat basariyla guncellendi -> ORMA: 198.5 TL
+2026-06-14 15:37:17,195 - INFO - Yahoo Finance'ten fiyat cekiliyor -> RYSAS.IS
+2026-06-14 15:37:17,424 - INFO - Fiyat basariyla guncellendi -> RYSAS: 25.079999923706055 TL
+2026-06-14 15:37:17,424 - INFO - Yahoo Finance'ten fiyat cekiliyor -> LIDER.IS
+2026-06-14 15:37:17,723 - INFO - Fiyat basariyla guncellendi -> LIDER: 108.9000015258789 TL
+2026-06-14 15:37:17,733 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 15:37:17,749 - INFO - Islem Basarili (Simule) -> Hisse: KRONT | Yon: AL | Fiyat: 75.0 | Miktar: 100.0 | Toplam: 7500.0 TL
+2026-06-14 15:37:18,004 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 15:37:18,004 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-06-14 15:37:18,027 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 15:37:18,043 - INFO - Islem Basarili (Simule) -> Hisse: KRONT | Yon: SAT | Fiyat: 80.0 | Miktar: 50.0 | Toplam: 4000.0 TL
+2026-06-14 15:37:18,277 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 15:37:18,277 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-06-14 15:37:18,289 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 15:37:18,297 - WARNING - Bakiye yetersiz! Gerekli: 200000.0 TL, Mevcut: 36141.29000000008 TL. Islem iptal edildi.
+2026-06-14 15:37:18,537 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 15:37:18,540 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 15:37:18,549 - WARNING - Hisse miktari yetersiz! Satilmak istenen: 10.0, Mevcut: 0.0. Islem iptal edildi.
+2026-06-14 15:37:23,768 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 15:37:23,772 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 15:37:23,772 - WARNING - Yetkisiz webhook istegi engellendi. Kaynak IP: 127.0.0.1
+2026-06-14 15:38:30,715 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-06-14 15:38:30,717 - INFO - Periyodik BIST tarama motoru arka planda baslatildi.
+2026-06-14 15:38:45,938 - ERROR - Portfoy okunurken ve degerlenirken hata: threads can only be started once
+2026-06-14 15:38:45,941 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 15:38:45,954 - INFO - Islem Basarili (Simule) -> Hisse: KRONT | Yon: AL | Fiyat: 75.0 | Miktar: 100.0 | Toplam: 7500.0 TL
+2026-06-14 15:38:46,211 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 15:38:46,211 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-06-14 15:38:46,217 - ERROR - Portfoy okunurken ve degerlenirken hata: threads can only be started once
+2026-06-14 15:38:46,220 - ERROR - Islem gecmisi okunurken hata: threads can only be started once
+2026-06-14 15:38:46,223 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 15:38:46,239 - INFO - Islem Basarili (Simule) -> Hisse: KRONT | Yon: SAT | Fiyat: 80.0 | Miktar: 50.0 | Toplam: 4000.0 TL
+2026-06-14 15:38:46,472 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 15:38:46,473 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-06-14 15:38:46,478 - ERROR - Portfoy okunurken ve degerlenirken hata: threads can only be started once
+2026-06-14 15:38:46,480 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 15:38:46,491 - WARNING - Bakiye yetersiz! Gerekli: 200000.0 TL, Mevcut: 32641.29000000008 TL. Islem iptal edildi.
+2026-06-14 15:38:46,728 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 15:38:46,732 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 15:38:46,745 - WARNING - Hisse miktari yetersiz! Satilmak istenen: 10.0, Mevcut: 0.0. Islem iptal edildi.
+2026-06-14 15:38:46,968 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 15:38:46,972 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 15:38:46,972 - WARNING - Yetkisiz webhook istegi engellendi. Kaynak IP: 127.0.0.1
+2026-06-14 16:18:37,970 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-06-14 16:18:37,980 - INFO - Periyodik BIST tarama motoru arka planda baslatildi.
+2026-06-14 16:18:42,894 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRONT.IS
+2026-06-14 16:18:44,107 - INFO - Fiyat basariyla guncellendi -> KRONT: 20.420000076293945 TL
+2026-06-14 16:18:44,107 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ASELS.IS
+2026-06-14 16:18:44,342 - INFO - Fiyat basariyla guncellendi -> ASELS: 371.25 TL
+2026-06-14 16:18:44,342 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BASGZ.IS
+2026-06-14 16:18:44,593 - INFO - Fiyat basariyla guncellendi -> BASGZ: 49.20000076293945 TL
+2026-06-14 16:18:44,593 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BULGS.IS
+2026-06-14 16:18:44,817 - INFO - Fiyat basariyla guncellendi -> BULGS: 40.060001373291016 TL
+2026-06-14 16:18:44,817 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ZGYO.IS
+2026-06-14 16:18:45,043 - INFO - Fiyat basariyla guncellendi -> ZGYO: 40.099998474121094 TL
+2026-06-14 16:18:45,043 - INFO - Yahoo Finance'ten fiyat cekiliyor -> YAYLA.IS
+2026-06-14 16:18:45,275 - INFO - Fiyat basariyla guncellendi -> YAYLA: 22.780000686645508 TL
+2026-06-14 16:18:45,275 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TUKAS.IS
+2026-06-14 16:18:45,668 - INFO - Fiyat basariyla guncellendi -> TUKAS: 2.369999885559082 TL
+2026-06-14 16:18:45,669 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ALFAS.IS
+2026-06-14 16:18:46,057 - INFO - Fiyat basariyla guncellendi -> ALFAS: 58.400001525878906 TL
+2026-06-14 16:18:46,057 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AKSGY.IS
+2026-06-14 16:18:46,307 - INFO - Fiyat basariyla guncellendi -> AKSGY: 9.119999885559082 TL
+2026-06-14 16:18:46,307 - INFO - Yahoo Finance'ten fiyat cekiliyor -> SOKE.IS
+2026-06-14 16:18:46,608 - INFO - Fiyat basariyla guncellendi -> SOKE: 15.329999923706055 TL
+2026-06-14 16:18:46,608 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BEGYO.IS
+2026-06-14 16:18:46,832 - INFO - Fiyat basariyla guncellendi -> BEGYO: 4.079999923706055 TL
+2026-06-14 16:18:46,832 - INFO - Yahoo Finance'ten fiyat cekiliyor -> CUSAN.IS
+2026-06-14 16:18:47,046 - INFO - Fiyat basariyla guncellendi -> CUSAN: 24.100000381469727 TL
+2026-06-14 16:18:47,046 - INFO - Yahoo Finance'ten fiyat cekiliyor -> GEDZA.IS
+2026-06-14 16:18:47,265 - INFO - Fiyat basariyla guncellendi -> GEDZA: 33.70000076293945 TL
+2026-06-14 16:18:47,265 - INFO - Yahoo Finance'ten fiyat cekiliyor -> LMKDC.IS
+2026-06-14 16:18:47,580 - INFO - Fiyat basariyla guncellendi -> LMKDC: 28.360000610351562 TL
+2026-06-14 16:18:47,580 - INFO - Yahoo Finance'ten fiyat cekiliyor -> LYDYE.IS
+2026-06-14 16:18:47,852 - INFO - Fiyat basariyla guncellendi -> LYDYE: 13752.5 TL
+2026-06-14 16:18:47,852 - INFO - Yahoo Finance'ten fiyat cekiliyor -> DEVA.IS
+2026-06-14 16:18:48,104 - INFO - Fiyat basariyla guncellendi -> DEVA: 65.05000305175781 TL
+2026-06-14 16:18:48,104 - INFO - Yahoo Finance'ten fiyat cekiliyor -> COSMO.IS
+2026-06-14 16:18:48,330 - INFO - Fiyat basariyla guncellendi -> COSMO: 154.0 TL
+2026-06-14 16:18:48,330 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ZRGYO.IS
+2026-06-14 16:18:48,557 - INFO - Fiyat basariyla guncellendi -> ZRGYO: 16.600000381469727 TL
+2026-06-14 16:18:48,557 - INFO - Yahoo Finance'ten fiyat cekiliyor -> REEDR.IS
+2026-06-14 16:18:49,240 - INFO - Fiyat basariyla guncellendi -> REEDR: 7.829999923706055 TL
+2026-06-14 16:18:49,240 - INFO - Yahoo Finance'ten fiyat cekiliyor -> DNISI.IS
+2026-06-14 16:18:49,590 - INFO - Fiyat basariyla guncellendi -> DNISI: 20.979999542236328 TL
+2026-06-14 16:18:49,590 - INFO - Yahoo Finance'ten fiyat cekiliyor -> MEPET.IS
+2026-06-14 16:18:49,985 - INFO - Fiyat basariyla guncellendi -> MEPET: 29.1200008392334 TL
+2026-06-14 16:18:49,985 - INFO - Yahoo Finance'ten fiyat cekiliyor -> PETUN.IS
+2026-06-14 16:18:50,240 - INFO - Fiyat basariyla guncellendi -> PETUN: 12.119999885559082 TL
+2026-06-14 16:18:50,240 - INFO - Yahoo Finance'ten fiyat cekiliyor -> SKYMD.IS
+2026-06-14 16:18:50,638 - INFO - Fiyat basariyla guncellendi -> SKYMD: 13.430000305175781 TL
+2026-06-14 16:18:50,638 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AKCNS.IS
+2026-06-14 16:18:50,887 - INFO - Fiyat basariyla guncellendi -> AKCNS: 217.10000610351562 TL
+2026-06-14 16:18:50,887 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TUCLK.IS
+2026-06-14 16:18:51,313 - INFO - Fiyat basariyla guncellendi -> TUCLK: 4.179999828338623 TL
+2026-06-14 16:18:51,313 - INFO - Yahoo Finance'ten fiyat cekiliyor -> GATEG.IS
+2026-06-14 16:18:51,525 - INFO - Fiyat basariyla guncellendi -> GATEG: 297.75 TL
+2026-06-14 16:18:51,525 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ECOGR.IS
+2026-06-14 16:18:51,982 - INFO - Fiyat basariyla guncellendi -> ECOGR: 37.86000061035156 TL
+2026-06-14 16:18:51,982 - INFO - Yahoo Finance'ten fiyat cekiliyor -> PRKME.IS
+2026-06-14 16:18:52,280 - INFO - Fiyat basariyla guncellendi -> PRKME: 17.260000228881836 TL
+2026-06-14 16:18:52,280 - INFO - Yahoo Finance'ten fiyat cekiliyor -> DERHL.IS
+2026-06-14 16:18:52,724 - INFO - Fiyat basariyla guncellendi -> DERHL: 13.25 TL
+2026-06-14 16:18:52,726 - INFO - Yahoo Finance'ten fiyat cekiliyor -> RUBNS.IS
+2026-06-14 16:18:52,946 - INFO - Fiyat basariyla guncellendi -> RUBNS: 27.540000915527344 TL
+2026-06-14 16:18:52,946 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ERSU.IS
+2026-06-14 16:18:53,392 - INFO - Fiyat basariyla guncellendi -> ERSU: 27.700000762939453 TL
+2026-06-14 16:18:53,392 - INFO - Yahoo Finance'ten fiyat cekiliyor -> PSDTC.IS
+2026-06-14 16:18:53,793 - INFO - Fiyat basariyla guncellendi -> PSDTC: 119.4000015258789 TL
+2026-06-14 16:18:53,793 - INFO - Yahoo Finance'ten fiyat cekiliyor -> INVEO.IS
+2026-06-14 16:18:54,030 - INFO - Fiyat basariyla guncellendi -> INVEO: 7.989999771118164 TL
+2026-06-14 16:18:54,030 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AVHOL.IS
+2026-06-14 16:18:54,797 - INFO - Fiyat basariyla guncellendi -> AVHOL: 49.099998474121094 TL
+2026-06-14 16:18:54,797 - INFO - Yahoo Finance'ten fiyat cekiliyor -> EBEBK.IS
+2026-06-14 16:18:55,016 - INFO - Fiyat basariyla guncellendi -> EBEBK: 85.4000015258789 TL
+2026-06-14 16:18:55,016 - INFO - Yahoo Finance'ten fiyat cekiliyor -> HURGZ.IS
+2026-06-14 16:18:55,417 - INFO - Fiyat basariyla guncellendi -> HURGZ: 7.0 TL
+2026-06-14 16:18:55,417 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BANVT.IS
+2026-06-14 16:18:55,647 - INFO - Fiyat basariyla guncellendi -> BANVT: 151.5 TL
+2026-06-14 16:18:55,647 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ARZUM.IS
+2026-06-14 16:18:56,050 - INFO - Fiyat basariyla guncellendi -> ARZUM: 2.190000057220459 TL
+2026-06-14 16:18:56,055 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ENSRI.IS
+2026-06-14 16:18:56,307 - INFO - Fiyat basariyla guncellendi -> ENSRI: 10.399999618530273 TL
+2026-06-14 16:18:56,307 - INFO - Yahoo Finance'ten fiyat cekiliyor -> EKGYO.IS
+2026-06-14 16:18:56,729 - INFO - Fiyat basariyla guncellendi -> EKGYO: 19.90999984741211 TL
+2026-06-14 16:18:56,729 - INFO - Yahoo Finance'ten fiyat cekiliyor -> SERNT.IS
+2026-06-14 16:18:57,057 - INFO - Fiyat basariyla guncellendi -> SERNT: 9.1899995803833 TL
+2026-06-14 16:18:57,057 - INFO - Yahoo Finance'ten fiyat cekiliyor -> OZATD.IS
+2026-06-14 16:18:57,458 - INFO - Fiyat basariyla guncellendi -> OZATD: 1614.0 TL
+2026-06-14 16:18:57,458 - INFO - Yahoo Finance'ten fiyat cekiliyor -> GEREL.IS
+2026-06-14 16:18:57,693 - INFO - Fiyat basariyla guncellendi -> GEREL: 39.20000076293945 TL
+2026-06-14 16:18:57,693 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TERA.IS
+2026-06-14 16:18:58,085 - INFO - Fiyat basariyla guncellendi -> TERA: 217.5 TL
+2026-06-14 16:18:58,085 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TGSAS.IS
+2026-06-14 16:18:58,345 - INFO - Fiyat basariyla guncellendi -> TGSAS: 173.0 TL
+2026-06-14 16:18:58,345 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRTEK.IS
+2026-06-14 16:18:58,809 - INFO - Fiyat basariyla guncellendi -> KRTEK: 23.299999237060547 TL
+2026-06-14 16:18:58,809 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BIGEN.IS
+2026-06-14 16:18:59,074 - INFO - Fiyat basariyla guncellendi -> BIGEN: 54.099998474121094 TL
+2026-06-14 16:18:59,074 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ISBTR.IS
+2026-06-14 16:18:59,492 - INFO - Fiyat basariyla guncellendi -> ISBTR: 419915.0 TL
+2026-06-14 16:18:59,492 - INFO - Yahoo Finance'ten fiyat cekiliyor -> CCOLA.IS
+2026-06-14 16:18:59,746 - INFO - Fiyat basariyla guncellendi -> CCOLA: 82.5 TL
+2026-06-14 16:18:59,746 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BARMA.IS
+2026-06-14 16:19:00,174 - INFO - Fiyat basariyla guncellendi -> BARMA: 73.0999984741211 TL
+2026-06-14 16:19:00,174 - INFO - Yahoo Finance'ten fiyat cekiliyor -> BMSCH.IS
+2026-06-14 16:19:00,393 - INFO - Fiyat basariyla guncellendi -> BMSCH: 16.280000686645508 TL
+2026-06-14 16:19:00,393 - INFO - Yahoo Finance'ten fiyat cekiliyor -> EKOS.IS
+2026-06-14 16:19:00,804 - INFO - Fiyat basariyla guncellendi -> EKOS: 7.449999809265137 TL
+2026-06-14 16:19:00,804 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ALKA.IS
+2026-06-14 16:19:01,104 - INFO - Fiyat basariyla guncellendi -> ALKA: 9.550000190734863 TL
+2026-06-14 16:19:01,104 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KZGYO.IS
+2026-06-14 16:19:01,501 - INFO - Fiyat basariyla guncellendi -> KZGYO: 23.459999084472656 TL
+2026-06-14 16:19:01,507 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ENKAI.IS
+2026-06-14 16:19:01,744 - INFO - Fiyat basariyla guncellendi -> ENKAI: 93.0 TL
+2026-06-14 16:19:01,748 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ALARK.IS
+2026-06-14 16:19:02,178 - INFO - Fiyat basariyla guncellendi -> ALARK: 107.0 TL
+2026-06-14 16:19:02,178 - INFO - Yahoo Finance'ten fiyat cekiliyor -> VESBE.IS
+2026-06-14 16:19:02,426 - INFO - Fiyat basariyla guncellendi -> VESBE: 6.269999980926514 TL
+2026-06-14 16:19:02,426 - INFO - Yahoo Finance'ten fiyat cekiliyor -> MARKA.IS
+2026-06-14 16:19:02,848 - INFO - Fiyat basariyla guncellendi -> MARKA: 70.80000305175781 TL
+2026-06-14 16:19:02,848 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TATGD.IS
+2026-06-14 16:19:03,074 - INFO - Fiyat basariyla guncellendi -> TATGD: 19.450000762939453 TL
+2026-06-14 16:19:03,074 - INFO - Yahoo Finance'ten fiyat cekiliyor -> GESAN.IS
+2026-06-14 16:19:03,485 - INFO - Fiyat basariyla guncellendi -> GESAN: 85.75 TL
+2026-06-14 16:19:03,485 - INFO - Yahoo Finance'ten fiyat cekiliyor -> UFUK.IS
+2026-06-14 16:19:03,707 - INFO - Fiyat basariyla guncellendi -> UFUK: 1300.0 TL
+2026-06-14 16:19:03,707 - INFO - Yahoo Finance'ten fiyat cekiliyor -> LINK.IS
+2026-06-14 16:19:04,114 - INFO - Fiyat basariyla guncellendi -> LINK: 7.400000095367432 TL
+2026-06-14 16:19:04,114 - INFO - Yahoo Finance'ten fiyat cekiliyor -> MGROS.IS
+2026-06-14 16:19:04,416 - INFO - Fiyat basariyla guncellendi -> MGROS: 672.5 TL
+2026-06-14 16:19:04,416 - INFO - Yahoo Finance'ten fiyat cekiliyor -> MNDRS.IS
+2026-06-14 16:19:04,823 - INFO - Fiyat basariyla guncellendi -> MNDRS: 11.390000343322754 TL
+2026-06-14 16:19:04,823 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ANSGR.IS
+2026-06-14 16:19:05,063 - INFO - Fiyat basariyla guncellendi -> ANSGR: 27.920000076293945 TL
+2026-06-14 16:19:05,064 - INFO - Yahoo Finance'ten fiyat cekiliyor -> FONET.IS
+2026-06-14 16:19:05,468 - INFO - Fiyat basariyla guncellendi -> FONET: 5.369999885559082 TL
+2026-06-14 16:19:05,468 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KOPOL.IS
+2026-06-14 16:19:05,691 - INFO - Fiyat basariyla guncellendi -> KOPOL: 6.150000095367432 TL
+2026-06-14 16:19:05,691 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TRENJ.IS
+2026-06-14 16:19:06,094 - INFO - Fiyat basariyla guncellendi -> TRENJ: 83.55000305175781 TL
+2026-06-14 16:19:06,094 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KTLEV.IS
+2026-06-14 16:19:06,323 - INFO - Fiyat basariyla guncellendi -> KTLEV: 172.39999389648438 TL
+2026-06-14 16:19:06,323 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AKSEN.IS
+2026-06-14 16:19:06,727 - INFO - Fiyat basariyla guncellendi -> AKSEN: 79.8499984741211 TL
+2026-06-14 16:19:06,727 - INFO - Yahoo Finance'ten fiyat cekiliyor -> INDES.IS
+2026-06-14 16:19:06,980 - INFO - Fiyat basariyla guncellendi -> INDES: 11.25 TL
+2026-06-14 16:19:06,980 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AKSUE.IS
+2026-06-14 16:19:07,397 - INFO - Fiyat basariyla guncellendi -> AKSUE: 36.91999816894531 TL
+2026-06-14 16:19:07,397 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TEHOL.IS
+2026-06-14 16:19:07,795 - INFO - Fiyat basariyla guncellendi -> TEHOL: 32.400001525878906 TL
+2026-06-14 16:19:07,795 - INFO - Yahoo Finance'ten fiyat cekiliyor -> DYOBY.IS
+2026-06-14 16:19:08,014 - INFO - Fiyat basariyla guncellendi -> DYOBY: 14.920000076293945 TL
+2026-06-14 16:19:08,014 - INFO - Yahoo Finance'ten fiyat cekiliyor -> GZNMI.IS
+2026-06-14 16:19:08,240 - INFO - Fiyat basariyla guncellendi -> GZNMI: 68.8499984741211 TL
+2026-06-14 16:19:08,240 - INFO - Yahoo Finance'ten fiyat cekiliyor -> PAGYO.IS
+2026-06-14 16:19:08,652 - INFO - Fiyat basariyla guncellendi -> PAGYO: 132.3000030517578 TL
+2026-06-14 16:19:08,652 - INFO - Yahoo Finance'ten fiyat cekiliyor -> INTEK.IS
+2026-06-14 16:19:09,059 - INFO - Fiyat basariyla guncellendi -> INTEK: 227.0 TL
+2026-06-14 16:19:09,059 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AVOD.IS
+2026-06-14 16:19:09,268 - INFO - Fiyat basariyla guncellendi -> AVOD: 4.360000133514404 TL
+2026-06-14 16:19:09,268 - INFO - Yahoo Finance'ten fiyat cekiliyor -> DCTTR.IS
+2026-06-14 16:19:09,494 - INFO - Fiyat basariyla guncellendi -> DCTTR: 12.0 TL
+2026-06-14 16:19:09,494 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KLSER.IS
+2026-06-14 16:19:09,883 - INFO - Fiyat basariyla guncellendi -> KLSER: 28.200000762939453 TL
+2026-06-14 16:19:09,883 - INFO - Yahoo Finance'ten fiyat cekiliyor -> HLGYO.IS
+2026-06-14 16:19:10,363 - INFO - Fiyat basariyla guncellendi -> HLGYO: 6.289999961853027 TL
+2026-06-14 16:19:10,363 - INFO - Yahoo Finance'ten fiyat cekiliyor -> HEDEF.IS
+2026-06-14 16:19:10,584 - INFO - Fiyat basariyla guncellendi -> HEDEF: 115.0 TL
+2026-06-14 16:19:10,584 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TRMET.IS
+2026-06-14 16:19:10,812 - INFO - Fiyat basariyla guncellendi -> TRMET: 106.4000015258789 TL
+2026-06-14 16:19:10,812 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KOCMT.IS
+2026-06-14 16:19:11,081 - INFO - Fiyat basariyla guncellendi -> KOCMT: 2.5199999809265137 TL
+2026-06-14 16:19:11,081 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ESEN.IS
+2026-06-14 16:19:11,324 - INFO - Fiyat basariyla guncellendi -> ESEN: 3.740000009536743 TL
+2026-06-14 16:19:11,324 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AKSA.IS
+2026-06-14 16:19:11,757 - INFO - Fiyat basariyla guncellendi -> AKSA: 11.119999885559082 TL
+2026-06-14 16:19:11,757 - INFO - Yahoo Finance'ten fiyat cekiliyor -> PINSU.IS
+2026-06-14 16:19:12,178 - INFO - Fiyat basariyla guncellendi -> PINSU: 11.1899995803833 TL
+2026-06-14 16:19:12,178 - INFO - Yahoo Finance'ten fiyat cekiliyor -> KRDMB.IS
+2026-06-14 16:19:12,411 - INFO - Fiyat basariyla guncellendi -> KRDMB: 111.80000305175781 TL
+2026-06-14 16:19:12,411 - INFO - Yahoo Finance'ten fiyat cekiliyor -> FZLGY.IS
+2026-06-14 16:19:12,629 - INFO - Fiyat basariyla guncellendi -> FZLGY: 17.950000762939453 TL
+2026-06-14 16:19:12,629 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TKFEN.IS
+2026-06-14 16:19:13,047 - INFO - Fiyat basariyla guncellendi -> TKFEN: 139.0 TL
+2026-06-14 16:19:13,048 - INFO - Yahoo Finance'ten fiyat cekiliyor -> SEYKM.IS
+2026-06-14 16:19:13,510 - INFO - Fiyat basariyla guncellendi -> SEYKM: 4.619999885559082 TL
+2026-06-14 16:19:13,510 - INFO - Yahoo Finance'ten fiyat cekiliyor -> TTRAK.IS
+2026-06-14 16:19:13,748 - INFO - Fiyat basariyla guncellendi -> TTRAK: 441.25 TL
+2026-06-14 16:19:13,748 - INFO - Yahoo Finance'ten fiyat cekiliyor -> DGGYO.IS
+2026-06-14 16:19:13,968 - INFO - Fiyat basariyla guncellendi -> DGGYO: 31.399999618530273 TL
+2026-06-14 16:19:13,968 - INFO - Yahoo Finance'ten fiyat cekiliyor -> CVKMD.IS
+2026-06-14 16:19:14,372 - INFO - Fiyat basariyla guncellendi -> CVKMD: 40.220001220703125 TL
+2026-06-14 16:19:14,372 - INFO - Yahoo Finance'ten fiyat cekiliyor -> SISE.IS
+2026-06-14 16:19:14,807 - INFO - Fiyat basariyla guncellendi -> SISE: 44.7599983215332 TL
+2026-06-14 16:19:14,807 - INFO - Yahoo Finance'ten fiyat cekiliyor -> VBTYZ.IS
+2026-06-14 16:19:15,024 - INFO - Fiyat basariyla guncellendi -> VBTYZ: 32.2400016784668 TL
+2026-06-14 16:19:15,024 - INFO - Yahoo Finance'ten fiyat cekiliyor -> HKTM.IS
+2026-06-14 16:19:15,346 - INFO - Fiyat basariyla guncellendi -> HKTM: 13.760000228881836 TL
+2026-06-14 16:19:15,346 - INFO - Yahoo Finance'ten fiyat cekiliyor -> AGYO.IS
+2026-06-14 16:19:15,775 - INFO - Fiyat basariyla guncellendi -> AGYO: 8.699999809265137 TL
+2026-06-14 16:19:15,775 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ULUUN.IS
+2026-06-14 16:19:16,003 - INFO - Fiyat basariyla guncellendi -> ULUUN: 8.270000457763672 TL
+2026-06-14 16:19:16,003 - INFO - Yahoo Finance'ten fiyat cekiliyor -> ORMA.IS
+2026-06-14 16:19:16,222 - INFO - Fiyat basariyla guncellendi -> ORMA: 198.5 TL
+2026-06-14 16:19:16,222 - INFO - Yahoo Finance'ten fiyat cekiliyor -> RYSAS.IS
+2026-06-14 16:19:16,621 - INFO - Fiyat basariyla guncellendi -> RYSAS: 25.079999923706055 TL
+2026-06-14 16:19:16,624 - INFO - Yahoo Finance'ten fiyat cekiliyor -> LIDER.IS
+2026-06-14 16:19:16,907 - INFO - Fiyat basariyla guncellendi -> LIDER: 108.9000015258789 TL
+2026-06-14 16:19:16,919 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 16:19:16,933 - INFO - Islem Basarili (Simule) -> Hisse: KRONT | Yon: AL | Fiyat: 75.0 | Miktar: 100.0 | Toplam: 7500.0 TL
+2026-06-14 16:19:17,215 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 16:19:17,222 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-06-14 16:19:17,243 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 16:19:17,259 - INFO - Islem Basarili (Simule) -> Hisse: KRONT | Yon: SAT | Fiyat: 80.0 | Miktar: 50.0 | Toplam: 4000.0 TL
+2026-06-14 16:19:22,558 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 16:19:22,558 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-06-14 16:19:22,576 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 16:19:22,590 - WARNING - Bakiye yetersiz! Gerekli: 200000.0 TL, Mevcut: 29141.29000000008 TL. Islem iptal edildi.
+2026-06-14 16:19:22,821 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 16:19:22,824 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 16:19:22,833 - WARNING - Hisse miktari yetersiz! Satilmak istenen: 10.0, Mevcut: 0.0. Islem iptal edildi.
+2026-06-14 16:19:23,064 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 16:19:23,069 - INFO - Webhook istegi alindi. Kaynak IP: 127.0.0.1
+2026-06-14 16:19:23,069 - WARNING - Yetkisiz webhook istegi engellendi. Kaynak IP: 127.0.0.1
+2026-06-14 16:19:55,733 - INFO - Manuel BIST taramasi tetiklendi...
+2026-06-14 16:19:55,733 - INFO - BIST30 hisseleri asenkron taranıyor...
+2026-06-14 16:19:55,736 - INFO - Teknik analiz icin veri indiriliyor -> THYAO.IS
+2026-06-14 16:19:55,737 - INFO - Teknik analiz icin veri indiriliyor -> EREGL.IS
+2026-06-14 16:19:55,737 - INFO - Teknik analiz icin veri indiriliyor -> ASELS.IS
+2026-06-14 16:19:55,738 - INFO - Teknik analiz icin veri indiriliyor -> YKBNK.IS
+2026-06-14 16:19:55,739 - INFO - Teknik analiz icin veri indiriliyor -> AKBNK.IS
+2026-06-14 16:19:55,927 - ERROR - AKBNK analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:55,927 - INFO - Teknik analiz icin veri indiriliyor -> TUPRS.IS
+2026-06-14 16:19:55,973 - ERROR - THYAO analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:55,973 - INFO - Teknik analiz icin veri indiriliyor -> KCHOL.IS
+2026-06-14 16:19:55,974 - ERROR - YKBNK analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:55,975 - INFO - Teknik analiz icin veri indiriliyor -> SAHOL.IS
+2026-06-14 16:19:56,176 - ERROR - TUPRS analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:56,182 - INFO - Teknik analiz icin veri indiriliyor -> GARAN.IS
+2026-06-14 16:19:56,199 - ERROR - SAHOL analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:56,199 - INFO - Teknik analiz icin veri indiriliyor -> ISCTR.IS
+2026-06-14 16:19:56,251 - ERROR - EREGL analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:56,253 - INFO - Teknik analiz icin veri indiriliyor -> BIMAS.IS
+2026-06-14 16:19:56,308 - ERROR - ASELS analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:56,309 - INFO - Teknik analiz icin veri indiriliyor -> SISE.IS
+2026-06-14 16:19:56,319 - ERROR - GARAN analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:56,320 - INFO - Teknik analiz icin veri indiriliyor -> PGSUS.IS
+2026-06-14 16:19:56,340 - ERROR - ISCTR analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:56,342 - INFO - Teknik analiz icin veri indiriliyor -> EKGYO.IS
+2026-06-14 16:19:56,363 - ERROR - KCHOL analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:56,365 - INFO - Teknik analiz icin veri indiriliyor -> TCELL.IS
+2026-06-14 16:19:56,492 - ERROR - BIMAS analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:56,494 - INFO - Teknik analiz icin veri indiriliyor -> FROTO.IS
+2026-06-14 16:19:56,512 - ERROR - EKGYO analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:56,517 - INFO - Teknik analiz icin veri indiriliyor -> TOASO.IS
+2026-06-14 16:19:56,517 - ERROR - TCELL analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:56,519 - INFO - Teknik analiz icin veri indiriliyor -> PETKM.IS
+2026-06-14 16:19:56,552 - ERROR - SISE analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:56,557 - INFO - Teknik analiz icin veri indiriliyor -> KOZAA.IS
+2026-06-14 16:19:56,566 - ERROR - PGSUS analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:56,566 - INFO - Teknik analiz icin veri indiriliyor -> KOZAL.IS
+2026-06-14 16:19:56,646 - ERROR - FROTO analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:56,646 - INFO - Teknik analiz icin veri indiriliyor -> TAVHL.IS
+2026-06-14 16:19:56,655 - ERROR - PETKM analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:56,655 - INFO - Teknik analiz icin veri indiriliyor -> ENKAI.IS
+2026-06-14 16:19:56,741 - ERROR - TOASO analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:56,742 - INFO - Teknik analiz icin veri indiriliyor -> SASA.IS
+2026-06-14 16:19:56,781 - ERROR - ENKAI analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:56,786 - INFO - Teknik analiz icin veri indiriliyor -> HEKTS.IS
+2026-06-14 16:19:56,799 - ERROR - TAVHL analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:56,800 - INFO - Teknik analiz icin veri indiriliyor -> GUBRF.IS
+2026-06-14 16:19:56,962 - ERROR - SASA analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:56,965 - INFO - Teknik analiz icin veri indiriliyor -> DOAS.IS
+2026-06-14 16:19:57,246 - ERROR - DOAS analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:57,248 - INFO - Teknik analiz icin veri indiriliyor -> ODAS.IS
+2026-06-14 16:19:57,300 - ERROR - GUBRF analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:57,301 - INFO - Teknik analiz icin veri indiriliyor -> KRDMD.IS
+2026-06-14 16:19:57,346 - ERROR - HEKTS analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:57,351 - INFO - Teknik analiz icin veri indiriliyor -> VESTL.IS
+2026-06-14 16:19:57,440 - ERROR - KRDMD analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:57,442 - INFO - Teknik analiz icin veri indiriliyor -> ARCLK.IS
+2026-06-14 16:19:57,496 - ERROR - ODAS analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:57,496 - INFO - Teknik analiz icin veri indiriliyor -> ALARK.IS
+2026-06-14 16:19:57,496 - ERROR - VESTL analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:57,496 - INFO - Teknik analiz icin veri indiriliyor -> ASTOR.IS
+2026-06-14 16:19:57,629 - ERROR - ALARK analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:57,633 - INFO - Teknik analiz icin veri indiriliyor -> SMRTG.IS
+2026-06-14 16:19:57,662 - ERROR - ARCLK analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:57,662 - INFO - Teknik analiz icin veri indiriliyor -> ALFAS.IS
+2026-06-14 16:19:57,731 - ERROR - ASTOR analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:57,734 - INFO - Teknik analiz icin veri indiriliyor -> GESAN.IS
+2026-06-14 16:19:58,297 - ERROR - ALFAS analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:58,297 - INFO - Teknik analiz icin veri indiriliyor -> KMPUR.IS
+2026-06-14 16:19:58,328 - ERROR - SMRTG analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:58,335 - INFO - Teknik analiz icin veri indiriliyor -> ENJSA.IS
+2026-06-14 16:19:58,374 - ERROR - GESAN analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:58,377 - INFO - Teknik analiz icin veri indiriliyor -> TTRAK.IS
+2026-06-14 16:19:58,457 - ERROR - ENJSA analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:58,457 - INFO - Teknik analiz icin veri indiriliyor -> YYLGD.IS
+2026-06-14 16:19:58,478 - ERROR - HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: KOZAA.IS"}}}
+2026-06-14 16:19:58,482 - ERROR - HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: KOZAL.IS"}}}
+2026-06-14 16:19:58,504 - ERROR - TTRAK analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:58,504 - INFO - Teknik analiz icin veri indiriliyor -> GWIND.IS
+2026-06-14 16:19:58,692 - ERROR - YYLGD analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:58,699 - INFO - Teknik analiz icin veri indiriliyor -> TKFEN.IS
+2026-06-14 16:19:58,714 - ERROR - GWIND analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:58,716 - INFO - Teknik analiz icin veri indiriliyor -> MGROS.IS
+2026-06-14 16:19:58,742 - ERROR - KMPUR analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:58,743 - INFO - Teknik analiz icin veri indiriliyor -> CCOLA.IS
+2026-06-14 16:19:58,878 - ERROR - CCOLA analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:58,891 - INFO - Teknik analiz icin veri indiriliyor -> AEFES.IS
+2026-06-14 16:19:58,900 - ERROR - TKFEN analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:58,901 - INFO - Teknik analiz icin veri indiriliyor -> SOKM.IS
+2026-06-14 16:19:58,930 - ERROR - MGROS analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:58,936 - INFO - Teknik analiz icin veri indiriliyor -> OTKAR.IS
+2026-06-14 16:19:59,034 - ERROR - SOKM analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:59,035 - INFO - Teknik analiz icin veri indiriliyor -> KORDS.IS
+2026-06-14 16:19:59,058 - ERROR - OTKAR analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:59,061 - INFO - Teknik analiz icin veri indiriliyor -> BRISA.IS
+2026-06-14 16:19:59,128 - ERROR - AEFES analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:59,131 - INFO - Teknik analiz icin veri indiriliyor -> SELEC.IS
+2026-06-14 16:19:59,257 - ERROR - BRISA analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:59,260 - INFO - Teknik analiz icin veri indiriliyor -> ALBRK.IS
+2026-06-14 16:19:59,261 - ERROR - KORDS analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:59,507 - ERROR - $KOZAA.IS: possibly delisted; no price data found  (period=5d) (Yahoo error = "No data found, symbol may be delisted")
+2026-06-14 16:19:59,508 - WARNING - KOZAA icin yetersiz veri (Satir sayisi: 0)
+2026-06-14 16:19:59,555 - ERROR - ALBRK analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:59,566 - ERROR - $KOZAL.IS: possibly delisted; no price data found  (period=5d) (Yahoo error = "No data found, symbol may be delisted")
+2026-06-14 16:19:59,567 - WARNING - KOZAL icin yetersiz veri (Satir sayisi: 0)
+2026-06-14 16:19:59,914 - ERROR - SELEC analiz edilirken beklenmedik hata: threads can only be started once
+2026-06-14 16:19:59,915 - INFO - Tarama tamamlandı. Taranan: 50 | Sinyal: 0 | Sure: 4.18 sn
+2026-06-14 16:20:19,750 - INFO - Uygulama baslatiliyor. Veritabani kontrol ediliyor...
+2026-06-14 16:20:19,752 - INFO - Periyodik BIST tarama motoru arka planda baslatildi.
+2026-06-14 16:20:24,653 - INFO - Manuel BIST taramasi tetiklendi...
+2026-06-14 16:20:24,653 - INFO - BIST30 hisseleri asenkron taranıyor...
+2026-06-14 16:20:24,654 - INFO - Teknik analiz icin veri indiriliyor -> THYAO.IS
+2026-06-14 16:20:24,655 - INFO - Teknik analiz icin veri indiriliyor -> EREGL.IS
+2026-06-14 16:20:24,656 - INFO - Teknik analiz icin veri indiriliyor -> ASELS.IS
+2026-06-14 16:20:24,656 - INFO - Teknik analiz icin veri indiriliyor -> YKBNK.IS
+2026-06-14 16:20:24,657 - INFO - Teknik analiz icin veri indiriliyor -> AKBNK.IS
+2026-06-14 16:20:25,363 - INFO - Teknik analiz icin veri indiriliyor -> TUPRS.IS
+2026-06-14 16:20:25,366 - INFO - Teknik analiz icin veri indiriliyor -> KCHOL.IS
+2026-06-14 16:20:25,368 - INFO - Teknik analiz icin veri indiriliyor -> SAHOL.IS
+2026-06-14 16:20:25,523 - INFO - Teknik analiz icin veri indiriliyor -> GARAN.IS
+2026-06-14 16:20:25,524 - INFO - Teknik analiz icin veri indiriliyor -> ISCTR.IS
+2026-06-14 16:20:25,527 - INFO - Teknik analiz icin veri indiriliyor -> BIMAS.IS
+2026-06-14 16:20:25,677 - INFO - Teknik analiz icin veri indiriliyor -> SISE.IS
+2026-06-14 16:20:25,707 - INFO - Teknik analiz icin veri indiriliyor -> PGSUS.IS
+2026-06-14 16:20:25,710 - INFO - Teknik analiz icin veri indiriliyor -> EKGYO.IS
+2026-06-14 16:20:25,711 - INFO - Teknik analiz icin veri indiriliyor -> TCELL.IS
+2026-06-14 16:20:25,712 - INFO - Teknik analiz icin veri indiriliyor -> FROTO.IS
+2026-06-14 16:20:25,907 - INFO - Teknik analiz icin veri indiriliyor -> TOASO.IS
+2026-06-14 16:20:25,914 - INFO - Teknik analiz icin veri indiriliyor -> PETKM.IS
+2026-06-14 16:20:25,966 - INFO - Teknik analiz icin veri indiriliyor -> KOZAA.IS
+2026-06-14 16:20:26,007 - INFO - Teknik analiz icin veri indiriliyor -> KOZAL.IS
+2026-06-14 16:20:26,067 - INFO - Teknik analiz icin veri indiriliyor -> TAVHL.IS
+2026-06-14 16:20:26,073 - INFO - Teknik analiz icin veri indiriliyor -> ENKAI.IS
+2026-06-14 16:20:26,074 - INFO - Teknik analiz icin veri indiriliyor -> SASA.IS
+2026-06-14 16:20:26,190 - INFO - Teknik analiz icin veri indiriliyor -> HEKTS.IS
+2026-06-14 16:20:26,252 - INFO - Teknik analiz icin veri indiriliyor -> GUBRF.IS
+2026-06-14 16:20:26,293 - INFO - Teknik analiz icin veri indiriliyor -> DOAS.IS
+2026-06-14 16:20:26,628 - INFO - Teknik analiz icin veri indiriliyor -> ODAS.IS
+2026-06-14 16:20:26,630 - INFO - Teknik analiz icin veri indiriliyor -> KRDMD.IS
+2026-06-14 16:20:26,704 - INFO - Teknik analiz icin veri indiriliyor -> VESTL.IS
+2026-06-14 16:20:26,754 - INFO - Teknik analiz icin veri indiriliyor -> ARCLK.IS
+2026-06-14 16:20:26,780 - INFO - Teknik analiz icin veri indiriliyor -> ALARK.IS
+2026-06-14 16:20:26,932 - INFO - Teknik analiz icin veri indiriliyor -> ASTOR.IS
+2026-06-14 16:20:26,979 - INFO - Teknik analiz icin veri indiriliyor -> SMRTG.IS
+2026-06-14 16:20:27,487 - INFO - Teknik analiz icin veri indiriliyor -> ALFAS.IS
+2026-06-14 16:20:27,489 - INFO - Teknik analiz icin veri indiriliyor -> GESAN.IS
+2026-06-14 16:20:27,520 - ERROR - HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: KOZAA.IS"}}}
+2026-06-14 16:20:27,640 - ERROR - HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: KOZAL.IS"}}}
+2026-06-14 16:20:27,650 - INFO - Teknik analiz icin veri indiriliyor -> KMPUR.IS
+2026-06-14 16:20:27,651 - INFO - Teknik analiz icin veri indiriliyor -> ENJSA.IS
+2026-06-14 16:20:27,653 - INFO - Teknik analiz icin veri indiriliyor -> TTRAK.IS
+2026-06-14 16:20:27,796 - INFO - Teknik analiz icin veri indiriliyor -> YYLGD.IS
+2026-06-14 16:20:27,798 - INFO - Teknik analiz icin veri indiriliyor -> GWIND.IS
+2026-06-14 16:20:27,896 - INFO - Teknik analiz icin veri indiriliyor -> TKFEN.IS
+2026-06-14 16:20:27,938 - INFO - Teknik analiz icin veri indiriliyor -> MGROS.IS
+2026-06-14 16:20:27,939 - INFO - Teknik analiz icin veri indiriliyor -> CCOLA.IS
+2026-06-14 16:20:28,074 - INFO - Teknik analiz icin veri indiriliyor -> AEFES.IS
+2026-06-14 16:20:28,079 - INFO - Teknik analiz icin veri indiriliyor -> SOKM.IS
+2026-06-14 16:20:28,132 - INFO - Teknik analiz icin veri indiriliyor -> OTKAR.IS
+2026-06-14 16:20:28,352 - ERROR - $KOZAA.IS: possibly delisted; no price data found  (period=5d) (Yahoo error = "No data found, symbol may be delisted")
+2026-06-14 16:20:28,353 - WARNING - KOZAA icin yetersiz veri (Satir sayisi: 0)
+2026-06-14 16:20:28,353 - INFO - Teknik analiz icin veri indiriliyor -> KORDS.IS
+2026-06-14 16:20:28,404 - INFO - Teknik analiz icin veri indiriliyor -> BRISA.IS
+2026-06-14 16:20:28,405 - INFO - Teknik analiz icin veri indiriliyor -> SELEC.IS
+2026-06-14 16:20:28,466 - INFO - Teknik analiz icin veri indiriliyor -> ALBRK.IS
+2026-06-14 16:20:29,511 - ERROR - $KOZAL.IS: possibly delisted; no price data found  (period=5d) (Yahoo error = "No data found, symbol may be delisted")
+2026-06-14 16:20:29,514 - WARNING - KOZAL icin yetersiz veri (Satir sayisi: 0)
+2026-06-14 16:20:29,530 - INFO - Islem Basarili (Simule) -> Hisse: ASELS | Yon: SAT | Fiyat: 370.75 | Miktar: 59.0 | Toplam: 21874.25 TL
+2026-06-14 16:20:29,791 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 16:20:29,793 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-06-14 16:20:29,810 - INFO - Islem Basarili (Simule) -> Hisse: SISE | Yon: SAT | Fiyat: 44.68000030517578 | Miktar: 1000.0 | Toplam: 44680.00030517578 TL
+2026-06-14 16:20:30,101 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 16:20:30,101 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-06-14 16:20:30,125 - INFO - Islem Basarili (Simule) -> Hisse: EKGYO | Yon: SAT | Fiyat: 19.969999313354492 | Miktar: 1000.0 | Toplam: 19969.999313354492 TL
+2026-06-14 16:20:30,382 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 16:20:30,386 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-06-14 16:20:30,405 - INFO - Islem Basarili (Simule) -> Hisse: ENKAI | Yon: SAT | Fiyat: 93.3499984741211 | Miktar: 1000.0 | Toplam: 93349.9984741211 TL
+2026-06-14 16:20:30,612 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 16:20:30,617 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-06-14 16:20:30,636 - INFO - Islem Basarili (Simule) -> Hisse: ALARK | Yon: SAT | Fiyat: 107.0 | Miktar: 1111.0 | Toplam: 118877.0 TL
+2026-06-14 16:20:30,894 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 16:20:30,894 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-06-14 16:20:30,912 - INFO - Islem Basarili (Simule) -> Hisse: ALFAS | Yon: SAT | Fiyat: 58.400001525878906 | Miktar: 1000.0 | Toplam: 58400.001525878906 TL
+2026-06-14 16:20:31,161 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 16:20:31,166 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-06-14 16:20:31,183 - INFO - Islem Basarili (Simule) -> Hisse: TTRAK | Yon: SAT | Fiyat: 441.25 | Miktar: 1000.0 | Toplam: 441250.0 TL
+2026-06-14 16:20:31,410 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 16:20:31,410 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-06-14 16:20:31,425 - INFO - Islem Basarili (Simule) -> Hisse: TKFEN | Yon: SAT | Fiyat: 139.39999389648438 | Miktar: 1000.0 | Toplam: 139399.99389648438 TL
+2026-06-14 16:20:31,690 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 16:20:31,690 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-06-14 16:20:31,710 - INFO - Islem Basarili (Simule) -> Hisse: MGROS | Yon: SAT | Fiyat: 672.5 | Miktar: 1000.0 | Toplam: 672500.0 TL
+2026-06-14 16:20:31,945 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 16:20:31,945 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-06-14 16:20:31,965 - INFO - Islem Basarili (Simule) -> Hisse: CCOLA | Yon: SAT | Fiyat: 82.30000305175781 | Miktar: 1000.0 | Toplam: 82300.00305175781 TL
+2026-06-14 16:20:38,266 - INFO - Telegram bildirimi basariyla gonderildi.
+2026-06-14 16:20:38,266 - INFO - Sanal Mod (Demo) aktif. Gercek emir gonderilmedi.
+2026-06-14 16:20:38,267 - INFO - Tarama tamamlandı. Taranan: 50 | Sinyal: 10 | Sure: 13.61 sn
