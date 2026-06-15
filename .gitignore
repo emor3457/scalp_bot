@@ -8,5 +8,4 @@ venv/
 borsa_scalper.zip
 Borsa_Bot.lnk
 *.log
-
-
+.pytest_cache/
