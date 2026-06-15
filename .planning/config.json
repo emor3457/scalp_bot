@@ -1,0 +1,17 @@
+{
+  "workflow": "gsd",
+  "project_name": "Borsa Scalper",
+  "tech_stack": {
+    "language": "Python 3.10+",
+    "framework": "FastAPI",
+    "database": "SQLite (via SQLAlchemy)",
+    "execution_api": "AlgoLab (Deniz Yatırım) or Playwright fallback",
+    "tunneling": "Ngrok / Cloudflare Tunnels",
+    "notifications": "Telegram Bot API"
+  },
+  "preferences": {
+    "testing": "Pytest",
+    "linting": "Ruff",
+    "formatting": "Black"
+  }
+}
