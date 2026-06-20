@@ -1,37 +1,21 @@
-# ============================================================
-# Aşama 1 — Bağımlılıkları kur (Builder stage)
-# ============================================================
-FROM python:3.11-slim AS builder
+FROM python:3.11-slim
 
 WORKDIR /app
 
-# Sadece gereksinimler dosyasını kopyala (layer cache için)
+# Install dependencies first (for better layer caching)
 COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Bağımlılıkları kullanıcı dizinine kur (site-packages kopyalanabilir)
-RUN pip install --no-cache-dir --user -r requirements.txt
+# Playwright install (needed for order_executor web automation)
+RUN playwright install chromium --with-deps
 
-# ============================================================
-# Aşama 2 — Üretim imajı (Runtime stage)
-# ============================================================
-FROM python:3.11-slim AS runtime
-
-WORKDIR /app
-
-# Builder'dan yalnızca kurulu paketleri al (imaj boyutunu küçültür)
-COPY --from=builder /root/.local /root/.local
-
-# Uygulama kodunu kopyala
+# Copy the rest of the application
 COPY . .
 
-# PATH'e kullanıcı bin dizinini ekle
-ENV PATH=/root/.local/bin:$PATH
-
-# Python tamponlamayı kapat (log'ların anlık görünmesi için)
 ENV PYTHONUNBUFFERED=1
 
-# FastAPI portu
+# Expose the API port
 EXPOSE 8000
 
-# Uvicorn ile başlat
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
+# Start the main script using uvicorn
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
