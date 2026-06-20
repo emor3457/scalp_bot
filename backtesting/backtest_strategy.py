@@ -180,7 +180,7 @@ def run_backtest(ticker: str, period: str, initial_capital: float, max_trade_all
     profit_factor = (total_gains / total_losses) if total_losses > 0 else (total_gains if total_gains > 0 else 1.0)
     
     print("\n" + "="*50)
-    print(f"📊 {ticker} GERİYE DÖNÜK TEST (BACKTEST) SONUÇLARI")
+    print(f"=== {ticker} GERIYE DONUK TEST (BACKTEST) SONUCLARI ===")
     print("="*50)
     print(f"Başlangıç Sermayesi : {initial_capital:,.2f} TL")
     print(f"Bitiş Sermayesi     : {final_portfolio_value:,.2f} TL")
@@ -195,6 +195,34 @@ def run_backtest(ticker: str, period: str, initial_capital: float, max_trade_all
     print(f"Kazanma Oranı (Win%): {win_rate:.2f}%")
     print(f"Kar Faktörü (P.F.)  : {profit_factor:.2f}")
     print("="*50)
+
+    # JSON Serileştirme için Timestamps string'e dönüştürülüyor
+    serialized_trades = []
+    for t in trades:
+        st = t.copy()
+        if "entry_time" in st and hasattr(st["entry_time"], "strftime"):
+            st["entry_time"] = st["entry_time"].strftime("%Y-%m-%d %H:%M")
+        if "exit_time" in st and hasattr(st["exit_time"], "strftime"):
+            st["exit_time"] = st["exit_time"].strftime("%Y-%m-%d %H:%M")
+        serialized_trades.append(st)
+
+    return {
+        "status": "success",
+        "ticker": ticker,
+        "period": period,
+        "initial_capital": initial_capital,
+        "final_portfolio_value": final_portfolio_value,
+        "total_return": total_return,
+        "net_profit": final_portfolio_value - initial_capital,
+        "max_drawdown": max_drawdown,
+        "total_trades": total_trades,
+        "completed_trades_count": len(completed_trades),
+        "winning_trades_count": len(winning_trades),
+        "losing_trades_count": len(losing_trades),
+        "win_rate": win_rate,
+        "profit_factor": profit_factor,
+        "trades": serialized_trades
+    }
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="BIST Scalper Bot Strateji Backtest Aracı")
