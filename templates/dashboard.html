@@ -522,6 +522,112 @@
                 </div>
             </div>
         </div>
+
+        <!-- Backtest Card (Full Width at Bottom) -->
+        <div class="dashboard-card" style="margin-top: 2rem; margin-bottom: 2rem;">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="fa-solid fa-clock-rotate-left" style="color: var(--accent-purple);"></i> Strateji Geriye Dönük Test (Backtest)
+                </h2>
+            </div>
+            <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+                <!-- Inputs Row -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; align-items: flex-end;">
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <label style="font-size: 0.8rem; color: var(--text-secondary);">Hisse Kodu (Örn: THYAO)</label>
+                        <input type="text" id="backtestTicker" value="THYAO" style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--card-border); color: var(--text-primary); padding: 0.5rem; border-radius: 6px; text-transform: uppercase;">
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <label style="font-size: 0.8rem; color: var(--text-secondary);">Veri Süresi</label>
+                        <select id="backtestPeriod" style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--card-border); color: var(--text-primary); padding: 0.5rem; border-radius: 6px;">
+                            <option value="1mo">1 Ay (5m Mumlar)</option>
+                            <option value="3mo">3 Ay (5m Mumlar)</option>
+                            <option value="5d">5 Gün (5m Mumlar)</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <label style="font-size: 0.8rem; color: var(--text-secondary);">Başlangıç Sermayesi (TL)</label>
+                        <input type="number" id="backtestCapital" value="500000" style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--card-border); color: var(--text-primary); padding: 0.5rem; border-radius: 6px;">
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <label style="font-size: 0.8rem; color: var(--text-secondary);">İşlem Başına Bütçe (TL)</label>
+                        <input type="number" id="backtestMaxAlloc" value="10000" style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--card-border); color: var(--text-primary); padding: 0.5rem; border-radius: 6px;">
+                    </div>
+                    <button class="btn-refresh" id="startBacktestBtn" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6); border: none; color: white; padding: 0.6rem; border-radius: 6px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; height: 38px;">
+                        <i class="fa-solid fa-play"></i> Testi Başlat
+                    </button>
+                </div>
+
+                <!-- Loading Spinner -->
+                <div id="backtestLoading" style="display: none; text-align: center; padding: 2rem;">
+                    <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--accent-blue);"></i>
+                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Veriler Yahoo Finance'ten çekilip simüle ediliyor. Lütfen bekleyin...</p>
+                </div>
+
+                <!-- Results Output -->
+                <div id="backtestResults" style="display: none; flex-direction: column; gap: 1.5rem;">
+                    <!-- Metrics cards -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+                        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Net Kâr / Zarar</div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #10b981; margin-top: 0.25rem;" id="btNetProfit">0.00 TL</div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);" id="btReturnPct">+0.00%</div>
+                        </div>
+                        <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Kâr Faktörü (Profit Factor)</div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #a78bfa; margin-top: 0.25rem;" id="btProfitFactor">0.00</div>
+                        </div>
+                        <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Kazanma Oranı (Win Rate)</div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #60a5fa; margin-top: 0.25rem;" id="btWinRate">0.00%</div>
+                        </div>
+                        <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Toplam İşlem Sayısı</div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #fbbf24; margin-top: 0.25rem;" id="btTotalTrades">0</div>
+                        </div>
+                        <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Maksimum Drawdown</div>
+                            <div style="font-size: 1.2rem; font-weight: bold; color: #f87171; margin-top: 0.25rem;" id="btMaxDrawdown">-0.00%</div>
+                        </div>
+                    </div>
+
+                    <!-- Chart & Table split -->
+                    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.5rem; min-height: 350px;">
+                        <!-- Chart container -->
+                        <div style="background: rgba(0, 0, 0, 0.1); border: 1px solid var(--card-border); border-radius: 8px; padding: 1rem; position: relative;">
+                            <h3 style="font-size: 0.9rem; margin-bottom: 1rem; color: var(--text-primary); font-weight: 500;">
+                                <i class="fa-solid fa-chart-line"></i> İşlem Kâr/Zarar Gelişimi (Kümülatif TL)
+                            </h3>
+                            <div style="height: 250px; position: relative;">
+                                <canvas id="backtestChart"></canvas>
+                            </div>
+                        </div>
+                        <!-- Trades table container -->
+                        <div style="background: rgba(0, 0, 0, 0.1); border: 1px solid var(--card-border); border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; max-height: 320px;">
+                            <h3 style="font-size: 0.9rem; margin-bottom: 1rem; color: var(--text-primary); font-weight: 500;">
+                                <i class="fa-solid fa-list"></i> Simüle Edilen İşlemler
+                            </h3>
+                            <div class="table-responsive" style="flex-grow: 1; overflow-y: auto;">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Giriş / Çıkış</th>
+                                            <th>Miktar</th>
+                                            <th>Fiyat</th>
+                                            <th>K/Z</th>
+                                            <th>Neden</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="backtestTradesTableBody">
+                                        <!-- Dynamic backtest trade rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Script to fetch and render dashboard data -->
@@ -551,6 +657,11 @@
             // Konsol kapat
             document.getElementById('closeConsoleBtn').addEventListener('click', () => {
                 document.getElementById('scanConsoleCard').style.display = 'none';
+            });
+
+            // Backtest başlat butonu
+            document.getElementById('startBacktestBtn').addEventListener('click', () => {
+                startBacktesting();
             });
         });
 
@@ -927,6 +1038,148 @@
             
             // Auto scroll to bottom
             consoleOut.scrollTop = consoleOut.scrollHeight;
+        }
+
+        let backtestChart = null;
+
+        function startBacktesting() {
+            const ticker = document.getElementById('backtestTicker').value.trim().toUpperCase();
+            const period = document.getElementById('backtestPeriod').value;
+            const capital = document.getElementById('backtestCapital').value;
+            const maxAlloc = document.getElementById('backtestMaxAlloc').value;
+
+            if (!ticker) {
+                alert('Lütfen geçerli bir hisse kodu girin!');
+                return;
+            }
+
+            // UI state
+            document.getElementById('backtestResults').style.display = 'none';
+            document.getElementById('backtestLoading').style.display = 'block';
+
+            fetch(`/api/backtest?ticker=${ticker}&period=${period}&capital=${capital}&max_alloc=${maxAlloc}`)
+                .then(res => {
+                    if (!res.ok) {
+                        return res.json().then(err => { throw new Error(err.detail || 'Bilinmeyen hata') });
+                    }
+                    return res.json();
+                })
+                .then(data => {
+                    document.getElementById('backtestLoading').style.display = 'none';
+                    document.getElementById('backtestResults').style.display = 'flex';
+
+                    // Update metrics
+                    const netProfit = data.net_profit;
+                    const netProfitEl = document.getElementById('btNetProfit');
+                    netProfitEl.innerText = `${netProfit.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL`;
+                    if (netProfit >= 0) {
+                        netProfitEl.style.color = '#10b981';
+                    } else {
+                        netProfitEl.style.color = '#f87171';
+                    }
+
+                    document.getElementById('btReturnPct').innerText = `${netProfit >= 0 ? '+' : ''}${data.total_return.toFixed(2)}%`;
+                    document.getElementById('btProfitFactor').innerText = data.profit_factor.toFixed(2);
+                    document.getElementById('btWinRate').innerText = `${data.win_rate.toFixed(2)}%`;
+                    document.getElementById('btTotalTrades').innerText = data.total_trades;
+                    document.getElementById('btMaxDrawdown').innerText = `-${data.max_drawdown.toFixed(2)}%`;
+
+                    // Populate trades table
+                    const tbody = document.getElementById('backtestTradesTableBody');
+                    tbody.innerHTML = '';
+                    
+                    if (data.trades.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-secondary);">İşlem bulunamadı.</td></tr>';
+                    } else {
+                        data.trades.forEach(trade => {
+                            const pnl = trade.pnl !== undefined ? trade.pnl : 0;
+                            const pnlPct = trade.pnl_pct !== undefined ? trade.pnl_pct : 0;
+                            const isWin = pnl >= 0;
+                            
+                            let pnlText = '-';
+                            if (trade.pnl !== undefined) {
+                                pnlText = `<span style="color: ${isWin ? '#10b981' : '#f87171'}; font-weight:bold;">
+                                    ${pnl >= 0 ? '+' : ''}${pnl.toFixed(2)} TL (${pnl_pct >= 0 ? '+' : ''}${pnlPct.toFixed(2)}%)
+                                </span>`;
+                            }
+
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td>
+                                    <div style="font-size:0.75rem; color:var(--text-secondary);">${trade.entry_time}</div>
+                                    <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">${trade.exit_time || 'Açık Pozisyon'}</div>
+                                </td>
+                                <td>${trade.qty} Lot</td>
+                                <td>
+                                    <div>Giriş: ${trade.entry_price.toFixed(2)}</div>
+                                    <div style="margin-top:2px;">Çıkış: ${trade.exit_price ? trade.exit_price.toFixed(2) : '-'}</div>
+                                </td>
+                                <td>${pnlText}</td>
+                                <td><span style="font-size:0.75rem; color:var(--text-secondary);">${trade.exit_reason || trade.reason || '-'}</span></td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+                    }
+
+                    // Render chart
+                    renderBacktestChart(data.trades, data.initial_capital);
+                })
+                .catch(err => {
+                    document.getElementById('backtestLoading').style.display = 'none';
+                    alert(`Hata: ${err.message}`);
+                });
+        }
+
+        function renderBacktestChart(trades, initialCapital) {
+            const ctx = document.getElementById('backtestChart').getContext('2d');
+            if (backtestChart) {
+                backtestChart.destroy();
+            }
+
+            let currentVal = 0;
+            const labels = ['Başlangıç'];
+            const dataPoints = [0];
+
+            trades.forEach((trade, idx) => {
+                if (trade.pnl !== undefined) {
+                    currentVal += trade.pnl;
+                    labels.push(trade.exit_time ? trade.exit_time.split(' ')[0] : `İşlem ${idx + 1}`);
+                    dataPoints.push(currentVal);
+                }
+            });
+
+            backtestChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Net Kâr/Zarar (TL)',
+                        data: dataPoints,
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                            ticks: { color: '#9ca3af' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#9ca3af', maxRotation: 45, minRotation: 45 }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
         }
 
         // Sayfayi her 10 saniyede bir otomatik yenile
