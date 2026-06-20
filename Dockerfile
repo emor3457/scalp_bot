@@ -1,20 +1,37 @@
-FROM python:3.11-slim
+# ============================================================
+# Aşama 1 — Bağımlılıkları kur (Builder stage)
+# ============================================================
+FROM python:3.11-slim AS builder
 
 WORKDIR /app
 
-# Install dependencies first (for better layer caching)
+# Sadece gereksinimler dosyasını kopyala (layer cache için)
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
 
-# Playwright install (needed for yfinance backend or any browser tasks if they arise, though not strictly required for websockets)
-RUN playwright install chromium --with-deps
+# Bağımlılıkları kullanıcı dizinine kur (site-packages kopyalanabilir)
+RUN pip install --no-cache-dir --user -r requirements.txt
 
-# Copy the rest of the application
+# ============================================================
+# Aşama 2 — Üretim imajı (Runtime stage)
+# ============================================================
+FROM python:3.11-slim AS runtime
+
+WORKDIR /app
+
+# Builder'dan yalnızca kurulu paketleri al (imaj boyutunu küçültür)
+COPY --from=builder /root/.local /root/.local
+
+# Uygulama kodunu kopyala
 COPY . .
 
-# Expose the API port if they want to access the fastAPI web interface
+# PATH'e kullanıcı bin dizinini ekle
+ENV PATH=/root/.local/bin:$PATH
+
+# Python tamponlamayı kapat (log'ların anlık görünmesi için)
+ENV PYTHONUNBUFFERED=1
+
+# FastAPI portu
 EXPOSE 8000
 
-# Start the main script using uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-
+# Uvicorn ile başlat
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
