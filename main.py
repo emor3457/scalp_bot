@@ -32,7 +32,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger("BistScalpBot")
 
-app = FastAPI(title="BIST Scalp Bot Webhook Receiver & Simulator")
+app = FastAPI(title="BIST Short-Term Trading Bot | Teknik + Temel + Haber Analizi")
 
 async def periodic_scan_loop():
     # Bekle ve baslat (baslangicta uvicorn'un yuklenmesini bekle)
@@ -53,7 +53,7 @@ async def periodic_scan_loop():
         except Exception as e:
             logger.error(f"Periyodik tarama dongusunde hata: {str(e)}")
         
-        await asyncio.sleep(300) # 5 dakika bekle
+        await asyncio.sleep(900)  # 15 dakika bekle (kisa vadeli tarama)
 
 # Sunucu baslarken veritabani kontrolu
 @app.on_event("startup")
