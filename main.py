@@ -179,6 +179,18 @@ async def get_signals(limit: int = 50):
         logger.error(f"Sinyal gecmisi okunurken hata: {str(e)}")
         raise HTTPException(status_code=500, detail="Sinyal gecmisi alinamadi.")
 
+@app.get("/api/backtest")
+def get_api_backtest(ticker: str = "THYAO", period: str = "1mo", capital: float = 500000.0, max_alloc: float = 10000.0):
+    try:
+        from backtesting.backtest_strategy import run_backtest
+        res = run_backtest(ticker.upper(), period, capital, max_alloc)
+        if not res:
+            raise HTTPException(status_code=400, detail="Backtest basarisiz oldu veya veri yok.")
+        return res
+    except Exception as e:
+        logger.error(f"API Backtest hatasi: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Backtest sirasinda hata olustu: {str(e)}")
+
 @app.get("/scan")
 async def trigger_scan():
     try:
