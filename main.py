@@ -180,10 +180,10 @@ async def get_signals(limit: int = 50):
         raise HTTPException(status_code=500, detail="Sinyal gecmisi alinamadi.")
 
 @app.get("/api/backtest")
-def get_api_backtest(ticker: str = "THYAO", period: str = "1mo", capital: float = 500000.0, max_alloc: float = 10000.0):
+async def get_api_backtest(ticker: str = "THYAO", period: str = "1mo", capital: float = 500000.0, max_alloc: float = 10000.0):
     try:
         from backtesting.backtest_strategy import run_backtest
-        res = run_backtest(ticker.upper(), period, capital, max_alloc)
+        res = await run_backtest(ticker.upper(), period, capital, max_alloc)
         if not res:
             raise HTTPException(status_code=400, detail="Backtest basarisiz oldu veya veri yok.")
         return res
