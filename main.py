@@ -49,7 +49,7 @@ DASHBOARD_AUTH_TOKEN = (
 
 PROTECTED_PATHS = (
     "/dashboard", "/portfolio", "/trades", "/signals",
-    "/scan", "/api/backtest", "/config",
+    "/scan", "/api/backtest", "/api/deep-analysis", "/config",
 )
 
 
@@ -236,6 +236,22 @@ async def get_api_backtest(ticker: str = "THYAO", period: str = "1mo", capital: 
     except Exception as e:
         logger.error(f"API Backtest hatasi: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Backtest sirasinda hata olustu: {str(e)}")
+
+@app.get("/api/deep-analysis")
+async def get_deep_analysis(ticker: str = "THYAO"):
+    """
+    bist-stock-analysis: BIST hissesi icin SKILL.md sablonuna uygun
+    Turkce Markdown derin analiz raporu uretir (teknik + temel + haber).
+    """
+    try:
+        from bist_analysis import build_markdown
+        ticker = ticker.upper().replace(".IS", "")
+        md = await build_markdown(ticker)
+        return {"ticker": ticker, "markdown": md}
+    except Exception as e:
+        logger.error(f"Derin analiz hatasi [{ticker}]: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Derin analiz sirasinda hata: {str(e)}")
+
 
 @app.get("/scan")
 async def trigger_scan(report_only: bool = True):
