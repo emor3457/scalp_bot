@@ -15,12 +15,14 @@ Karar Mantigi:
 import time
 import logging
 import asyncio
+import os
 import yfinance as yf
 import pandas as pd
 import numpy as np
 import database
 import trade_manager
 import news_analyst
+import market_data
 
 logger = logging.getLogger("BistScalpBot")
 
@@ -316,7 +318,12 @@ async def analyze_ticker(ticker: str, semaphore: asyncio.Semaphore) -> dict:
             # Kompozit Skor: Teknik %50, Temel %25, Haber %25
             composite = (tech_score * 0.50) + (fund_score * 0.25) + (news_score * 0.25)
 
-            close  = tech_details.get("close", 0.0)
+            # Canli fiyat: seans sirasinda gunluk barin son kapanisi bayat kalabilir
+            # (genellikle dunku kapanis). SL/TP kontrolleri ve islem icra fiyati
+            # icin canli fiyat kullanilir; alinamazsa gunluk kapanis fallback olur.
+            live_price = await market_data.get_stock_price(ticker)
+            close = live_price if live_price and live_price > 0 else tech_details.get("close", 0.0)
+
             rsi    = tech_details.get("rsi", 50.0)
             vol_r  = tech_details.get("vol_ratio", 1.0)
             macd_h = tech_details.get("macd_hist", 0.0)
@@ -481,12 +488,74 @@ def _hold_result(ticker: str, price: float, reason: str) -> dict:
 # Asenkron Tarama Dongusu
 # ---------------------------------------------------------------------------
 
-async def scan_all_and_report() -> dict:
+def _report_only_default() -> bool:
+    """Periyodik taramanin varsayilan modu: SCAN_MODE=report ise raporlama modu."""
+    return os.getenv("SCAN_MODE", "live").strip().lower() == "report"
+
+
+def _simulate_signal(sig: dict, state: dict) -> tuple:
+    """
+    RAPOR MODU icin salt-okunur simulasyon.
+
+    trade_manager.process_trade_signal ile AYNI risk kurallarini uygular
+    (AL: bakiye yeterli mi; SAT: elde hisse var mi) ama DB'ye HICBIR SEY
+    yazmaz. state = {"cash": float, "portfolio": {ticker: {"qty", "avg_cost"}}}
+    sinyallerin SIRALI etkisi dogru hesaplansin diye guncellenir.
+
+    NOT: Bu bilincli bir kopyadir — canli icradaki tek dogruluk kaynagi
+    trade_manager'dir; burasi yalnizca 'ne olurdu' tahminidir.
+    """
+    ticker = sig["ticker"]
+    cost = sig["price"] * sig["quantity"]
+    cash = state["cash"]
+    portfolio = state["portfolio"]
+
+    if sig["action"] == "AL":
+        if cash < cost:
+            return False, f"Bakiye yetersiz: {cost:.2f} TL gerekli, {cash:.2f} TL mevcut"
+        cash -= cost
+        pos = portfolio.get(ticker)
+        if pos:
+            new_qty = pos["qty"] + sig["quantity"]
+            pos["avg_cost"] = (pos["qty"] * pos["avg_cost"] + cost) / new_qty
+            pos["qty"] = new_qty
+        else:
+            portfolio[ticker] = {"qty": sig["quantity"], "avg_cost": sig["price"]}
+        state["cash"] = cash
+        return True, None
+
+    # SAT
+    pos = portfolio.get(ticker)
+    held = pos["qty"] if pos else 0.0
+    if held < sig["quantity"]:
+        return False, f"Yetersiz hisse: {sig['quantity']:.0f} lot isteniyor, {held:.0f} lot mevcut"
+    new_qty = held - sig["quantity"]
+    if new_qty == 0:
+        del portfolio[ticker]
+    else:
+        pos["qty"] = new_qty
+    state["cash"] = cash + cost
+    return True, None
+
+
+async def scan_all_and_report(report_only: bool = None) -> dict:
     """
     BIST50 hisselerini asenkron olarak tarar (Semaphore=3 ile hiz sinirlamasi).
-    AL/SAT sinyali olanlari trade_manager'a iletir.
+
+    report_only=True  -> Sadece RAPORLAMA: sonuclar donulur, bot.db'ye hicbir
+                         sinyal/islem yazilmaz. Sinyallerin gercekte isleme
+                         gecip gecmeyecegi trade_manager kurallariyla
+                         salt-okunur simule edilir (would_execute/rejected_reason).
+    report_only=False -> Sinyaller trade_manager uzerinden islenir (mevcut davranis).
+    report_only=None  -> SCAN_MODE env degiskenine bakar (report ise raporlama).
     """
-    logger.info("BIST50 kisa vadeli tarama baslatiliyor...")
+    if report_only is None:
+        report_only = _report_only_default()
+
+    logger.info(
+        "BIST50 kisa vadeli tarama baslatiliyor..."
+        + (" [RAPOR MODU - bot.db'ye yazilmaz]" if report_only else "")
+    )
     start_time = time.time()
 
     # Ayni anda max 3 istek (gunluk veri + fundamentals icin daha ihtiyatli)
@@ -494,24 +563,61 @@ async def scan_all_and_report() -> dict:
     tasks = [analyze_ticker(ticker, sem) for ticker in BIST50_TICKERS]
     results = await asyncio.gather(*tasks)
 
-    signals_sent = []
-    for analysis in results:
-        if analysis["action"] in ["AL", "SAT"] and analysis["quantity"] > 0:
-            signals_sent.append(analysis)
-            await inject_signal_to_bot(analysis)
+    signals = [a for a in results if a["action"] in ["AL", "SAT"] and a["quantity"] > 0]
+
+    simulation = None
+    if report_only:
+        # Mevcut portfoyu salt-okunur oku ve sinyallerin sirali etkisini simule et
+        conn = await database.get_async_db_connection()
+        try:
+            state = {"cash": 0.0, "portfolio": {}}
+            async with conn.execute("SELECT ticker, quantity, average_cost FROM portfolio") as cur:
+                rows = await cur.fetchall()
+                for r in rows:
+                    if r["ticker"] == "TRY":
+                        state["cash"] = r["quantity"]
+                    else:
+                        state["portfolio"][r["ticker"]] = {
+                            "qty": r["quantity"], "avg_cost": r["average_cost"]
+                        }
+        finally:
+            await conn.close()
+
+        for sig in signals:
+            would_execute, note = _simulate_signal(sig, state)
+            sig["executed"] = False
+            sig["would_execute"] = would_execute
+            if note:
+                sig["rejected_reason"] = note
+
+        simulation = {
+            "mode": "report_only",
+            "final_cash": round(state["cash"], 2),
+            "position_count": len(state["portfolio"]),
+            "executable_signals": sum(1 for s in signals if s["would_execute"]),
+        }
+        logger.info(
+            f"RAPOR MODU: {len(signals)} sinyal uretildi, "
+            f"{simulation['executable_signals']} tanesi isleme girebilir. DB'ye yazilmadi."
+        )
+    else:
+        for sig in signals:
+            await inject_signal_to_bot(sig)
 
     scan_duration = time.time() - start_time
     summary = {
         "timestamp":               time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
         "scan_duration_seconds":   round(scan_duration, 2),
         "total_scanned":           len(BIST50_TICKERS),
-        "signals_generated_count": len(signals_sent),
-        "signals":                 signals_sent,
+        "signals_generated_count": len(signals),
+        "report_only":             report_only,
+        "simulation":              simulation,
+        "signals":                 signals,
         "details":                 results,
     }
     logger.info(
         f"Tarama tamamlandi. Taranan: {len(BIST50_TICKERS)} | "
-        f"Sinyal: {len(signals_sent)} | Sure: {scan_duration:.1f} sn"
+        f"Sinyal: {len(signals)} | Sure: {scan_duration:.1f} sn"
     )
     return summary
 

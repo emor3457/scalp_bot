@@ -11,19 +11,32 @@ from datetime import datetime
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from auto_analyst import calculate_technical_score, calculate_fundamental_score
-import news_analyst
 
-async def run_backtest(ticker: str, period: str, initial_capital: float, max_trade_allocation: float):
+async def run_backtest(ticker: str, period: str, initial_capital: float, max_trade_allocation: float, news_score: float = None, fill_mode: str = "next_open"):
+    # Icra modu:
+    #   next_open    (varsayilan, gercekci) — sinyal bar kapanisinda uretilir, icra bir sonraki barin
+    #                 acilis fiyatindan yapilir. Lookahead bias yoktur.
+    #   signal_close (eski/iyimser)         — sinyal uretildigi barin kapanis fiyatindan aninda icra
+    #                 edilir. Sonuclari iyimser sisebilecegi icin karsilastirma amaclidir.
+    if fill_mode not in ("next_open", "signal_close"):
+        raise ValueError(f"Gecersiz fill_mode: {fill_mode}. Beklenen: 'next_open' veya 'signal_close'")
+
     yahoo_ticker = f"{ticker}.IS"
     print(f"\n[+] {yahoo_ticker} için veriler indiriliyor...")
+    print(f"[+] Icra modu: {fill_mode} (" + ("sinyal kapanisinda aninda" if fill_mode == "signal_close" else "sonraki bar acilisinda") + ")")
     
-    # 1. Haber skorunu bir kere al (Geçmişe dönük haber olmadığı için mevcut duyarlılık sabit kabul edilir)
-    try:
-        news_score = await news_analyst.get_news_score(ticker)
-        print(f"[+] Anlık haber skoru alındı: {news_score:.1f}/100 (Backtest boyunca sabit kullanılacak)")
-    except Exception as e:
-        news_score = 60.0
-        print(f"[-] Haber skoru alınamadı, 60.0 (Nötr-Pozitif) varsayılıyor. Hata: {str(e)}")
+    # 1. Haber skoru: Tarihsel haber verisi olmadığı için backtest boyunca tek bir değer kullanılır.
+    #    Varsayılan NÖTR (50.0) — bugünkü canlı haber duyarlılığı geçmişe uygulanmaz (bias).
+    #    Bugünkü haber ortamını senaryo olarak test etmek için news_score parametresi verilebilir.
+    if news_score is None:
+        news_score = 50.0
+        news_mode = "neutral"
+        print("[+] Haber skoru: NÖTR (50.0). Canlı haber skoru tarihsel backtest'e uygulanmaz.")
+        print("    Bugünkü haber ortamını senaryo olarak test etmek için --news <0-100> kullanın.")
+    else:
+        news_mode = "scenario"
+        news_score = max(0.0, min(100.0, float(news_score)))
+        print(f"[+] Haber skoru senaryosu: {news_score:.1f}/100 (kullanıcı tanımlı, backtest boyunca sabit)")
 
     # 2. Periyotlara göre veri aralıklarını belirle (EMA göstergelerinin ısınması için günlük veri daha uzun tutulur)
     if period == "5d":
@@ -67,7 +80,10 @@ async def run_backtest(ticker: str, period: str, initial_capital: float, max_tra
     
     trades = []       # Tamamlanmış/Bölünmüş tüm işlemler
     held_trades = []  # Açık olan pozisyon
-    
+
+    # next_open modunda: önceki barın kapanışında üretilen sinyal bu barın açılışında icra edilir
+    pending_signal = None  # (action, sell_qty, reason)
+
     # Performans takibi
     peak_portfolio_value = initial_capital
     max_drawdown = 0.0
@@ -76,7 +92,70 @@ async def run_backtest(ticker: str, period: str, initial_capital: float, max_tra
     for i in range(10, len(df_hourly)):
         current_time = df_hourly.index[i]
         curr_bar = df_hourly.iloc[i]
+        bar_open = float(curr_bar['Open'])
         close = float(curr_bar['Close'])
+
+        # ------------------------------------------------------------------
+        # A) BEKLEYEN SINYALIN ICRA EDILMESI (yalnizca next_open modu)
+        #    Sinyal bir onceki barin kapanisinda uretilir, bu barin AÇILIŞ
+        #    fiyatindan dolur. Boylece 'sinyal goruldugu anda ayni kapanistan
+        #    icra' seklindeki lookahead bias ortadan kalkar.
+        # ------------------------------------------------------------------
+        if pending_signal is not None:
+            sig_action, sig_qty, sig_reason = pending_signal
+            pending_signal = None
+
+            if sig_action == "AL" and held_qty == 0 and bar_open > 0:
+                # Tahsis buyuklugu icra anindaki acilis fiyatina gore yeniden hesaplanir
+                target_amount = min(capital * 0.15, max_trade_allocation)
+                if target_amount < 500.0:
+                    target_amount = min(capital, 500.0)
+                qty_to_buy = int(target_amount / bar_open)
+                if qty_to_buy >= 1:
+                    buy_cost = qty_to_buy * bar_open
+                    capital -= buy_cost
+                    held_qty = float(qty_to_buy)
+                    entry_price = bar_open
+                    tp1_hit = False
+                    tp2_hit = False
+                    held_trades.append({
+                        "entry_time": current_time,
+                        "entry_price": entry_price,
+                        "qty": held_qty,
+                        "type": "AL",
+                        "reason": sig_reason
+                    })
+                    print(f"[{current_time}] ALIM: {qty_to_buy} Lot @ {bar_open:.2f} TL (acilis) | Kalan Nakit: {capital:.2f} TL")
+
+            elif sig_action in ("SAT_ALL", "SAT_PARTIAL") and held_qty > 0:
+                sell_qty = min(sig_qty, held_qty)
+                if sell_qty >= 1:
+                    sell_revenue = sell_qty * bar_open
+                    capital += sell_revenue
+
+                    p_trade = held_trades[0]
+                    pnl = (bar_open - p_trade["entry_price"]) * sell_qty
+                    pnl_pct = ((bar_open - p_trade["entry_price"]) / p_trade["entry_price"]) * 100
+
+                    trades.append({
+                        "entry_time": p_trade["entry_time"],
+                        "exit_time": current_time,
+                        "entry_price": p_trade["entry_price"],
+                        "exit_price": bar_open,
+                        "qty": sell_qty,
+                        "type": "AL",
+                        "pnl": pnl,
+                        "pnl_pct": pnl_pct,
+                        "reason": p_trade["reason"],
+                        "exit_reason": sig_reason
+                    })
+                    p_trade["qty"] -= sell_qty
+                    held_qty -= sell_qty
+                    if sig_action == "SAT_ALL" or held_qty < 1:
+                        held_qty = 0.0
+                        entry_price = 0.0
+                        held_trades = []
+                    print(f"[{current_time}] SATIM: {sell_qty} Lot @ {bar_open:.2f} TL (acilis) | Kâr/Zarar: {pnl:+.2f} TL ({pnl_pct:+.2f}%) | Neden: {sig_reason} | Kalan: {held_qty} Lot")
 
         # 3. Lookahead bias (geleceği görme) olmaksızın günlük slice oluştur
         # Bugünün o saate kadar olan saatlik barlarını birleştirip bugünlük bar oluştur
@@ -116,33 +195,41 @@ async def run_backtest(ticker: str, period: str, initial_capital: float, max_tra
         if drawdown > max_drawdown:
             max_drawdown = drawdown
 
-        # İŞLEM SİMÜLASYONU
+        # ------------------------------------------------------------------
+        # B) SINYAL URETIMI (bar kapanisi baz alinir)
+        #    next_open: sinyal uretilir, icra sonraki turda (barin acilisinda) yapilir
+        #    signal_close: sinyal aninda kapanis fiyatindan icra edilir (eski davranis)
+        # ------------------------------------------------------------------
         if held_qty == 0:
             # ALIM KOŞULU (Skor >= 65 ve Haber >= 30)
             if composite >= 65 and news_score >= 30:
-                target_amount = min(capital * 0.15, max_trade_allocation)
-                if target_amount < 500.0:
-                    target_amount = min(capital, 500.0)
-                
-                qty_to_buy = int(target_amount / close)
-                if qty_to_buy >= 1:
-                    buy_cost = qty_to_buy * close
-                    capital -= buy_cost
-                    held_qty = float(qty_to_buy)
-                    entry_price = close
-                    tp1_hit = False
-                    tp2_hit = False
-                    
-                    held_trades.append({
-                        "entry_time": current_time,
-                        "entry_price": entry_price,
-                        "qty": held_qty,
-                        "type": "AL",
-                        "reason": f"Kompozit Skor: {composite:.1f}/100 (Teknik: {tech_score:.1f}, Temel: {fund_score:.1f})"
-                    })
-                    print(f"[{current_time}] ALIM: {qty_to_buy} Lot @ {close:.2f} TL | Kompozit: {composite:.1f} | Kalan Nakit: {capital:.2f} TL")
+                reason = f"Kompozit Skor: {composite:.1f}/100 (Teknik: {tech_score:.1f}, Temel: {fund_score:.1f})"
+                if fill_mode == "next_open":
+                    pending_signal = ("AL", 0.0, reason)
+                else:
+                    target_amount = min(capital * 0.15, max_trade_allocation)
+                    if target_amount < 500.0:
+                        target_amount = min(capital, 500.0)
+
+                    qty_to_buy = int(target_amount / close)
+                    if qty_to_buy >= 1:
+                        buy_cost = qty_to_buy * close
+                        capital -= buy_cost
+                        held_qty = float(qty_to_buy)
+                        entry_price = close
+                        tp1_hit = False
+                        tp2_hit = False
+
+                        held_trades.append({
+                            "entry_time": current_time,
+                            "entry_price": entry_price,
+                            "qty": held_qty,
+                            "type": "AL",
+                            "reason": reason
+                        })
+                        print(f"[{current_time}] ALIM: {qty_to_buy} Lot @ {close:.2f} TL | Kompozit: {composite:.1f} | Kalan Nakit: {capital:.2f} TL")
         else:
-            # SATIM KOŞULLARI (Kısa Vadeli TP/SL Seviyeleri)
+            # SATIM KOŞULLARI (Kısa Vadeli TP/SL Seviyeleri) — kapanış fiyatıyla değerlendirilir
             current_return_pct = (close - entry_price) / entry_price
             
             action = None
@@ -188,7 +275,11 @@ async def run_backtest(ticker: str, period: str, initial_capital: float, max_tra
                 sell_qty = held_qty
                 exit_reason = f"Zayıf Skor (Kompozit: {composite:.1f})"
 
-            if action == "SAT_ALL":
+            if action is not None and fill_mode == "next_open":
+                # Sinyal uretildi; icra bir sonraki barin acilisinda yapilacak
+                pending_signal = (action, sell_qty, exit_reason)
+
+            elif action == "SAT_ALL":
                 sell_revenue = sell_qty * close
                 capital += sell_revenue
                 
@@ -299,6 +390,9 @@ async def run_backtest(ticker: str, period: str, initial_capital: float, max_tra
         "status": "success",
         "ticker": ticker,
         "period": period,
+        "fill_mode": fill_mode,
+        "news_score": news_score,
+        "news_mode": news_mode,
         "initial_capital": initial_capital,
         "final_portfolio_value": final_portfolio_value,
         "total_return": total_return,
@@ -319,6 +413,9 @@ if __name__ == "__main__":
     parser.add_argument("--period", type=str, default="1mo", choices=["5d", "1mo", "3mo", "60d"], help="Analiz süresi")
     parser.add_argument("--capital", type=float, default=500000.0, help="Başlangıç sermayesi (TL)")
     parser.add_argument("--max-alloc", type=float, default=10000.0, help="İşlem başına maksimum tahsis (TL)")
+    parser.add_argument("--news", type=float, default=None, help="Haber skoru senaryosu (0-100). Verilmezse nötr 50.0 kullanılır.")
+    parser.add_argument("--fill-mode", type=str, default="next_open", choices=["next_open", "signal_close"],
+                        help="Icra modu: next_open (sonraki bar acilisi, gercekci) veya signal_close (sinyal kapanisi, iyimser)")
     
     args = parser.parse_args()
     
@@ -326,5 +423,7 @@ if __name__ == "__main__":
         ticker=args.ticker.upper(),
         period=args.period,
         initial_capital=args.capital,
-        max_trade_allocation=args.max_alloc
+        max_trade_allocation=args.max_alloc,
+        news_score=args.news,
+        fill_mode=args.fill_mode
     ))
