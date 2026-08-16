@@ -1,10 +1,18 @@
 import json
+import base64
 import urllib.request
 import urllib.error
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
+
+def basic_auth_headers(token):
+    """Dashboard/API korumasi icin Basic Auth header'i uretir."""
+    if not token:
+        return {}
+    encoded = base64.b64encode(f"borsa:{token}".encode('utf-8')).decode('ascii')
+    return {"Authorization": f"Basic {encoded}"}
 
 def send_request(url, data=None, method='GET', extra_headers=None):
     req_data = json.dumps(data).encode('utf-8') if data else None
@@ -40,10 +48,12 @@ def send_request(url, data=None, method='GET', extra_headers=None):
 def run_tests():
     base_url = "http://127.0.0.1:8000"
     token = os.getenv("WEBHOOK_SECRET_TOKEN", "").strip()
+    dashboard_token = os.getenv("DASHBOARD_AUTH_TOKEN", "").strip() or token
     headers = {"X-Webhook-Token": token} if token else None
+    api_headers = basic_auth_headers(dashboard_token) or None
     
     print("=== 1. BASLANGIC PORTFOY DURUMU ===")
-    status, res = send_request(f"{base_url}/portfolio")
+    status, res = send_request(f"{base_url}/portfolio", extra_headers=api_headers)
     print(f"Durum: {status} | Portfoy: {json.dumps(res, indent=2)}\n")
     
     print("=== 2. GECERLI AL ISLEMI (KRONT) ===")
@@ -57,11 +67,11 @@ def run_tests():
     print(f"Durum: {status} | Yanit: {json.dumps(res, indent=2)}\n")
     
     print("=== 3. ISLEM SONRASI PORTFOY DURUMU ===")
-    status, res = send_request(f"{base_url}/portfolio")
+    status, res = send_request(f"{base_url}/portfolio", extra_headers=api_headers)
     print(f"Durum: {status} | Portfoy: {json.dumps(res, indent=2)}\n")
     
     print("=== 4. ISLEM GECMISI ===")
-    status, res = send_request(f"{base_url}/trades")
+    status, res = send_request(f"{base_url}/trades", extra_headers=api_headers)
     print(f"Durum: {status} | Islemler: {json.dumps(res, indent=2)}\n")
 
     print("=== 5. GECERLI SAT ISLEMI (KRONT - 50 lot) ===")
@@ -75,7 +85,7 @@ def run_tests():
     print(f"Durum: {status} | Yanit: {json.dumps(res, indent=2)}\n")
 
     print("=== 6. SATIS SONRASI PORTFOY DURUMU ===")
-    status, res = send_request(f"{base_url}/portfolio")
+    status, res = send_request(f"{base_url}/portfolio", extra_headers=api_headers)
     print(f"Durum: {status} | Portfoy: {json.dumps(res, indent=2)}\n")
     
     print("=== 7. HATA TESTI: BAKIYE YETERSIZ AL ===")

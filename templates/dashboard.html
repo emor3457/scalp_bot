@@ -122,6 +122,42 @@
             border-color: rgba(255, 255, 255, 0.2);
         }
 
+        /* Tarama modu gecisi: Rapor (DB'ye yazmaz) / Canli (bot.db'ye yazar) */
+        .scan-mode-toggle {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--card-border);
+            border-radius: 50px;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.25);
+        }
+        .scan-mode-toggle .mode-option {
+            background: transparent;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s ease;
+        }
+        .scan-mode-toggle .mode-option:hover {
+            color: var(--text-primary);
+        }
+        .scan-mode-toggle .mode-option.active-report {
+            background: rgba(139, 92, 246, 0.18);
+            color: #c084fc;
+            box-shadow: inset 0 0 0 1px rgba(139, 92, 246, 0.35);
+        }
+        .scan-mode-toggle .mode-option.active-live {
+            background: rgba(52, 211, 153, 0.15);
+            color: #34d399;
+            box-shadow: inset 0 0 0 1px rgba(52, 211, 153, 0.35);
+        }
+
         /* Hero Metrics Card Grid */
         .metrics-grid {
             display: grid;
@@ -373,21 +409,28 @@
                     <h1>BIST Scalp Bot</h1>
                     <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px;">TradingView Webhook & Otomatik Tarama</p>
                 </div>
-            </div>
-            <div class="status-section">
-                <div class="status-indicator" id="modeIndicator" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: var(--accent-blue);">
-                    <i class="fa-solid fa-flask" style="margin-right: 2px;"></i>
-                    Sanal Mod (Demo)
+            </div>                <div class="status-section">
+                    <div class="status-indicator" id="modeIndicator" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: var(--accent-blue);">
+                        <i class="fa-solid fa-flask" style="margin-right: 2px;"></i>
+                        Sanal Mod (Demo)
+                    </div>
+                    <div class="scan-mode-toggle" id="scanModeToggle" title="Tarama modu: Rapor (bot.db'ye yazmaz) / Canlı (bot.db'ye yazar)">
+                        <button class="mode-option active-report" id="modeReportBtn" data-mode="report">
+                            <i class="fa-solid fa-clipboard-list"></i> Rapor
+                        </button>
+                        <button class="mode-option" id="modeLiveBtn" data-mode="live">
+                            <i class="fa-solid fa-bolt"></i> Canlı
+                        </button>
+                    </div>
+                    <button class="btn-refresh" id="scanBtn" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15)); border: 1px solid rgba(139, 92, 246, 0.3); color: #c084fc;">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        Analiz Başlat
+                    </button>
+                    <button class="btn-refresh" id="refreshBtn">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                        Yenile
+                    </button>
                 </div>
-                <button class="btn-refresh" id="scanBtn" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15)); border: 1px solid rgba(139, 92, 246, 0.3); color: #c084fc;">
-                    <i class="fa-solid fa-magnifying-glass-chart"></i>
-                    Analiz Başlat
-                </button>
-                <button class="btn-refresh" id="refreshBtn">
-                    <i class="fa-solid fa-arrows-rotate"></i>
-                    Yenile
-                </button>
-            </div>
         </header>
 
         <!-- Dynamic Scan Console Card (Hidden by default) -->
@@ -553,6 +596,13 @@
                         <label style="font-size: 0.8rem; color: var(--text-secondary);">İşlem Başına Bütçe (TL)</label>
                         <input type="number" id="backtestMaxAlloc" value="10000" style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--card-border); color: var(--text-primary); padding: 0.5rem; border-radius: 6px;">
                     </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <label style="font-size: 0.8rem; color: var(--text-secondary);">İcra Modu</label>
+                        <select id="backtestFillMode" style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--card-border); color: var(--text-primary); padding: 0.5rem; border-radius: 6px;">
+                            <option value="next_open">Gerçekçi (Sonraki Bar Açılışı)</option>
+                            <option value="signal_close">İyimser (Sinyal Kapanışı)</option>
+                        </select>
+                    </div>
                     <button class="btn-refresh" id="startBacktestBtn" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6); border: none; color: white; padding: 0.6rem; border-radius: 6px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; height: 38px;">
                         <i class="fa-solid fa-play"></i> Testi Başlat
                     </button>
@@ -633,6 +683,8 @@
     <!-- Script to fetch and render dashboard data -->
     <script>
         let myChart = null;
+        // Tarama modu: 'report' (varsayilan, DB'ye yazmaz) veya 'live' (bot.db'ye yazar)
+        let currentScanMode = 'report';
 
         // Sayfa yuklendiginde ve butonla yenile
         document.addEventListener('DOMContentLoaded', () => {
@@ -649,6 +701,19 @@
                 });
             });
 
+            // Kaydedilmis tarama modunu geri yukle (varsayilan: report)
+            try {
+                const savedScanMode = localStorage.getItem('scanMode');
+                if (savedScanMode === 'live' || savedScanMode === 'report') {
+                    currentScanMode = savedScanMode;
+                }
+            } catch (e) { /* localStorage erisilemezse varsayilan modda kal */ }
+            applyScanModeUI();
+
+            // Tarama modu gecis anahtari
+            document.getElementById('modeReportBtn').addEventListener('click', () => setScanMode('report'));
+            document.getElementById('modeLiveBtn').addEventListener('click', () => setScanMode('live'));
+
             // Analiz baslat butonu
             document.getElementById('scanBtn').addEventListener('click', () => {
                 triggerMarketScan();
@@ -664,6 +729,47 @@
                 startBacktesting();
             });
         });
+
+        // XSS korumasi: sunucudan gelen metinleri innerHTML'e basmadan once escape et
+        function escapeHtml(value) {
+            return String(value == null ? '' : value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // Tarama modunun gorunumunu uygula (onay sormadan — sayfa yuklemesi icin)
+        function applyScanModeUI() {
+            const reportBtn = document.getElementById('modeReportBtn');
+            const liveBtn = document.getElementById('modeLiveBtn');
+            const scanBtn = document.getElementById('scanBtn');
+            reportBtn.classList.toggle('active-report', currentScanMode === 'report');
+            liveBtn.classList.toggle('active-live', currentScanMode === 'live');
+            if (currentScanMode === 'live') {
+                scanBtn.style.borderColor = 'rgba(52, 211, 153, 0.5)';
+                scanBtn.style.color = '#34d399';
+            } else {
+                scanBtn.style.borderColor = 'rgba(139, 92, 246, 0.3)';
+                scanBtn.style.color = '#c084fc';
+            }
+        }
+
+        // Tarama modunu degistir (Rapor = DB'ye yazmaz, Canli = bot.db'ye yazar)
+        function setScanMode(mode) {
+            if (mode === 'live' && currentScanMode !== 'live') {
+                const ok = confirm("CANLI MOD: Tarama sonuçları bot.db'ye yazılacak, portföy güncellenecek ve Telegram bildirimi gönderilecek. Devam edilsin mi?");
+                if (!ok) return;
+            }
+            currentScanMode = mode;
+            try {
+                localStorage.setItem('scanMode', mode);
+            } catch (e) {
+                console.warn('Tarama modu kaydedilemedi:', e);
+            }
+            applyScanModeUI();
+        }
 
         // Config verilerini cekip Mod Gostergesini guncelle
         async function updateConfig() {
@@ -754,7 +860,7 @@
                 }
 
                 tr.innerHTML = `
-                    <td style="font-weight: 600;">#${item.ticker}</td>
+                    <td style="font-weight: 600;">#${escapeHtml(item.ticker)}</td>
                     <td>${item.quantity.toLocaleString('tr-TR', { maximumFractionDigits: 2 })}</td>
                     <td>${item.average_cost.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL</td>
                     <td>${item.current_price.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL</td>
@@ -877,8 +983,8 @@
                 const infoIcon = trade.reasoning ? ' <i class="fa-solid fa-circle-info" style="font-size:0.75rem; color:var(--accent-purple); margin-left:4px;"></i>' : '';
 
                 tr.innerHTML = `
-                    <td style="color: var(--text-secondary);">${formattedTime}</td>
-                    <td style="font-weight: 600;">#${trade.ticker}${infoIcon}</td>
+                    <td style="color: var(--text-secondary);">${escapeHtml(formattedTime)}</td>
+                    <td style="font-weight: 600;">#${escapeHtml(trade.ticker)}${infoIcon}</td>
                     <td>${actionBadge}</td>
                     <td>${trade.price.toFixed(2)} TL</td>
                     <td>${trade.quantity.toFixed(0)}</td>
@@ -893,7 +999,7 @@
                     rTr.style.display = 'none';
                     rTr.innerHTML = `
                         <td colspan="6" style="padding: 0.8rem 1.5rem; background: rgba(139, 92, 246, 0.03); border-left: 3px solid var(--accent-purple); white-space: normal; line-height: 1.5; color: var(--text-secondary);">
-                            <strong>30 Yıllık Borsacı Yorumu:</strong> <em>${trade.reasoning}</em>
+                            <strong>30 Yıllık Borsacı Yorumu:</strong> <em>${escapeHtml(trade.reasoning)}</em>
                         </td>
                     `;
                     tableBody.appendChild(rTr);
@@ -924,8 +1030,8 @@
                 const infoIcon = sig.reasoning ? ' <i class="fa-solid fa-circle-info" style="font-size:0.75rem; color:var(--accent-purple); margin-left:4px;"></i>' : '';
 
                 tr.innerHTML = `
-                    <td style="color: var(--text-secondary);">${formattedTime}</td>
-                    <td style="font-weight: 600;">#${sig.ticker}${infoIcon}</td>
+                    <td style="color: var(--text-secondary);">${escapeHtml(formattedTime)}</td>
+                    <td style="font-weight: 600;">#${escapeHtml(sig.ticker)}${infoIcon}</td>
                     <td>${actionBadge}</td>
                     <td>${sig.price.toFixed(2)} TL</td>
                     <td>${sig.quantity.toFixed(0)}</td>
@@ -939,7 +1045,7 @@
                     rTr.style.display = 'none';
                     rTr.innerHTML = `
                         <td colspan="5" style="padding: 0.8rem 1.5rem; background: rgba(59, 130, 246, 0.03); border-left: 3px solid var(--accent-blue); white-space: normal; line-height: 1.5; color: var(--text-secondary);">
-                            <strong>Teknik Gerekçe:</strong> <em>${sig.reasoning}</em>
+                            <strong>Teknik Gerekçe:</strong> <em>${escapeHtml(sig.reasoning)}</em>
                         </td>
                     `;
                     tableBody.appendChild(rTr);
@@ -980,21 +1086,41 @@
 
             try {
                 const start = Date.now();
-                const res = await fetch('/scan');
+                // Secili mod: Rapor (DB'ye yazmaz) veya Canli (bot.db'ye yazar)
+                if (currentScanMode === 'live') {
+                    writeToConsole("WARN", "CANLI MOD aktif: sinyaller bot.db'ye yazılacak ve portföy güncellenecek.");
+                } else {
+                    writeToConsole("INFO", "RAPOR MODU aktif: sonuçlar yalnızca raporlanacak, bot.db'ye yazılmayacak.");
+                }
+                const res = await fetch('/scan?report_only=' + (currentScanMode === 'live' ? 'false' : 'true'));
                 const data = await res.json();
                 const duration = ((Date.now() - start) / 1000).toFixed(2);
 
                 writeToConsole("SUCCESS", `Tarama tamamlandı! Süre: ${duration} saniye. Taranan Hisse: ${data.total_scanned}. Üretilen Sinyal: ${data.signals_generated_count}`);
 
+                // Rapor modu bildirimi
+                if (data.report_only) {
+                    writeToConsole("WARN", "⚠ RAPOR MODU: Tarama sonuçları yalnızca raporlandı, bot.db'ye HİÇBİR işlem yazılmadı.");
+                    if (data.simulation) {
+                        writeToConsole("INFO", `Simülasyon: ${data.simulation.executable_signals}/${data.signals_generated_count} sinyal icra edilebilir. Uygulanırsa tahmini nakit: ${data.simulation.final_cash.toLocaleString('tr-TR')} TL, pozisyon sayısı: ${data.simulation.position_count}.`);
+                    }
+                }
+
                 // Sinyal listesini yaz
                 if (data.signals_generated_count > 0) {
                     data.signals.forEach(sig => {
                         const style = sig.action === "AL" ? "SUCCESS" : "ERROR";
-                        writeToConsole(style, `[SİNYAL] #${sig.ticker} için ${sig.action} işlemi gerçekleştirildi. Fiyat: ${sig.price.toFixed(2)} TL | Miktar: ${sig.quantity.toFixed(0)} Lot`);
+                        let execNote;
+                        if (data.report_only) {
+                            execNote = sig.would_execute ? " — icra edilebilir (rapor)" : ` — REDDEDİLİR: ${sig.rejected_reason || 'risk kontrolü'}`;
+                        } else {
+                            execNote = " işlemi gerçekleştirildi.";
+                        }
+                        writeToConsole(style, `[SİNYAL] #${sig.ticker} için ${sig.action} sinyali: Fiyat ${sig.price.toFixed(2)} TL | Miktar ${sig.quantity.toFixed(0)} Lot${execNote}`);
                         writeToConsole("TEXT", `└ Gerekçe: "${sig.reasoning}"`);
                     });
                 } else {
-                    writeToConsole("WARN", "BIST 30 üzerinde alım veya satım koşullarını sağlayan aktif hisse senedi bulunamadı (Tüm hisseler beklemede).");
+                    writeToConsole("WARN", "BIST 50 üzerinde alım veya satım koşullarını sağlayan aktif hisse senedi bulunamadı (Tüm hisseler beklemede).");
                 }
 
                 // Hisse detaylarının özetini konsola dök
@@ -1033,7 +1159,7 @@
             if (type === "WARN") colorClass = 'console-warn';
             if (type === "ERROR") colorClass = 'console-error';
 
-            line.innerHTML = `${timeSpan}<span class="${colorClass}">${message}</span>`;
+            line.innerHTML = `${timeSpan}<span class="${colorClass}">${escapeHtml(message)}</span>`;
             consoleOut.appendChild(line);
             
             // Auto scroll to bottom
@@ -1047,6 +1173,7 @@
             const period = document.getElementById('backtestPeriod').value;
             const capital = document.getElementById('backtestCapital').value;
             const maxAlloc = document.getElementById('backtestMaxAlloc').value;
+            const fillMode = document.getElementById('backtestFillMode').value;
 
             if (!ticker) {
                 alert('Lütfen geçerli bir hisse kodu girin!');
@@ -1057,7 +1184,7 @@
             document.getElementById('backtestResults').style.display = 'none';
             document.getElementById('backtestLoading').style.display = 'block';
 
-            fetch(`/api/backtest?ticker=${ticker}&period=${period}&capital=${capital}&max_alloc=${maxAlloc}`)
+            fetch(`/api/backtest?ticker=${ticker}&period=${period}&capital=${capital}&max_alloc=${maxAlloc}&fill_mode=${fillMode}`)
                 .then(res => {
                     if (!res.ok) {
                         return res.json().then(err => { throw new Error(err.detail || 'Bilinmeyen hata') });

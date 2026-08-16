@@ -2,6 +2,8 @@ import os
 import logging
 import sys
 import asyncio
+import base64
+import secrets
 
 if sys.platform == 'win32':
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
@@ -34,6 +36,45 @@ logger = logging.getLogger("BistScalpBot")
 
 app = FastAPI(title="BIST Short-Term Trading Bot | Teknik + Temel + Haber Analizi")
 
+# ---------------------------------------------------------------------------
+# Dashboard/API kimlik dogrulama (Basic Auth)
+# - DASHBOARD_AUTH_TOKEN ayarlanmadiysa WEBHOOK_SECRET_TOKEN kullanilir.
+# - Ikisi de bos ise koruma kapalidir (geriye donuk uyumluluk).
+# - Browser: ilk acilista kullanici adi olarak 'borsa', sifre olarak token girilir.
+# ---------------------------------------------------------------------------
+DASHBOARD_AUTH_TOKEN = (
+    os.getenv("DASHBOARD_AUTH_TOKEN", "").strip()
+    or os.getenv("WEBHOOK_SECRET_TOKEN", "").strip()
+)
+
+PROTECTED_PATHS = (
+    "/dashboard", "/portfolio", "/trades", "/signals",
+    "/scan", "/api/backtest", "/config",
+)
+
+
+@app.middleware("http")
+async def dashboard_auth_middleware(request: Request, call_next):
+    path = request.url.path
+    if path in PROTECTED_PATHS and DASHBOARD_AUTH_TOKEN:
+        auth = request.headers.get("Authorization", "")
+        expected_basic = "Basic " + base64.b64encode(
+            f"borsa:{DASHBOARD_AUTH_TOKEN}".encode("utf-8")
+        ).decode("ascii")
+        expected_bearer = "Bearer " + DASHBOARD_AUTH_TOKEN
+        valid = (
+            secrets.compare_digest(auth, expected_basic)
+            or secrets.compare_digest(auth, expected_bearer)
+        )
+        if not valid:
+            return JSONResponse(
+                status_code=401,
+                content={"detail": "Yetkisiz erisim. Gecersiz kimlik bilgisi."},
+                headers={"WWW-Authenticate": 'Basic realm="BIST Bot"'},
+            )
+    return await call_next(request)
+
+
 async def periodic_scan_loop():
     # Bekle ve baslat (baslangicta uvicorn'un yuklenmesini bekle)
     await asyncio.sleep(10)
@@ -47,6 +88,7 @@ async def periodic_scan_loop():
             # BIST seans saatleri 10:00 - 18:00
             if now.weekday() < 5 and (10 <= now.hour < 18):
                 logger.info("Periyodik BIST taramasi baslatiliyor...")
+                # Mod: SCAN_MODE env (report ise raporlama, DB'ye yazilmaz)
                 await auto_analyst.scan_all_and_report()
             else:
                 logger.debug("BIST kapali oldugu icin periyodik tarama atlandi.")
@@ -65,7 +107,8 @@ def startup_event():
 
 # TradingView'dan gelecek JSON verisi icin Pydantic modeli
 class WebhookAlert(BaseModel):
-    ticker: str = Field(..., description="Hisse adi (Orn: KRONT, ARFYE)")
+    # ticker: XSS ve gecersiz girdilere karsi harf/rakam/nokta ile sinirli (1-10 karakter)
+    ticker: str = Field(..., pattern=r"^[A-Za-z0-9.]{1,10}$", description="Hisse adi (Orn: KRONT, ARFYE)")
     action: Literal["AL", "SAT"] = Field(..., description="Islem yonu (AL veya SAT)")
     price: float = Field(..., gt=0, description="Hisse fiyati")
     quantity: float = Field(..., gt=0, description="Islem miktari (lot)")
@@ -180,10 +223,13 @@ async def get_signals(limit: int = 50):
         raise HTTPException(status_code=500, detail="Sinyal gecmisi alinamadi.")
 
 @app.get("/api/backtest")
-async def get_api_backtest(ticker: str = "THYAO", period: str = "1mo", capital: float = 500000.0, max_alloc: float = 10000.0):
+async def get_api_backtest(ticker: str = "THYAO", period: str = "1mo", capital: float = 500000.0, max_alloc: float = 10000.0, news: float = None, fill_mode: str = "next_open"):
     try:
         from backtesting.backtest_strategy import run_backtest
-        res = await run_backtest(ticker.upper(), period, capital, max_alloc)
+        # news: 0-100 arasi haber skoru senaryosu. Verilmezse notr (50.0) kullanilir
+        # ve canli haber duyarliligi tarihsel sonuclari carpitmaz.
+        # fill_mode: next_open (gercekci, varsayilan) veya signal_close (iyimser karsilastirma)
+        res = await run_backtest(ticker.upper(), period, capital, max_alloc, news, fill_mode)
         if not res:
             raise HTTPException(status_code=400, detail="Backtest basarisiz oldu veya veri yok.")
         return res
@@ -192,10 +238,15 @@ async def get_api_backtest(ticker: str = "THYAO", period: str = "1mo", capital: 
         raise HTTPException(status_code=500, detail=f"Backtest sirasinda hata olustu: {str(e)}")
 
 @app.get("/scan")
-async def trigger_scan():
+async def trigger_scan(report_only: bool = True):
+    """
+    Manuel BIST taramasi. Varsayilan RAPOR MODU (report_only=true):
+    sonuclar donulur, bot.db'ye hicbir sinyal/islem YAZILMAZ.
+    Gercek islem icin acikca report_only=false gonderilmelidir.
+    """
     try:
-        logger.info("Manuel BIST taramasi tetiklendi...")
-        report = await auto_analyst.scan_all_and_report()
+        logger.info(f"Manuel BIST taramasi tetiklendi (report_only={report_only})...")
+        report = await auto_analyst.scan_all_and_report(report_only=report_only)
         return report
     except Exception as e:
         logger.error(f"Manuel tarama sirasinda hata: {str(e)}")
