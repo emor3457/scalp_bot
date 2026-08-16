@@ -23,6 +23,7 @@ import database
 import trade_manager
 import news_analyst
 import market_data
+import bist_fundamentals
 
 logger = logging.getLogger("BistScalpBot")
 
@@ -214,9 +215,13 @@ def calculate_technical_score(df_daily: pd.DataFrame, df_hourly: pd.DataFrame) -
     return final_score, details
 
 
-def calculate_fundamental_score(ticker_info: dict, dist_from_52w_low: float) -> float:
+def calculate_fundamental_score(ticker_info: dict, dist_from_52w_low: float, bist: dict | None = None) -> float:
     """
-    Yahoo Finance temel analiz verilerinden bir 0-100 skoru hesaplar.
+    Temel analiz skoru (0-100).
+
+    bist parametresi verildiginde GERCEK BIST oranlari (bist_fundamentals /
+    uzmanpara-Foreks: F/K, PD/DD, ROE, net kar, senet sayisi) kullanilir;
+    yoksa Yahoo Finance verisiyle (ticker_info) fallback yapilir.
     """
     score = 50.0  # Baslangic notr skor
 
@@ -225,18 +230,54 @@ def calculate_fundamental_score(ticker_info: dict, dist_from_52w_low: float) -> 
         eps = ticker_info.get("trailingEps")
         roe = ticker_info.get("returnOnEquity")
 
-        # F/K Oranı değerlendirmesi
-        if pe is not None:
-            if 5 < pe < 12:
-                score += 20   # Ucuz
-            elif 12 <= pe < 20:
-                score += 10   # Makul
-            elif pe > 30:
-                score -= 10   # Pahali
-            elif pe < 0:
-                score -= 15   # Zarar ediyor
+        if bist:
+            # --- GERCEK BIST ORANLARI (uzmanpara/Foreks) onceliklidir ---
+            bist_pe = bist.get("fk")
+            if bist_pe is not None:
+                pe = bist_pe
+            bist_roe = bist.get("roe")
+            if bist_roe is not None:
+                roe = bist_roe
+            # EPS = Net Kar / Senet Sayisi (BIST'te dogrudan EPS verilmez)
+            nk, ss = bist.get("net_kar"), bist.get("senet_sayisi")
+            if nk is not None and ss and ss > 0:
+                eps = nk / ss
 
-        # ROE (Ozsermaye Karliligi)
+            # F/K (BIST bandi: F/K 6-12 makul, <6 cok ucuz)
+            if pe is not None:
+                if 0 < pe < 6:
+                    score += 20   # Cok ucuz (BIST degeri firsati)
+                elif 6 <= pe < 12:
+                    score += 10   # Makul
+                elif 12 <= pe < 20:
+                    score += 5
+                elif pe > 30:
+                    score -= 10   # Pahali
+                elif pe < 0:
+                    score -= 15   # Zarar ediyor
+
+            # PD/DD (yalnizca BIST verisinde var; THYAO gibi <1 deger firsati)
+            pd_dd = bist.get("pd_dd")
+            if pd_dd is not None:
+                if 0 < pd_dd < 1:
+                    score += 10   # Defter degerinin altinda
+                elif pd_dd < 2:
+                    score += 5    # Makul
+                elif pd_dd > 4:
+                    score -= 5    # Pahali
+        else:
+            # --- YFINANCE FALLBACK (mevcut davranis) ---
+            if pe is not None:
+                if 5 < pe < 12:
+                    score += 20   # Ucuz
+                elif 12 <= pe < 20:
+                    score += 10   # Makul
+                elif pe > 30:
+                    score -= 10   # Pahali
+                elif pe < 0:
+                    score -= 15   # Zarar ediyor
+
+        # ROE (Ozsermaye Karliligi) — her iki kaynak icin ortak
         if roe is not None:
             if roe > 0.25:
                 score += 15   # Cok iyi (>%25)
@@ -297,10 +338,12 @@ async def analyze_ticker(ticker: str, semaphore: asyncio.Semaphore) -> dict:
             stock = yf.Ticker(yahoo_ticker)
 
             # Veri indir — thread pool ile (blocking IO)
-            df_daily, df_hourly, info = await asyncio.gather(
+            # bist: gercek BIST temel oranlari (uzmanpara/Foreks, 30 dk onbellek)
+            df_daily, df_hourly, info, bist = await asyncio.gather(
                 asyncio.to_thread(_fetch_history, stock, "6mo", "1d"),
                 asyncio.to_thread(_fetch_history, stock, "1mo", "1h"),
                 asyncio.to_thread(_fetch_info, stock),
+                asyncio.to_thread(bist_fundamentals.get_fundamentals, ticker),
             )
 
             # Haber skoru (ayri, non-blocking)
@@ -311,9 +354,13 @@ async def analyze_ticker(ticker: str, semaphore: asyncio.Semaphore) -> dict:
                 logger.warning(f"{ticker}: Yetersiz gunluk veri ({len(df_daily) if df_daily is not None else 0} satir)")
                 return _hold_result(ticker, 0.0, "Yetersiz piyasa verisi.")
 
-            # Skor hesapla
+            # Skor hesapla — temel skorda gercek BIST oranlari oncelikli
+            # (yoksa yfinance fallback)
             tech_score, tech_details = calculate_technical_score(df_daily, df_hourly)
-            fund_score = calculate_fundamental_score(info, tech_details.get("dist_from_52w_low", 50))
+            fund_source = "BIST/uzmanpara" if bist else "yfinance"
+            fund_score = calculate_fundamental_score(
+                info, tech_details.get("dist_from_52w_low", 50), bist=bist
+            )
 
             # Kompozit Skor: Teknik %50, Temel %25, Haber %25
             composite = (tech_score * 0.50) + (fund_score * 0.25) + (news_score * 0.25)
@@ -331,7 +378,7 @@ async def analyze_ticker(ticker: str, semaphore: asyncio.Semaphore) -> dict:
 
             logger.info(
                 f"{ticker} | Teknik={tech_score:.1f} Temel={fund_score:.1f} "
-                f"Haber={news_score:.1f} -> Kompozit={composite:.1f}"
+                f"[{fund_source}] Haber={news_score:.1f} -> Kompozit={composite:.1f}"
             )
 
             # --- Portfoy durumu ---
@@ -466,6 +513,7 @@ async def analyze_ticker(ticker: str, semaphore: asyncio.Semaphore) -> dict:
                     "technical": round(tech_score, 1),
                     "fundamental": round(fund_score, 1),
                     "news": round(news_score, 1),
+                    "fund_source": fund_source,
                 }
             }
 

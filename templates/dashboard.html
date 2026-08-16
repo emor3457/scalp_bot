@@ -158,6 +158,67 @@
             box-shadow: inset 0 0 0 1px rgba(52, 211, 153, 0.35);
         }
 
+        /* Derin Analiz raporu (Markdown render) */
+        .report-body {
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: var(--text-primary);
+        }
+        .report-body h2 {
+            font-size: 1.15rem;
+            margin: 1.2rem 0 0.5rem;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 0.3rem;
+        }
+        .report-body h3 {
+            font-size: 1rem;
+            margin: 1rem 0 0.4rem;
+            color: var(--accent-green);
+        }
+        .report-body h4 {
+            font-size: 0.95rem;
+            margin: 0.8rem 0 0.3rem;
+        }
+        .report-body p { margin: 0.4rem 0; }
+        .report-body ul { margin: 0.4rem 0; padding-left: 1.4rem; }
+        .report-body li { margin: 0.2rem 0; }
+        .report-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.6rem 0;
+            font-size: 0.85rem;
+        }
+        .report-body th {
+            background: rgba(0, 0, 0, 0.25);
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-align: left;
+            padding: 0.5rem 0.7rem;
+            border: 1px solid var(--card-border);
+        }
+        .report-body td {
+            padding: 0.45rem 0.7rem;
+            border: 1px solid var(--card-border);
+        }
+        .report-body tr:nth-child(even) td { background: rgba(255, 255, 255, 0.02); }
+        .report-body blockquote {
+            border-left: 3px solid var(--accent-blue);
+            margin: 0.6rem 0;
+            padding: 0.4rem 0.8rem;
+            color: var(--text-secondary);
+            background: rgba(59, 130, 246, 0.06);
+            border-radius: 0 6px 6px 0;
+        }
+        .report-body hr { border: none; border-top: 1px solid var(--card-border); margin: 1.2rem 0; }
+        .report-body code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.1rem 0.35rem;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+        .report-body strong { color: #e5e7eb; }
+
         /* Hero Metrics Card Grid */
         .metrics-grid {
             display: grid;
@@ -678,6 +739,39 @@
                 </div>
             </div>
         </div>
+
+        <!-- Derin Analiz Card (bist-stock-analysis) -->
+        <div class="dashboard-card" style="margin-top: 2rem; margin-bottom: 2rem;">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="fa-solid fa-magnifying-glass-chart" style="color: var(--accent-green);"></i> Derin Analiz (bist-stock-analysis)
+                </h2>
+            </div>
+            <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+                <!-- Inputs Row -->
+                <div style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem; flex: 1; min-width: 180px; max-width: 320px;">
+                        <label style="font-size: 0.8rem; color: var(--text-secondary);">Hisse Kodu (Örn: THYAO)</label>
+                        <input type="text" id="deepTicker" value="THYAO" style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--card-border); color: var(--text-primary); padding: 0.5rem; border-radius: 6px; text-transform: uppercase;">
+                    </div>
+                    <button class="btn-refresh" id="startDeepBtn" style="background: linear-gradient(135deg, #10b981, #3b82f6); border: none; color: white; padding: 0.6rem 1.4rem; border-radius: 6px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; height: 38px;">
+                        <i class="fa-solid fa-file-lines"></i> Rapor Üret
+                    </button>
+                </div>
+
+                <!-- Loading Spinner -->
+                <div id="deepLoading" style="display: none; text-align: center; padding: 2rem;">
+                    <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--accent-green);"></i>
+                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Teknik + temel + haber verisi toplanıyor, Türkçe rapor hazırlanıyor. Lütfen bekleyin (10-20 sn)...</p>
+                </div>
+
+                <!-- Hata kutusu -->
+                <div id="deepError" style="display: none; color: #f87171; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); padding: 1rem; border-radius: 8px;"></div>
+
+                <!-- Rapor ciktisi (Markdown render) -->
+                <div id="deepReport" style="display: none;" class="report-body"></div>
+            </div>
+        </div>
     </div>
 
     <!-- Script to fetch and render dashboard data -->
@@ -727,6 +821,11 @@
             // Backtest başlat butonu
             document.getElementById('startBacktestBtn').addEventListener('click', () => {
                 startBacktesting();
+            });
+
+            // Derin Analiz butonu (bist-stock-analysis)
+            document.getElementById('startDeepBtn').addEventListener('click', () => {
+                startDeepAnalysis();
             });
         });
 
@@ -1164,6 +1263,81 @@
             
             // Auto scroll to bottom
             consoleOut.scrollTop = consoleOut.scrollHeight;
+        }
+
+        // ---- Derin Analiz (bist-stock-analysis) ----
+        // Guvenli minimal Markdown renderer: once escape, sonra inline bicimlendirme
+        function mdInline(text) {
+            return text
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>');
+        }
+
+        function renderMarkdown(md) {
+            const lines = md.split(/\r?\n/);
+            let html = '';
+            let i = 0;
+            const parseRow = r => r.replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => mdInline(c.trim()));
+            while (i < lines.length) {
+                const t = lines[i].trim();
+                if (!t) { i++; continue; }
+                if (t.startsWith('|')) {
+                    const rows = [];
+                    while (i < lines.length && lines[i].trim().startsWith('|')) { rows.push(lines[i].trim()); i++; }
+                    const header = parseRow(rows[0]);
+                    const body = rows.slice(2); // 2. satir ayrac (|---|)
+                    html += '<table><thead><tr>' + header.map(c => '<th>' + c + '</th>').join('') + '</tr></thead><tbody>';
+                    body.forEach(r => { html += '<tr>' + parseRow(r).map(c => '<td>' + c + '</td>').join('') + '</tr>'; });
+                    html += '</tbody></table>';
+                    continue;
+                }
+                if (t.startsWith('### ')) { html += '<h4>' + mdInline(escapeHtml(t.slice(4))) + '</h4>'; i++; continue; }
+                if (t.startsWith('## ')) { html += '<h3>' + mdInline(escapeHtml(t.slice(3))) + '</h3>'; i++; continue; }
+                if (t.startsWith('# ')) { html += '<h2>' + mdInline(escapeHtml(t.slice(2))) + '</h2>'; i++; continue; }
+                if (/^---$/.test(t)) { html += '<hr>'; i++; continue; }
+                if (t.startsWith('> ')) { html += '<blockquote>' + mdInline(escapeHtml(t.slice(2))) + '</blockquote>'; i++; continue; }
+                if (t.startsWith('- ')) {
+                    const items = [];
+                    while (i < lines.length && /^- /.test(lines[i].trim())) { items.push(mdInline(escapeHtml(lines[i].trim().slice(2)))); i++; }
+                    html += '<ul><li>' + items.join('</li><li>') + '</li></ul>';
+                    continue;
+                }
+                html += '<p>' + mdInline(escapeHtml(t)) + '</p>';
+                i++;
+            }
+            return html;
+        }
+
+        async function startDeepAnalysis() {
+            const tickerInput = document.getElementById('deepTicker');
+            const ticker = tickerInput.value.trim().toUpperCase().replace(/\.IS$/, '');
+            if (!ticker) { alert('Lütfen geçerli bir hisse kodu girin!'); return; }
+            const report = document.getElementById('deepReport');
+            const loading = document.getElementById('deepLoading');
+            const errorBox = document.getElementById('deepError');
+            const btn = document.getElementById('startDeepBtn');
+
+            report.style.display = 'none';
+            errorBox.style.display = 'none';
+            loading.style.display = 'block';
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
+
+            try {
+                const res = await fetch('/api/deep-analysis?ticker=' + encodeURIComponent(ticker));
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.detail || ('HTTP ' + res.status));
+                report.innerHTML = renderMarkdown(data.markdown);
+                report.style.display = 'block';
+            } catch (e) {
+                console.error(e);
+                errorBox.textContent = 'Derin analiz oluşturulamadı: ' + e.message;
+                errorBox.style.display = 'block';
+            } finally {
+                loading.style.display = 'none';
+                btn.disabled = false;
+                btn.style.opacity = '1';
+            }
         }
 
         let backtestChart = null;
