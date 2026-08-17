@@ -81,7 +81,7 @@ info "Adim 5/5: Saglik kontrolu"
 # ---------------------------------------------------------------------------
 container="$($DC ps -q borsa_bot 2>/dev/null | head -n1)"
 if [[ -z "$container" ]]; then
-    err "Konteyner bulunamadi. Son loglar:"
+    err "Konteyner baslatilamadi. Son loglar:"
     $DC logs --tail=50 || true
     exit 1
 fi
@@ -96,11 +96,18 @@ for _ in $(seq 1 30); do   # max ~60 sn
 done
 
 if [[ "$healthy" != "1" ]]; then
-    err "Saglik kontrolu basarisiz (60 sn boyunca yanit alinamadi). Son loglar:"
-    $DC logs --tail=50 || true
-    err "Geri almak icin: git reset --hard HEAD@{1} && $DC up -d --build --force-recreate"
+    err "Saglik kontrolu basarisiz (60 sn boyunca yanit alinamadi)."
+    err "Hatali versiyon loglari 'crash.log' dosyasina kaydedildi."
+    $DC logs --tail=100 > crash.log || true
+    cat crash.log | tail -n 20
+    
+    warn "Otomatik Geri Alma (Rollback) baslatiliyor..."
+    git reset --hard HEAD@{1}
+    $DC up -d --build --force-recreate
+    
+    err "Kritik Hata: Yeni kod calismadi, bir onceki calisan versiyona donuldu!"
     exit 1
 fi
 
 info "Tamam. Bot ayakta: $(curl -fsS http://127.0.0.1:8000/ 2>/dev/null | tr -d '\n')"
-info "Dashboard: http://<VPS_IP>:8000/dashboard (DASHBOARD_AUTH_TOKEN ile korumali)"
+info "Dashboard: http://<VPS_IP>:8000/dashboard"
