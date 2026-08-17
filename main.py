@@ -38,14 +38,10 @@ app = FastAPI(title="BIST Short-Term Trading Bot | Teknik + Temel + Haber Analiz
 
 # ---------------------------------------------------------------------------
 # Dashboard/API kimlik dogrulama (Basic Auth)
-# - DASHBOARD_AUTH_TOKEN ayarlanmadiysa WEBHOOK_SECRET_TOKEN kullanilir.
-# - Ikisi de bos ise koruma kapalidir (geriye donuk uyumluluk).
-# - Browser: ilk acilista kullanici adi olarak 'borsa', sifre olarak token girilir.
+# - Sadece DASHBOARD_AUTH_TOKEN acikca set edildiyse aktif olur.
+# - Bos ise tarayici kullanici adi / sifre sormaz.
 # ---------------------------------------------------------------------------
-DASHBOARD_AUTH_TOKEN = (
-    os.getenv("DASHBOARD_AUTH_TOKEN", "").strip()
-    or os.getenv("WEBHOOK_SECRET_TOKEN", "").strip()
-)
+DASHBOARD_AUTH_TOKEN = os.getenv("DASHBOARD_AUTH_TOKEN", "").strip()
 
 PROTECTED_PATHS = (
     "/dashboard", "/portfolio", "/trades", "/signals",
