@@ -9,8 +9,10 @@ services:
       - .env
     environment:
       - PYTHONUNBUFFERED=1
+      - TZ=Europe/Istanbul
     volumes:
-      # Veritabanlari ve session dosyalarinin silinmemesi icin klasoru bagliyoruz
-      - .:/app
+      # Sadece dinamik veri dosyalari mount ediliyor (pycache ve venv cashleri engellenir)
+      - ./bot.db:/app/bot.db
+      - ./bot.log:/app/bot.log
     ports:
       - "8000:8000"

@@ -38,9 +38,8 @@ CACHE = {}
 CACHE_TTL = 1800  # 30 dakika
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+# SSL: Sistem sertifikalari kullanilir (guvenli)
 _CTX = ssl.create_default_context()
-_CTX.check_hostname = False
-_CTX.verify_mode = ssl.CERT_NONE
 
 # Etiket eslemesi (aksansizlastirilmis -> anahtar)
 LABEL_MAP = {
