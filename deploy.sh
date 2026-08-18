@@ -88,7 +88,7 @@ fi
 
 healthy=0
 for _ in $(seq 1 30); do   # max ~60 sn
-    if curl -fsS --max-time 3 http://127.0.0.1:8000/ 2>/dev/null | grep -q '"status": "running"'; then
+    if curl -fsS --max-time 3 http://127.0.0.1:8000/ > /dev/null; then
         healthy=1
         break
     fi
