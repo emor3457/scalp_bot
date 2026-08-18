@@ -6,8 +6,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Playwright install (needed for order_executor web automation)
-RUN playwright install chromium --with-deps
+# Playwright install kaldirildi (VPS'i yormamasi icin)
 
 # Copy the rest of the application
 COPY . .
