@@ -74,6 +74,9 @@ $DC build
 # ---------------------------------------------------------------------------
 info "Adim 4/5: Servis yeniden baslatiliyor"
 # ---------------------------------------------------------------------------
+# Eski docker-compose versiyonlarinda ContainerConfig hatasini asmak icin 
+# once eski konteyneri manuel siliyoruz (veriler volume ile güvende).
+docker rm -f borsa_scalp_bot 2>/dev/null || true
 $DC up -d --force-recreate
 
 # ---------------------------------------------------------------------------
