@@ -99,7 +99,7 @@ async def process_trade_signal(ticker: str, action: str, price: float, quantity:
 
             # Hisse miktarini dusur veya portfoyden kaldir
             new_qty = stock_qty - quantity
-            if new_qty == 0:
+            if new_qty <= 1e-8:  # Float hassasiyeti icin esik deger kullan
                 await conn.execute("DELETE FROM portfolio WHERE ticker = ?", (ticker,))
             else:
                 await conn.execute("UPDATE portfolio SET quantity = ? WHERE ticker = ?", (new_qty, ticker))

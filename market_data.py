@@ -13,15 +13,21 @@ def _fetch_yfinance_price(yahoo_ticker: str) -> float:
     """Senkron olarak Yahoo Finance'ten fiyat verisi ceker. Thread pool icinde calistirilacaktir."""
     stock = yf.Ticker(yahoo_ticker)
     
-    # fast_info ile son fiyati alalim
-    info = stock.fast_info
-    price = info.get('lastPrice') or info.get('previousClose')
+    try:
+        # fast_info bir dict degil, FastInfo sinifidir - attribute erisimi kullanilmali
+        info = stock.fast_info
+        price = getattr(info, 'last_price', None) or getattr(info, 'previous_close', None)
+    except Exception:
+        price = None
     
-    if price is None:
+    if price is None or price <= 0:
         # history yedek yontemi
-        hist = stock.history(period="1d")
-        if not hist.empty:
-            price = hist['Close'].iloc[-1]
+        try:
+            hist = stock.history(period="1d")
+            if not hist.empty:
+                price = hist['Close'].iloc[-1]
+        except Exception:
+            pass
             
     if price is not None and price > 0:
         return float(price)

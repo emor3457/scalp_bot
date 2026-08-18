@@ -23,7 +23,7 @@ def init_db():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS signals (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            timestamp DATETIME DEFAULT (datetime('now', 'localtime')),
+            timestamp DATETIME DEFAULT (datetime('now')),
             ticker TEXT NOT NULL,
             action TEXT NOT NULL,
             price REAL NOT NULL,
@@ -36,7 +36,7 @@ def init_db():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS trades (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            timestamp DATETIME DEFAULT (datetime('now', 'localtime')),
+            timestamp DATETIME DEFAULT (datetime('now')),
             ticker TEXT NOT NULL,
             action TEXT NOT NULL,
             price REAL NOT NULL,

@@ -95,7 +95,7 @@ async def periodic_scan_loop():
 
 # Sunucu baslarken veritabani kontrolu
 @app.on_event("startup")
-def startup_event():
+async def startup_event():  # KRITIK: async olmasi gerekiyor, yoksa asyncio.create_task calismiyor
     logger.info("Uygulama baslatiliyor. Veritabani kontrol ediliyor...")
     database.init_db()
     asyncio.create_task(periodic_scan_loop())
@@ -284,7 +284,13 @@ async def receive_webhook(
     # Token dogrulamasi (Header veya Query Parametresi)
     webhook_secret = os.getenv("WEBHOOK_SECRET_TOKEN", "").strip()
     provided_token = x_webhook_token or token
-    if webhook_secret and provided_token != webhook_secret:
+    
+    # Guvenlik: Token tanimlanmamissa webhook tamamen engellenir
+    if not webhook_secret:
+        logger.error("WEBHOOK_SECRET_TOKEN tanimlanmamis! Guvenlik icin tum webhook istekleri reddedildi.")
+        raise HTTPException(status_code=503, detail="Webhook servisi aktif degil. WEBHOOK_SECRET_TOKEN gerekli.")
+    
+    if not provided_token or not secrets.compare_digest(provided_token, webhook_secret):
         logger.warning(f"Yetkisiz webhook istegi engellendi. Kaynak IP: {client_host}")
         raise HTTPException(status_code=401, detail="Yetkisiz erisim. Gecersiz token.")
 
