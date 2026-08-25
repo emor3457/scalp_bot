@@ -3,19 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BIST Scalp Bot Dashboard</title>
-    <!-- Google Fonts -->
+    <title>BIST Scalp Bot v2 | Multi-Timeframe & Kar Alma Motoru</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
             --bg-color: #050505;
-            --card-bg: rgba(10, 15, 20, 0.7);
+            --card-bg: rgba(10, 15, 20, 0.75);
             --card-border: rgba(16, 185, 129, 0.15);
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
@@ -23,854 +20,330 @@
             --accent-purple: #818cf8;
             --accent-green: #10b981;
             --accent-red: #f87171;
-            --glow-blue: rgba(56, 189, 248, 0.12);
-            --glow-green: rgba(16, 185, 129, 0.12);
+            --accent-amber: #fbbf24;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Outfit', sans-serif;
-            transition: all 0.25s ease;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            min-height: 100vh;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 45%),
-                radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.08) 0%, transparent 45%);
-            background-attachment: fixed;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        /* Header Style */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--card-border);
-        }
-
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .logo-icon {
-            font-size: 2.2rem;
-            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.4));
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            background: linear-gradient(to right, #ffffff, #e5e7eb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .status-section {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .status-indicator {
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-refresh {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--card-border);
-            color: var(--text-primary);
-            padding: 0.5rem 1.2rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-refresh:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Tarama modu gecisi: Rapor (DB'ye yazmaz) / Canli (bot.db'ye yazar) */
-        .scan-mode-toggle {
-            display: flex;
-            align-items: center;
-            border: 1px solid var(--card-border);
-            border-radius: 50px;
-            overflow: hidden;
-            background: rgba(0, 0, 0, 0.25);
-        }
-        .scan-mode-toggle .mode-option {
-            background: transparent;
-            border: none;
-            padding: 0.5rem 1rem;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            transition: all 0.2s ease;
-        }
-        .scan-mode-toggle .mode-option:hover {
-            color: var(--text-primary);
-        }
-        .scan-mode-toggle .mode-option.active-report {
-            background: rgba(139, 92, 246, 0.18);
-            color: #c084fc;
-            box-shadow: inset 0 0 0 1px rgba(139, 92, 246, 0.35);
-        }
-        .scan-mode-toggle .mode-option.active-live {
-            background: rgba(52, 211, 153, 0.15);
-            color: #34d399;
-            box-shadow: inset 0 0 0 1px rgba(52, 211, 153, 0.35);
-        }
-
-        /* Derin Analiz raporu (Markdown render) */
-        .report-body {
-            font-size: 0.9rem;
-            line-height: 1.7;
-            color: var(--text-primary);
-        }
-        .report-body h2 {
-            font-size: 1.15rem;
-            margin: 1.2rem 0 0.5rem;
-            color: var(--text-primary);
-            border-bottom: 1px solid var(--card-border);
-            padding-bottom: 0.3rem;
-        }
-        .report-body h3 {
-            font-size: 1rem;
-            margin: 1rem 0 0.4rem;
-            color: var(--accent-green);
-        }
-        .report-body h4 {
-            font-size: 0.95rem;
-            margin: 0.8rem 0 0.3rem;
-        }
-        .report-body p { margin: 0.4rem 0; }
-        .report-body ul { margin: 0.4rem 0; padding-left: 1.4rem; }
-        .report-body li { margin: 0.2rem 0; }
-        .report-body table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 0.6rem 0;
-            font-size: 0.85rem;
-        }
-        .report-body th {
-            background: rgba(0, 0, 0, 0.25);
-            color: var(--text-secondary);
-            font-weight: 600;
-            text-align: left;
-            padding: 0.5rem 0.7rem;
-            border: 1px solid var(--card-border);
-        }
-        .report-body td {
-            padding: 0.45rem 0.7rem;
-            border: 1px solid var(--card-border);
-        }
-        .report-body tr:nth-child(even) td { background: rgba(255, 255, 255, 0.02); }
-        .report-body blockquote {
-            border-left: 3px solid var(--accent-blue);
-            margin: 0.6rem 0;
-            padding: 0.4rem 0.8rem;
-            color: var(--text-secondary);
-            background: rgba(59, 130, 246, 0.06);
-            border-radius: 0 6px 6px 0;
-        }
-        .report-body hr { border: none; border-top: 1px solid var(--card-border); margin: 1.2rem 0; }
-        .report-body code {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 0.1rem 0.35rem;
-            border-radius: 4px;
-            font-size: 0.85em;
-        }
-        .report-body strong { color: #e5e7eb; }
-
-        /* Hero Metrics Card Grid */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .metric-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            backdrop-filter: blur(12px);
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .metric-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, transparent);
-        }
-
-        .metric-card.blue::before {
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
-        }
-
-        .metric-card.green::before {
-            background: linear-gradient(90deg, var(--accent-green), #34d399);
-        }
-
-        .metric-card.purple::before {
-            background: linear-gradient(90deg, var(--accent-purple), #a78bfa);
-        }
-
-        .metric-label {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .metric-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .metric-subtext {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-        }
-
-        /* Main Dashboard Layout Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
-
-        @media (min-width: 1024px) {
-            .dashboard-grid {
-                grid-template-columns: 1.6fr 1fr;
-            }
-        }
-
-        .dashboard-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            backdrop-filter: blur(12px);
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-            height: 100%;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .card-title {
-            font-size: 1.15rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--text-primary);
-        }
-
-        .card-title i {
-            color: var(--accent-green);
-        }
-
-        /* Portfolio Visualization Section */
-        .portfolio-split {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
-
-        @media (min-width: 640px) {
-            .portfolio-split {
-                grid-template-columns: 1.2fr 0.8fr;
-            }
-        }
-
-        .chart-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            min-height: 220px;
-        }
-
-        /* Tables Styling */
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 0.88rem;
-        }
-
-        th {
-            background: rgba(255, 255, 255, 0.03);
-            color: var(--text-secondary);
-            font-weight: 600;
-            padding: 0.8rem 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            white-space: nowrap;
-        }
-
-        td {
-            padding: 0.9rem 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            color: var(--text-primary);
-            white-space: nowrap;
-        }
-
-        tr.clickable-row {
-            cursor: pointer;
-        }
-
-        tr.clickable-row:hover td {
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        tr:last-child td {
-            border-bottom: none;
-        }
-
-        .badge {
-            padding: 0.25rem 0.6rem;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        .badge-buy {
-            background: rgba(16, 185, 129, 0.15);
-            color: var(--accent-green);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-        }
-
-        .badge-sell {
-            background: rgba(239, 68, 68, 0.15);
-            color: var(--accent-red);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-        }
-
-        .text-green {
-            color: var(--accent-green) !important;
-            font-weight: 600;
-        }
-
-        .text-red {
-            color: var(--accent-red) !important;
-            font-weight: 600;
-        }
-
-        .empty-state {
-            text-align: center;
-            color: var(--text-secondary);
-            padding: 2rem;
-            font-size: 0.9rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .empty-state i {
-            font-size: 2rem;
-            color: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Right column widgets layout */
-        .right-widgets {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        /* Console Output styles */
-        .console-line {
-            line-height: 1.5;
-            margin-bottom: 0.4rem;
-        }
-        .console-info { color: #60a5fa; }
-        .console-success { color: #34d399; }
-        .console-warn { color: #f59e0b; }
-        .console-error { color: #f87171; }
-        .console-text { color: #e5e7eb; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; transition: all 0.2s ease; }
+        body { background-color: var(--bg-color); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; background-attachment: fixed; }
+        .container { max-width: 1440px; margin: 0 auto; padding: 1.5rem 2rem; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.8rem; padding-bottom: 1rem; border-bottom: 1px solid var(--card-border); flex-wrap: wrap; gap: 1rem; }
+        .logo-section { display: flex; align-items: center; gap: 0.8rem; }
+        .logo-icon { font-size: 2.2rem; background: linear-gradient(135deg, var(--accent-green), var(--accent-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        h1 { font-size: 1.8rem; font-weight: 700; background: linear-gradient(to right, #ffffff, #e5e7eb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .status-section { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+        .strategy-selector-wrapper { display: flex; align-items: center; gap: 0.5rem; background: rgba(0, 0, 0, 0.4); border: 1px solid var(--card-border); border-radius: 50px; padding: 0.3rem 0.8rem; }
+        .strategy-select { background: transparent; border: none; color: var(--accent-blue); font-size: 0.85rem; font-weight: 600; outline: none; cursor: pointer; }
+        .strategy-select option { background: #0f172a; color: #f8fafc; }
+        .status-indicator { padding: 0.5rem 1rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+        .btn-refresh { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border); color: var(--text-primary); padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.85rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
+        .btn-refresh:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-2px); border-color: rgba(255, 255, 255, 0.2); }
+        .scan-mode-toggle { display: flex; align-items: center; border: 1px solid var(--card-border); border-radius: 50px; overflow: hidden; background: rgba(0, 0, 0, 0.25); }
+        .scan-mode-toggle .mode-option { background: transparent; border: none; padding: 0.5rem 1rem; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; }
+        .scan-mode-toggle .mode-option.active-report { background: rgba(139, 92, 246, 0.18); color: #c084fc; }
+        .scan-mode-toggle .mode-option.active-live { background: rgba(52, 211, 153, 0.15); color: #34d399; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; margin-bottom: 1.8rem; }
+        .metric-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 1.2rem; backdrop-filter: blur(12px); position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 0.4rem; }
+        .metric-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 3px; }
+        .metric-card.blue::before { background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple)); }
+        .metric-card.green::before { background: linear-gradient(90deg, var(--accent-green), #34d399); }
+        .metric-card.purple::before { background: linear-gradient(90deg, var(--accent-purple), #a78bfa); }
+        .metric-card.amber::before { background: linear-gradient(90deg, var(--accent-amber), #f59e0b); }
+        .metric-label { font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; display: flex; align-items: center; gap: 0.4rem; }
+        .metric-value { font-size: 1.5rem; font-weight: 700; }
+        .metric-subtext { font-size: 0.78rem; color: var(--text-secondary); }
+        .dashboard-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; padding: 1.4rem; backdrop-filter: blur(12px); margin-bottom: 1.5rem; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .card-title { font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+        .table-responsive { width: 100%; overflow-x: auto; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.05); }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.85rem; }
+        th { background: rgba(255, 255, 255, 0.03); color: var(--text-secondary); font-weight: 600; padding: 0.7rem 0.9rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); white-space: nowrap; }
+        td { padding: 0.8rem 0.9rem; border-bottom: 1px solid rgba(255, 255, 255, 0.03); color: var(--text-primary); white-space: nowrap; }
+        tr:hover td { background: rgba(255, 255, 255, 0.02); }
+        .badge { padding: 0.2rem 0.55rem; border-radius: 6px; font-size: 0.72rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.25rem; }
+        .badge-buy { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.25); }
+        .badge-sell { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.25); }
+        .badge-tf-bull { background: rgba(16, 185, 129, 0.12); color: #34d399; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.7rem; }
+        .badge-tf-bear { background: rgba(239, 68, 68, 0.12); color: #f87171; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.7rem; }
+        .badge-tf-neut { background: rgba(148, 163, 184, 0.12); color: #94a3b8; padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.7rem; }
+        .badge-strat-scaling { background: rgba(139, 92, 246, 0.15); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.3); }
+        .badge-strat-swing { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+        .badge-strat-momentum { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .btn-action-close { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; padding: 0.3rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+        .text-green { color: var(--accent-green) !important; font-weight: 600; }
+        .text-red { color: var(--accent-red) !important; font-weight: 600; }
+        .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        @media (min-width: 1024px) { .dashboard-grid { grid-template-columns: 1.4fr 1fr; } }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
+        .modal-content { background: #0f172a; border: 1px solid var(--card-border); border-radius: 16px; max-width: 800px; width: 90%; max-height: 85vh; overflow-y: auto; padding: 1.5rem; position: relative; }
+        .modal-close { position: absolute; top: 1rem; right: 1rem; background: transparent; border: none; color: var(--text-secondary); font-size: 1.3rem; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <header>
             <div class="logo-section">
                 <i class="fa-solid fa-chart-line logo-icon"></i>
                 <div>
-                    <h1>BIST Scalp Bot</h1>
-                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px;">TradingView Webhook & Otomatik Tarama</p>
+                    <h1>BIST Scalp Bot <span style="font-size: 0.9rem; color: var(--accent-blue); font-weight: 600;">v2.0 MTF</span></h1>
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px;">4 Timeframe (15m, 1h, 4h, 1d) + Akilli Kar Alma Motoru</p>
                 </div>
-            </div>                <div class="status-section">
-                    <div class="status-indicator" id="modeIndicator" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: var(--accent-blue);">
-                        <i class="fa-solid fa-flask" style="margin-right: 2px;"></i>
-                        Sanal Mod (Demo)
-                    </div>
-                    <div class="scan-mode-toggle" id="scanModeToggle" title="Tarama modu: Rapor (bot.db'ye yazmaz) / Canlı (bot.db'ye yazar)">
-                        <button class="mode-option active-report" id="modeReportBtn" data-mode="report">
-                            <i class="fa-solid fa-clipboard-list"></i> Rapor
-                        </button>
-                        <button class="mode-option" id="modeLiveBtn" data-mode="live">
-                            <i class="fa-solid fa-bolt"></i> Canlı
-                        </button>
-                    </div>
-                    <button class="btn-refresh" id="scanBtn" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15)); border: 1px solid rgba(139, 92, 246, 0.3); color: #c084fc;">
-                        <i class="fa-solid fa-magnifying-glass-chart"></i>
-                        Analiz Başlat
+            </div>
+            <div class="status-section">
+                <div class="strategy-selector-wrapper" title="Aktif Kar Alma Stratejisi">
+                    <i class="fa-solid fa-brain" style="color: var(--accent-blue); font-size: 0.85rem;"></i>
+                    <select class="strategy-select" id="globalStrategySelect">
+                        <option value="auto">🤖 Akilli Otomatik</option>
+                        <option value="scaling">📊 Kademeli Kar Alma</option>
+                        <option value="swing">🔄 Swing Trade (1-3G)</option>
+                        <option value="momentum">⚡ Momentum Scalp</option>
+                    </select>
+                </div>
+                <div class="status-indicator" id="modeIndicator" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); color: var(--accent-blue);">
+                    <i class="fa-solid fa-flask"></i> Sanal Mod
+                </div>
+                <div class="scan-mode-toggle" id="scanModeToggle">
+                    <button class="mode-option active-report" id="modeReportBtn" data-mode="report">
+                        <i class="fa-solid fa-clipboard-list"></i> Rapor
                     </button>
-                    <button class="btn-refresh" id="refreshBtn">
-                        <i class="fa-solid fa-arrows-rotate"></i>
-                        Yenile
+                    <button class="mode-option" id="modeLiveBtn" data-mode="live">
+                        <i class="fa-solid fa-bolt"></i> Canli
                     </button>
                 </div>
+                <button class="btn-refresh" id="scanBtn" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15)); border: 1px solid rgba(139, 92, 246, 0.3); color: #c084fc;">
+                    <i class="fa-solid fa-magnifying-glass-chart"></i> MTF Analiz
+                </button>
+                <button class="btn-refresh" id="refreshBtn">
+                    <i class="fa-solid fa-arrows-rotate"></i> Yenile
+                </button>
+            </div>
         </header>
 
-        <!-- Dynamic Scan Console Card (Hidden by default) -->
-        <div class="dashboard-card" id="scanConsoleCard" style="display: none; margin-bottom: 2rem;">
-            <div class="card-header">
-                <h2 class="card-title">
-                    <i class="fa-solid fa-terminal" style="color: var(--accent-purple);"></i> Duayen Borsacı Analiz Raporu
-                </h2>
-                <button class="btn-refresh" id="closeConsoleBtn" style="padding: 0.2rem 0.8rem; font-size: 0.75rem;">Konsolu Kapat</button>
-            </div>
-            <div style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--card-border); border-radius: 8px; padding: 1rem; font-family: monospace; font-size: 0.85rem; max-height: 250px; overflow-y: auto;" id="consoleOutput">
-                <!-- Log streams -->
-            </div>
-        </div>
-
-        <!-- Hero Metrics -->
         <div class="metrics-grid">
             <div class="metric-card blue">
-                <span class="metric-label">
-                    <i class="fa-solid fa-wallet"></i> Toplam Varlık Değeri (NAV)
-                </span>
-                <span class="metric-value" id="navVal">100,000.00 TL</span>
-                <span class="metric-subtext">Sanal Başlangıç Sermayesi: 500k TL</span>
+                <span class="metric-label"><i class="fa-solid fa-wallet"></i> Toplam Portfoy (NAV)</span>
+                <span class="metric-value" id="navVal">500,000.00 TL</span>
+                <span class="metric-subtext">Baslangic: 500k TL</span>
             </div>
             <div class="metric-card purple">
-                <span class="metric-label">
-                    <i class="fa-solid fa-money-bill-wave"></i> Nakit Bakiye (TRY)
-                </span>
-                <span class="metric-value" id="cashVal">100,000.00 TL</span>
-                <span class="metric-subtext">Yedek Akçe</span>
+                <span class="metric-label"><i class="fa-solid fa-money-bill-wave"></i> Bakiye (TRY)</span>
+                <span class="metric-value" id="cashVal">500,000.00 TL</span>
+                <span class="metric-subtext">Kullanilabilir Nakit</span>
             </div>
-            <div class="metric-card">
-                <span class="metric-label">
-                    <i class="fa-solid fa-briefcase"></i> Hisse Senedi Değeri
-                </span>
-                <span class="metric-value" id="stockVal">0.00 TL</span>
-                <span class="metric-subtext">Portföydeki Aktif Varlıklar</span>
+            <div class="metric-card amber">
+                <span class="metric-label"><i class="fa-solid fa-layer-group"></i> Acik Pozisyonlar</span>
+                <span class="metric-value" id="openPosCount">0 / 5</span>
+                <span class="metric-subtext">Max 5 Pozisyon | Max %12 Pay</span>
             </div>
             <div class="metric-card green" id="pnlCard">
-                <span class="metric-label">
-                    <i class="fa-solid fa-arrow-trend-up"></i> Toplam Kâr / Zarar
-                </span>
+                <span class="metric-label"><i class="fa-solid fa-arrow-trend-up"></i> Toplam Kar / Zarar</span>
                 <span class="metric-value" id="totalPnl">0.00 TL</span>
                 <span class="metric-subtext" id="totalPnlPercent">0.00%</span>
             </div>
         </div>
 
-        <!-- Main Content Area -->
+        <div class="dashboard-card" style="border-color: rgba(56, 189, 248, 0.25);">
+            <div class="card-header">
+                <h2 class="card-title" style="color: var(--accent-blue);">
+                    <i class="fa-solid fa-crosshairs"></i> Aktif Pozisyonlar & Kar Alma Takip Motoru (TP / SL / Trailing)
+                </h2>
+                <span style="font-size: 0.8rem; color: var(--text-secondary);">Her 60 sn otomatik denetlenir</span>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Hisse</th>
+                            <th>Strateji</th>
+                            <th>Giris</th>
+                            <th>Guncel</th>
+                            <th>Kar / Zarar (%)</th>
+                            <th>Miktar</th>
+                            <th>TP1</th>
+                            <th>TP2 / Trailing</th>
+                            <th>Stop-Loss</th>
+                            <th>Asama</th>
+                            <th>Vade</th>
+                            <th>Islem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="openPositionsTableBody">
+                        <tr><td colspan="12" style="text-align: center; color: var(--text-secondary); padding: 1.5rem;">Aktif acik pozisyon bulunmuyor.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="fa-solid fa-cubes" style="color: var(--accent-green);"></i> Multi-Timeframe Confluence Matrisi (15m, 1h, 4h, 1d)
+                </h2>
+                <span style="font-size: 0.8rem; color: var(--text-secondary);">Detaylar icin hisseye tiklayin</span>
+            </div>
+            <div class="table-responsive" style="max-height: 420px; overflow-y: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Hisse</th>
+                            <th>Fiyat</th>
+                            <th>15dk ⚡</th>
+                            <th>1 Saat 📈</th>
+                            <th>4 Saat 📊</th>
+                            <th>Gunluk 🌍</th>
+                            <th>MTF Skoru</th>
+                            <th>Confluence</th>
+                            <th>Onerilen Strateji</th>
+                            <th>Sinyal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mtfMatrixTableBody">
+                        <tr><td colspan="10" style="text-align: center; color: var(--text-secondary); padding: 1.5rem;">Tarama baslatilmadi. 'MTF Analiz' butonuna basin.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="dashboard-grid">
-            <!-- Left Card: Portfolio distribution and details -->
             <div class="dashboard-card">
                 <div class="card-header">
-                    <h2 class="card-title">
-                        <i class="fa-solid fa-pie-chart"></i> Varlık Dağılımı ve Detayları
-                    </h2>
+                    <h2 class="card-title"><i class="fa-solid fa-pie-chart"></i> Portfoy Dagilimi</h2>
                 </div>
-                <div class="portfolio-split">
+                <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 1rem; align-items: center;">
                     <div class="table-responsive">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Varlık</th>
+                                    <th>Varlik</th>
                                     <th>Miktar</th>
-                                    <th>Ort. Maliyet</th>
-                                    <th>Güncel Fiyat</th>
-                                    <th>Değer</th>
-                                    <th>Kâr / Zarar (%)</th>
+                                    <th>Maliyet</th>
+                                    <th>Guncel</th>
+                                    <th>Deger</th>
+                                    <th>K/Z</th>
                                 </tr>
                             </thead>
-                            <tbody id="portfolioTableBody">
-                                <!-- Dynamic portfolio rows will go here -->
-                            </tbody>
+                            <tbody id="portfolioTableBody"></tbody>
                         </table>
                     </div>
-                    <div class="chart-container">
+                    <div style="position: relative; height: 180px;">
                         <canvas id="portfolioChart"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Column Widgets -->
-            <div class="right-widgets">
-                <!-- Widget: Signals -->
-                <div class="dashboard-card" style="max-height: 400px; overflow: hidden;">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <i class="fa-solid fa-bolt"></i> Son Gelen Sinyaller
-                        </h2>
-                    </div>
-                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Zaman</th>
-                                    <th>Hisse</th>
-                                    <th>Yön</th>
-                                    <th>Fiyat</th>
-                                    <th>Miktar</th>
-                                </tr>
-                            </thead>
-                            <tbody id="signalsTableBody">
-                                <!-- Dynamic signals here -->
-                            </tbody>
-                        </table>
-                    </div>
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fa-solid fa-receipt"></i> Son Islemler (Trades)</h2>
                 </div>
-
-                <!-- Widget: Trades -->
-                <div class="dashboard-card" style="max-height: 400px; overflow: hidden;">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            <i class="fa-solid fa-receipt"></i> Son İşlemler (Trades)
-                        </h2>
-                    </div>
-                    <div class="table-responsive" style="max-height: 300px; overflow-y: auto;">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Zaman</th>
-                                    <th>Hisse</th>
-                                    <th>Yön</th>
-                                    <th>Fiyat</th>
-                                    <th>Miktar</th>
-                                    <th>Toplam</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tradesTableBody">
-                                <!-- Dynamic trades here -->
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Zaman</th>
+                                <th>Hisse</th>
+                                <th>Yon</th>
+                                <th>Fiyat</th>
+                                <th>Miktar</th>
+                                <th>Toplam</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tradesTableBody"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
-        <!-- Backtest Card (Full Width at Bottom) -->
-        <div class="dashboard-card" style="margin-top: 2rem; margin-bottom: 2rem;">
+        <div class="dashboard-card" style="margin-top: 1rem;">
             <div class="card-header">
-                <h2 class="card-title">
-                    <i class="fa-solid fa-clock-rotate-left" style="color: var(--accent-purple);"></i> Strateji Geriye Dönük Test (Backtest)
-                </h2>
+                <h2 class="card-title"><i class="fa-solid fa-magnifying-glass-chart" style="color: var(--accent-green);"></i> BIST Derin Hisse Analiz Raporu</h2>
             </div>
-            <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
-                <!-- Inputs Row -->
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; align-items: flex-end;">
-                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                        <label style="font-size: 0.8rem; color: var(--text-secondary);">Hisse Kodu (Örn: THYAO)</label>
-                        <input type="text" id="backtestTicker" value="THYAO" style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--card-border); color: var(--text-primary); padding: 0.5rem; border-radius: 6px; text-transform: uppercase;">
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                        <label style="font-size: 0.8rem; color: var(--text-secondary);">Veri Süresi</label>
-                        <select id="backtestPeriod" style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--card-border); color: var(--text-primary); padding: 0.5rem; border-radius: 6px;">
-                            <option value="1mo">1 Ay (5m Mumlar)</option>
-                            <option value="3mo">3 Ay (5m Mumlar)</option>
-                            <option value="5d">5 Gün (5m Mumlar)</option>
-                        </select>
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                        <label style="font-size: 0.8rem; color: var(--text-secondary);">Başlangıç Sermayesi (TL)</label>
-                        <input type="number" id="backtestCapital" value="500000" style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--card-border); color: var(--text-primary); padding: 0.5rem; border-radius: 6px;">
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                        <label style="font-size: 0.8rem; color: var(--text-secondary);">İşlem Başına Bütçe (TL)</label>
-                        <input type="number" id="backtestMaxAlloc" value="10000" style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--card-border); color: var(--text-primary); padding: 0.5rem; border-radius: 6px;">
-                    </div>
-                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                        <label style="font-size: 0.8rem; color: var(--text-secondary);">İcra Modu</label>
-                        <select id="backtestFillMode" style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--card-border); color: var(--text-primary); padding: 0.5rem; border-radius: 6px;">
-                            <option value="next_open">Gerçekçi (Sonraki Bar Açılışı)</option>
-                            <option value="signal_close">İyimser (Sinyal Kapanışı)</option>
-                        </select>
-                    </div>
-                    <button class="btn-refresh" id="startBacktestBtn" style="background: linear-gradient(135deg, #8b5cf6, #3b82f6); border: none; color: white; padding: 0.6rem; border-radius: 6px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; height: 38px;">
-                        <i class="fa-solid fa-play"></i> Testi Başlat
-                    </button>
+            <div style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
+                <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                    <label style="font-size: 0.8rem; color: var(--text-secondary);">Hisse Kodu</label>
+                    <input type="text" id="deepTicker" value="THYAO" style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--card-border); color: #fff; padding: 0.5rem 0.8rem; border-radius: 6px; text-transform: uppercase;">
                 </div>
-
-                <!-- Loading Spinner -->
-                <div id="backtestLoading" style="display: none; text-align: center; padding: 2rem;">
-                    <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--accent-blue);"></i>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Veriler Yahoo Finance'ten çekilip simüle ediliyor. Lütfen bekleyin...</p>
-                </div>
-
-                <!-- Results Output -->
-                <div id="backtestResults" style="display: none; flex-direction: column; gap: 1.5rem;">
-                    <!-- Metrics cards -->
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
-                        <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); padding: 1rem; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Net Kâr / Zarar</div>
-                            <div style="font-size: 1.2rem; font-weight: bold; color: #10b981; margin-top: 0.25rem;" id="btNetProfit">0.00 TL</div>
-                            <div style="font-size: 0.75rem; color: var(--text-secondary);" id="btReturnPct">+0.00%</div>
-                        </div>
-                        <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2); padding: 1rem; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Kâr Faktörü (Profit Factor)</div>
-                            <div style="font-size: 1.2rem; font-weight: bold; color: #a78bfa; margin-top: 0.25rem;" id="btProfitFactor">0.00</div>
-                        </div>
-                        <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); padding: 1rem; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Kazanma Oranı (Win Rate)</div>
-                            <div style="font-size: 1.2rem; font-weight: bold; color: #60a5fa; margin-top: 0.25rem;" id="btWinRate">0.00%</div>
-                        </div>
-                        <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); padding: 1rem; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Toplam İşlem Sayısı</div>
-                            <div style="font-size: 1.2rem; font-weight: bold; color: #fbbf24; margin-top: 0.25rem;" id="btTotalTrades">0</div>
-                        </div>
-                        <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 1rem; border-radius: 8px; text-align: center;">
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">Maksimum Drawdown</div>
-                            <div style="font-size: 1.2rem; font-weight: bold; color: #f87171; margin-top: 0.25rem;" id="btMaxDrawdown">-0.00%</div>
-                        </div>
-                    </div>
-
-                    <!-- Chart & Table split -->
-                    <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.5rem; min-height: 350px;">
-                        <!-- Chart container -->
-                        <div style="background: rgba(0, 0, 0, 0.1); border: 1px solid var(--card-border); border-radius: 8px; padding: 1rem; position: relative;">
-                            <h3 style="font-size: 0.9rem; margin-bottom: 1rem; color: var(--text-primary); font-weight: 500;">
-                                <i class="fa-solid fa-chart-line"></i> İşlem Kâr/Zarar Gelişimi (Kümülatif TL)
-                            </h3>
-                            <div style="height: 250px; position: relative;">
-                                <canvas id="backtestChart"></canvas>
-                            </div>
-                        </div>
-                        <!-- Trades table container -->
-                        <div style="background: rgba(0, 0, 0, 0.1); border: 1px solid var(--card-border); border-radius: 8px; padding: 1rem; display: flex; flex-direction: column; max-height: 320px;">
-                            <h3 style="font-size: 0.9rem; margin-bottom: 1rem; color: var(--text-primary); font-weight: 500;">
-                                <i class="fa-solid fa-list"></i> Simüle Edilen İşlemler
-                            </h3>
-                            <div class="table-responsive" style="flex-grow: 1; overflow-y: auto;">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Giriş / Çıkış</th>
-                                            <th>Miktar</th>
-                                            <th>Fiyat</th>
-                                            <th>K/Z</th>
-                                            <th>Neden</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="backtestTradesTableBody">
-                                        <!-- Dynamic backtest trade rows -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <button class="btn-refresh" id="startDeepBtn" style="background: linear-gradient(135deg, #10b981, #3b82f6); border: none; color: white; padding: 0.5rem 1.2rem; height: 36px;">
+                    <i class="fa-solid fa-file-lines"></i> Rapor Uret
+                </button>
             </div>
-        </div>
-
-        <!-- Derin Analiz Card (bist-stock-analysis) -->
-        <div class="dashboard-card" style="margin-top: 2rem; margin-bottom: 2rem;">
-            <div class="card-header">
-                <h2 class="card-title">
-                    <i class="fa-solid fa-magnifying-glass-chart" style="color: var(--accent-green);"></i> Derin Analiz (bist-stock-analysis)
-                </h2>
+            <div id="deepLoading" style="display: none; text-align: center; padding: 1.5rem;">
+                <i class="fa-solid fa-spinner fa-spin" style="font-size: 1.5rem; color: var(--accent-green);"></i>
+                <p style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.85rem;">Teknik (4 TF) + Temel + Haber analizi derleniyor...</p>
             </div>
-            <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
-                <!-- Inputs Row -->
-                <div style="display: flex; gap: 1rem; align-items: flex-end; flex-wrap: wrap;">
-                    <div style="display: flex; flex-direction: column; gap: 0.5rem; flex: 1; min-width: 180px; max-width: 320px;">
-                        <label style="font-size: 0.8rem; color: var(--text-secondary);">Hisse Kodu (Örn: THYAO)</label>
-                        <input type="text" id="deepTicker" value="THYAO" style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--card-border); color: var(--text-primary); padding: 0.5rem; border-radius: 6px; text-transform: uppercase;">
-                    </div>
-                    <button class="btn-refresh" id="startDeepBtn" style="background: linear-gradient(135deg, #10b981, #3b82f6); border: none; color: white; padding: 0.6rem 1.4rem; border-radius: 6px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; height: 38px;">
-                        <i class="fa-solid fa-file-lines"></i> Rapor Üret
-                    </button>
-                </div>
-
-                <!-- Loading Spinner -->
-                <div id="deepLoading" style="display: none; text-align: center; padding: 2rem;">
-                    <i class="fa-solid fa-spinner fa-spin" style="font-size: 2rem; color: var(--accent-green);"></i>
-                    <p style="margin-top: 0.5rem; color: var(--text-secondary);">Teknik + temel + haber verisi toplanıyor, Türkçe rapor hazırlanıyor. Lütfen bekleyin (10-20 sn)...</p>
-                </div>
-
-                <!-- Hata kutusu -->
-                <div id="deepError" style="display: none; color: #f87171; background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); padding: 1rem; border-radius: 8px;"></div>
-
-                <!-- Rapor ciktisi (Markdown render) -->
-                <div id="deepReport" style="display: none;" class="report-body"></div>
-            </div>
+            <div id="deepError" style="display: none; color: #f87171; padding: 0.8rem; margin-top: 1rem; background: rgba(239, 68, 68, 0.08); border-radius: 6px;"></div>
+            <div id="deepReport" style="display: none; margin-top: 1rem; line-height: 1.7; font-size: 0.88rem;"></div>
         </div>
     </div>
 
-    <!-- Script to fetch and render dashboard data -->
+    <div class="modal" id="mtfModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeMtfModal()">&times;</button>
+            <h3 id="modalTickerTitle" style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--accent-blue);">Hisse Detay</h3>
+            <div id="modalContentBody"></div>
+        </div>
+    </div>
     <script>
         let myChart = null;
-        // Tarama modu: 'report' (varsayilan, DB'ye yazmaz) veya 'live' (bot.db'ye yazar)
         let currentScanMode = 'report';
 
-        // Sayfa yuklendiginde ve butonla yenile
         document.addEventListener('DOMContentLoaded', () => {
             updateConfig();
+            loadStrategySettings();
             updateDashboardData();
-            
+            loadOpenPositions();
+
             document.getElementById('refreshBtn').addEventListener('click', () => {
                 const icon = document.querySelector('#refreshBtn i');
                 icon.classList.add('fa-spin');
-                updateDashboardData().finally(() => {
-                    setTimeout(() => {
-                        icon.classList.remove('fa-spin');
-                    }, 500);
+                Promise.all([updateDashboardData(), loadOpenPositions()]).finally(() => {
+                    setTimeout(() => icon.classList.remove('fa-spin'), 500);
                 });
             });
 
-            // Kaydedilmis tarama modunu geri yukle (varsayilan: report)
-            try {
-                const savedScanMode = localStorage.getItem('scanMode');
-                if (savedScanMode === 'live' || savedScanMode === 'report') {
-                    currentScanMode = savedScanMode;
-                }
-            } catch (e) { /* localStorage erisilemezse varsayilan modda kal */ }
-            applyScanModeUI();
-
-            // Tarama modu gecis anahtari
             document.getElementById('modeReportBtn').addEventListener('click', () => setScanMode('report'));
             document.getElementById('modeLiveBtn').addEventListener('click', () => setScanMode('live'));
 
-            // Analiz baslat butonu
-            document.getElementById('scanBtn').addEventListener('click', () => {
-                triggerMarketScan();
+            document.getElementById('globalStrategySelect').addEventListener('change', async (e) => {
+                const newMode = e.target.value;
+                try {
+                    await fetch('/api/strategy/select', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ strategy_mode: newMode })
+                    });
+                } catch (err) { console.error('Strateji degistirilemedi:', err); }
             });
 
-            // Konsol kapat
-            document.getElementById('closeConsoleBtn').addEventListener('click', () => {
-                document.getElementById('scanConsoleCard').style.display = 'none';
-            });
+            document.getElementById('scanBtn').addEventListener('click', triggerMtfScan);
+            document.getElementById('startDeepBtn').addEventListener('click', startDeepAnalysis);
 
-            // Backtest başlat butonu
-            document.getElementById('startBacktestBtn').addEventListener('click', () => {
-                startBacktesting();
-            });
-
-            // Derin Analiz butonu (bist-stock-analysis)
-            document.getElementById('startDeepBtn').addEventListener('click', () => {
-                startDeepAnalysis();
-            });
+            setInterval(() => {
+                updateDashboardData();
+                loadOpenPositions();
+            }, 10000);
         });
 
-        // XSS korumasi: sunucudan gelen metinleri innerHTML'e basmadan once escape et
-        function escapeHtml(value) {
-            return String(value == null ? '' : value)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;');
+        function escapeHtml(val) {
+            return String(val == null ? '' : val).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         }
 
-        // Tarama modunun gorunumunu uygula (onay sormadan — sayfa yuklemesi icin)
-        function applyScanModeUI() {
-            const reportBtn = document.getElementById('modeReportBtn');
-            const liveBtn = document.getElementById('modeLiveBtn');
-            const scanBtn = document.getElementById('scanBtn');
-            reportBtn.classList.toggle('active-report', currentScanMode === 'report');
-            liveBtn.classList.toggle('active-live', currentScanMode === 'live');
-            if (currentScanMode === 'live') {
-                scanBtn.style.borderColor = 'rgba(52, 211, 153, 0.5)';
-                scanBtn.style.color = '#34d399';
-            } else {
-                scanBtn.style.borderColor = 'rgba(139, 92, 246, 0.3)';
-                scanBtn.style.color = '#c084fc';
-            }
-        }
-
-        // Tarama modunu degistir (Rapor = DB'ye yazmaz, Canli = bot.db'ye yazar)
         function setScanMode(mode) {
             if (mode === 'live' && currentScanMode !== 'live') {
-                const ok = confirm("CANLI MOD: Tarama sonuçları bot.db'ye yazılacak, portföy güncellenecek ve Telegram bildirimi gönderilecek. Devam edilsin mi?");
-                if (!ok) return;
+                if (!confirm("CANLI MOD: Sinyaller bot.db'ye yazilacak ve acik pozisyon acilacak. Devam edilsin mi?")) return;
             }
             currentScanMode = mode;
-            try {
-                localStorage.setItem('scanMode', mode);
-            } catch (e) {
-                console.warn('Tarama modu kaydedilemedi:', e);
-            }
-            applyScanModeUI();
+            document.getElementById('modeReportBtn').classList.toggle('active-report', mode === 'report');
+            document.getElementById('modeLiveBtn').classList.toggle('active-live', mode === 'live');
         }
 
-        // Config verilerini cekip Mod Gostergesini guncelle
+        async function loadStrategySettings() {
+            try {
+                const res = await fetch('/api/strategies');
+                const data = await res.json();
+                if (data.active_strategy_mode) {
+                    document.getElementById('globalStrategySelect').value = data.active_strategy_mode;
+                }
+            } catch (e) { console.error(e); }
+        }
+
         async function updateConfig() {
             try {
                 const res = await fetch('/config');
@@ -878,613 +351,296 @@
                 const modeIndicator = document.getElementById('modeIndicator');
                 if (data.demo_mode) {
                     modeIndicator.style.background = 'rgba(59, 130, 246, 0.1)';
-                    modeIndicator.style.borderColor = 'rgba(59, 130, 246, 0.2)';
                     modeIndicator.style.color = 'var(--accent-blue)';
-                    modeIndicator.innerHTML = '<i class="fa-solid fa-flask" style="margin-right: 2px;"></i> Sanal Mod (Demo)';
+                    modeIndicator.innerHTML = '<i class="fa-solid fa-flask"></i> Sanal Mod (Demo)';
                 } else {
                     modeIndicator.style.background = 'rgba(239, 68, 68, 0.1)';
-                    modeIndicator.style.borderColor = 'rgba(239, 68, 68, 0.2)';
                     modeIndicator.style.color = 'var(--accent-red)';
-                    modeIndicator.innerHTML = '<i class="fa-solid fa-fire-flame-curved" style="margin-right: 2px;"></i> GERÇEK MOD';
+                    modeIndicator.innerHTML = '<i class="fa-solid fa-fire"></i> GERCEK MOD';
                 }
-            } catch (e) {
-                console.error("Mod bilgisi alinamadi:", e);
-            }
+            } catch (e) { console.error(e); }
         }
 
-        // Dashboard Verilerini Cek
-        async function updateDashboardData() {
+        async function loadOpenPositions() {
             try {
-                const [portRes, tradeRes, sigRes] = await Promise.all([
-                    fetch('/portfolio'),
-                    fetch('/trades?limit=20'),
-                    fetch('/signals?limit=20')
-                ]);
+                const res = await fetch('/api/positions');
+                const data = await res.json();
+                const positions = data.open_positions || [];
+                const tbody = document.getElementById('openPositionsTableBody');
+                document.getElementById('openPosCount').innerText = positions.length + ' / 5';
 
-                const portData = await portRes.json();
-                const tradeData = await tradeRes.json();
-                const sigData = await sigRes.json();
+                if (positions.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="12" style="text-align: center; color: var(--text-secondary); padding: 1.5rem;">Aktif acik pozisyon bulunmuyor.</td></tr>';
+                    return;
+                }
 
-                renderPortfolio(portData.portfolio || []);
-                renderTrades(tradeData.trades || []);
-                renderSignals(sigData.signals || []);
+                tbody.innerHTML = '';
+                positions.forEach(p => {
+                    const isWin = p.pnl_percent >= 0;
+                    const pnlClass = isWin ? 'text-green' : 'text-red';
+                    const stratClass = 'badge-strat-' + p.strategy;
 
+                    let stageBadge = '<span class="badge" style="background:rgba(255,255,255,0.05);">Baslangic</span>';
+                    if (p.stage === 'TP1_HIT') stageBadge = '<span class="badge" style="background:rgba(16,185,129,0.2); color:#34d399;">🎯 TP1 Alindi (SL Basabas)</span>';
+                    if (p.stage === 'TP2_HIT') stageBadge = '<span class="badge" style="background:rgba(139,92,246,0.2); color:#c084fc;">🚀 TP2 Alindi (Trailing)</span>';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="font-weight: 700;">#` + escapeHtml(p.ticker) + `</td>
+                        <td><span class="badge ` + stratClass + `">` + p.strategy.toUpperCase() + `</span></td>
+                        <td>` + p.entry_price.toFixed(2) + ` TL</td>
+                        <td style="font-weight: 600;">` + p.current_price.toFixed(2) + ` TL</td>
+                        <td class="` + pnlClass + `">` + (p.pnl_percent >= 0 ? '+' : '') + p.pnl_percent.toFixed(2) + `% (` + p.pnl_value.toFixed(2) + ` TL)</td>
+                        <td>` + p.current_quantity.toFixed(0) + ` Lot</td>
+                        <td style="color: #34d399;">` + (p.tp1 ? p.tp1.toFixed(2) + ' TL' : '-') + `</td>
+                        <td style="color: #c084fc;">` + (p.tp2 ? p.tp2.toFixed(2) + ' TL' : (p.trailing_sl ? p.trailing_sl.toFixed(2) + ' TL' : '-')) + `</td>
+                        <td style="color: #f87171;">` + p.sl.toFixed(2) + ` TL</td>
+                        <td>` + stageBadge + `</td>
+                        <td style="font-size: 0.75rem; color: var(--text-secondary);">` + (p.expire_time || '-') + `</td>
+                        <td><button class="btn-action-close" onclick="closePosition('` + p.ticker + `')"><i class="fa-solid fa-xmark"></i> Kapat</button></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (e) { console.error(e); }
+        }
+
+        async function closePosition(ticker) {
+            if (!confirm(ticker + ' pozisyonunu guncel piyasa fiyatindan kapatmak istediginize emin misiniz?')) return;
+            try {
+                const res = await fetch('/api/positions/close/' + ticker, { method: 'POST' });
+                const d = await res.json();
+                if (res.ok) {
+                    alert(ticker + ' pozisyonu basariyla kapatildi.');
+                    loadOpenPositions();
+                    updateDashboardData();
+                } else {
+                    alert('Hata: ' + (d.detail || 'Kapatilamadi'));
+                }
+            } catch (e) { alert('Hata: ' + e.message); }
+        }
+
+        async function triggerMtfScan() {
+            const btn = document.getElementById('scanBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> MTF Taraniyor...';
+
+            try {
+                const isReport = currentScanMode === 'report';
+                const res = await fetch('/scan?report_only=' + isReport);
+                const data = await res.json();
+
+                renderMtfMatrix(data.all_results || []);
+                loadOpenPositions();
+                updateDashboardData();
             } catch (e) {
-                console.error("Veriler yuklenirken hata:", e);
+                alert('Tarama hatasi: ' + e.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-magnifying-glass-chart"></i> MTF Analiz';
             }
         }
 
-        // Portfolio tablosu ve kartlarini ciz
-        function renderPortfolio(portfolio) {
-            const tableBody = document.getElementById('portfolioTableBody');
-            tableBody.innerHTML = '';
+        function renderMtfMatrix(results) {
+            const tbody = document.getElementById('mtfMatrixTableBody');
+            tbody.innerHTML = '';
 
-            let cashVal = 0;
-            let stockVal = 0;
-
-            const chartLabels = [];
-            const chartValues = [];
-            const chartColors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#3b82f6', '#14b8a6'];
-
-            if (portfolio.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="6" class="empty-state"><i class="fa-solid fa-folder-open"></i>Portföyünüz şu an boş.</td></tr>`;
+            if (results.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" style="text-align: center; color: var(--text-secondary); padding: 1.5rem;">Sonuc bulunamadi.</td></tr>';
                 return;
             }
 
-            // TRY bulup ayiralim
+            results.forEach(r => {
+                const tfs = r.mtf_details || {};
+                const tfBadge = (tfName) => {
+                    const info = tfs[tfName];
+                    if (!info || !info.valid) return '<span class="badge-tf-neut">-</span>';
+                    if (info.trend === 'BULLISH') return '<span class="badge-tf-bull">AL (' + info.score + ')</span>';
+                    if (info.trend === 'BEARISH') return '<span class="badge-tf-bear">SAT (' + info.score + ')</span>';
+                    return '<span class="badge-tf-neut">NOTR (' + info.score + ')</span>';
+                };
+
+                const signalBadge = r.signal === 'AL' 
+                    ? '<span class="badge badge-buy"><i class="fa-solid fa-arrow-trend-up"></i> AL</span>'
+                    : (r.signal === 'SAT' ? '<span class="badge badge-sell">SAT</span>' : '<span class="badge" style="background:rgba(255,255,255,0.05);">BEKLE</span>');
+
+                const stratPlan = r.strategy_plan || {};
+                const stratBadge = '<span class="badge badge-strat-' + (stratPlan.strategy || 'scaling') + '">' + (stratPlan.strategy || 'auto').toUpperCase() + '</span>';
+
+                const tr = document.createElement('tr');
+                tr.style.cursor = 'pointer';
+                tr.onclick = () => showMtfDetails(r);
+                tr.innerHTML = `
+                    <td style="font-weight: 700;">#` + escapeHtml(r.ticker) + `</td>
+                    <td>` + r.current_price.toFixed(2) + ` TL</td>
+                    <td>` + tfBadge('15m') + `</td>
+                    <td>` + tfBadge('1h') + `</td>
+                    <td>` + tfBadge('4h') + `</td>
+                    <td>` + tfBadge('1d') + `</td>
+                    <td style="font-weight: 600; color: var(--accent-blue);">' + r.composite_score + ' / 100</td>
+                    <td>` + r.confluence_count + `/4 TF Onay</td>
+                    <td>` + stratBadge + `</td>
+                    <td>` + signalBadge + `</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function showMtfDetails(stock) {
+            const modal = document.getElementById('mtfModal');
+            document.getElementById('modalTickerTitle').innerText = '#' + stock.ticker + ' — Multi-Timeframe Analiz Detayi';
+            const body = document.getElementById('modalContentBody');
+            
+            const tfs = stock.mtf_details || {};
+            let tfCards = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 0.8rem; margin-bottom: 1.2rem;">';
+            ['15m', '1h', '4h', '1d'].forEach(tf => {
+                const d = tfs[tf] || {};
+                tfCards += `
+                    <div style="background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:8px; padding:0.8rem;">
+                        <div style="font-weight:700; color:var(--accent-blue); font-size:0.9rem;">` + tf.toUpperCase() + `</div>
+                        <div style="font-size:0.8rem; margin-top:0.3rem;">Skor: <strong>` + (d.score || '-') + `</strong> (` + (d.trend || '-') + `)</div>
+                        <div style="font-size:0.75rem; color:var(--text-secondary);">RSI: ` + (d.rsi || '-') + ` | MACD: ` + (d.macd_hist || '-') + `</div>
+                        <div style="font-size:0.75rem; color:var(--text-secondary);">ATR%: %` + (d.atr_pct || '-') + ` | ADX: ` + (d.adx || '-') + `</div>
+                    </div>
+                `;
+            });
+            tfCards += '</div>';
+
+            const strat = stock.strategy_plan || {};
+            let stratDetails = `
+                <div style="background:rgba(139,92,246,0.06); border:1px solid rgba(139,92,246,0.3); border-radius:8px; padding:1rem; margin-bottom:1rem;">
+                    <div style="font-weight:700; color:#c084fc;">Onerilen Strateji: ` + (strat.name || strat.strategy) + `</div>
+                    <div style="font-size:0.85rem; margin-top:0.4rem;">
+                        🎯 <strong>TP1:</strong> ` + (strat.tp1 || '-') + ` TL | 🚀 <strong>TP2:</strong> ` + (strat.tp2 || '-') + ` TL | 🛑 <strong>SL:</strong> ` + (strat.sl || '-') + ` TL
+                    </div>
+                    <div style="font-size:0.78rem; color:var(--text-secondary); margin-top:0.2rem;">Beklenen Sure: ` + (strat.expected_hold || '-') + `</div>
+                </div>
+            `;
+
+            body.innerHTML = tfCards + stratDetails;
+            modal.style.display = 'flex';
+        }
+
+        function closeMtfModal() {
+            document.getElementById('mtfModal').style.display = 'none';
+        }
+
+        async function updateDashboardData() {
+            try {
+                const [portRes, tradeRes] = await Promise.all([
+                    fetch('/portfolio'),
+                    fetch('/trades?limit=15')
+                ]);
+                const portData = await portRes.json();
+                const tradeData = await tradeRes.json();
+
+                renderPortfolio(portData.portfolio || []);
+                renderTrades(tradeData.trades || []);
+            } catch (e) { console.error(e); }
+        }
+
+        function renderPortfolio(portfolio) {
+            const tableBody = document.getElementById('portfolioTableBody');
+            tableBody.innerHTML = '';
+            let cashVal = 0;
+            let stockVal = 0;
+            const chartLabels = [];
+            const chartValues = [];
+            const chartColors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#14b8a6'];
+
             portfolio.forEach(item => {
                 if (item.ticker === 'TRY') {
                     cashVal = item.quantity;
                 } else {
                     stockVal += item.current_value;
-                    
-                    // Chart data
                     chartLabels.push(item.ticker);
                     chartValues.push(item.current_value);
+
+                    const pnlClass = item.pnl_percent >= 0 ? 'text-green' : 'text-red';
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="font-weight:600;">#` + escapeHtml(item.ticker) + `</td>
+                        <td>` + item.quantity.toFixed(0) + `</td>
+                        <td>` + item.average_cost.toFixed(2) + ` TL</td>
+                        <td>` + item.current_price.toFixed(2) + ` TL</td>
+                        <td>` + item.current_value.toLocaleString('tr-TR') + ` TL</td>
+                        <td class="` + pnlClass + `">` + (item.pnl_percent >= 0 ? '+' : '') + item.pnl_percent.toFixed(2) + `%</td>
+                    `;
+                    tableBody.appendChild(tr);
                 }
             });
 
-            // Varliklari sirala (Hisse senedi degerine gore)
-            const sortedPortfolio = [...portfolio].sort((a, b) => b.current_value - a.current_value);
-
-            sortedPortfolio.forEach(item => {
-                const tr = document.createElement('tr');
-                
-                let pnlClass = '';
-                let pnlText = '0.00%';
-                
-                if (item.ticker !== 'TRY') {
-                    pnlText = `${item.pnl_percent >= 0 ? '+' : ''}${item.pnl_percent.toFixed(2)}%`;
-                    pnlClass = item.pnl_percent > 0 ? 'text-green' : (item.pnl_percent < 0 ? 'text-red' : '');
-                }
-
-                tr.innerHTML = `
-                    <td style="font-weight: 600;">#${escapeHtml(item.ticker)}</td>
-                    <td>${item.quantity.toLocaleString('tr-TR', { maximumFractionDigits: 2 })}</td>
-                    <td>${item.average_cost.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL</td>
-                    <td>${item.current_price.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL</td>
-                    <td style="font-weight: 500;">${item.current_value.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL</td>
-                    <td class="${pnlClass}">${pnlText}</td>
-                `;
-                tableBody.appendChild(tr);
-            });
-
-            // Toplam Varlik (NAV)
             const totalNav = cashVal + stockVal;
-            
-            // Kartlari Guncelle
-            document.getElementById('navVal').innerText = `${totalNav.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL`;
-            document.getElementById('cashVal').innerText = `${cashVal.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL`;
-            document.getElementById('stockVal').innerText = `${stockVal.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL`;
+            document.getElementById('navVal').innerText = totalNav.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) + ' TL';
+            document.getElementById('cashVal').innerText = cashVal.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) + ' TL';
 
-            // Toplam Kar/Zarar
-            // Varsayilan ilk sermaye 500k TL
-            const initialCapital = 500000.0;
-            const netProfit = totalNav - initialCapital;
-            const profitPercent = (netProfit / initialCapital) * 100;
+            const netPnl = totalNav - 500000.0;
+            const netPct = (netPnl / 500000.0) * 100;
+            const pnlEl = document.getElementById('totalPnl');
+            const pnlPctEl = document.getElementById('totalPnlPercent');
+            pnlEl.innerText = (netPnl >= 0 ? '+' : '') + netPnl.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) + ' TL';
+            pnlPctEl.innerText = (netPnl >= 0 ? '+' : '') + netPct.toFixed(2) + '%';
+            pnlEl.className = netPnl >= 0 ? 'metric-value text-green' : 'metric-value text-red';
 
-            const totalPnlElement = document.getElementById('totalPnl');
-            const totalPnlPercentElement = document.getElementById('totalPnlPercent');
-            const pnlCard = document.getElementById('pnlCard');
-
-            totalPnlElement.innerText = `${netProfit >= 0 ? '+' : ''}${netProfit.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL`;
-            totalPnlPercentElement.innerText = `${netProfit >= 0 ? '+' : ''}${profitPercent.toFixed(2)}%`;
-
-            if (netProfit > 0) {
-                totalPnlElement.className = 'metric-value text-green';
-                totalPnlPercentElement.className = 'metric-subtext text-green';
-                pnlCard.style.borderColor = 'rgba(16, 185, 129, 0.3)';
-                pnlCard.style.boxShadow = '0 0 15px rgba(16, 185, 129, 0.08)';
-            } else if (netProfit < 0) {
-                totalPnlElement.className = 'metric-value text-red';
-                totalPnlPercentElement.className = 'metric-subtext text-red';
-                pnlCard.style.borderColor = 'rgba(239, 68, 68, 0.3)';
-                pnlCard.style.boxShadow = '0 0 15px rgba(239, 68, 68, 0.08)';
-            } else {
-                totalPnlElement.className = 'metric-value';
-                totalPnlPercentElement.className = 'metric-subtext';
-                pnlCard.style.borderColor = 'var(--card-border)';
-                pnlCard.style.boxShadow = 'none';
-            }
-
-            // Doughnut Chart Guncelle
-            if (stockVal > 0) {
-                chartLabels.push('Nakit (TRY)');
-                chartValues.push(cashVal);
-                renderChart(chartLabels, chartValues, chartColors);
-            } else {
-                // Sadece nakit varsa
-                renderChart(['Nakit (TRY)'], [cashVal], ['rgba(59, 130, 246, 0.4)']);
-            }
+            chartLabels.push('TRY');
+            chartValues.push(cashVal);
+            renderChart(chartLabels, chartValues, chartColors);
         }
 
-        // Chart.js doughnut ciz
         function renderChart(labels, data, colors) {
             const ctx = document.getElementById('portfolioChart').getContext('2d');
-            
-            if (myChart) {
-                myChart.destroy();
-            }
-
+            if (myChart) myChart.destroy();
             myChart = new Chart(ctx, {
                 type: 'doughnut',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: data,
-                        backgroundColor: colors,
-                        borderWidth: 1,
-                        borderColor: 'rgba(255, 255, 255, 0.08)'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: '#9ca3af',
-                                font: {
-                                    family: 'Outfit',
-                                    size: 11
-                                },
-                                padding: 15,
-                                boxWidth: 12
-                            }
-                        }
-                    },
-                    cutout: '65%'
-                }
+                data: { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 1 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, cutout: '70%' }
             });
         }
 
-        // Son Islemleri Ciz
         function renderTrades(trades) {
             const tableBody = document.getElementById('tradesTableBody');
             tableBody.innerHTML = '';
-
             if (trades.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="6" class="empty-state"><i class="fa-solid fa-clock-rotate-left"></i>Henüz hiç işlem gerçekleşmedi.</td></tr>`;
+                tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--text-secondary); padding:1rem;">Henuz islem yok.</td></tr>';
                 return;
             }
-
-            trades.forEach(trade => {
+            trades.forEach(t => {
                 const tr = document.createElement('tr');
-                tr.className = 'clickable-row';
-                tr.setAttribute('onclick', `toggleReasoning('trade-${trade.id}')`);
-
-                const actionBadge = trade.action === 'AL' 
-                    ? '<span class="badge badge-buy"><i class="fa-solid fa-arrow-trend-up"></i> AL</span>'
-                    : '<span class="badge badge-sell"><i class="fa-solid fa-arrow-trend-down"></i> SAT</span>';
-
-                const formattedTime = trade.timestamp.split(' ')[1] || trade.timestamp;
-                const infoIcon = trade.reasoning ? ' <i class="fa-solid fa-circle-info" style="font-size:0.75rem; color:var(--accent-purple); margin-left:4px;"></i>' : '';
-
+                const actionBadge = t.action === 'AL' 
+                    ? '<span class="badge badge-buy">AL</span>' 
+                    : '<span class="badge badge-sell">SAT</span>';
                 tr.innerHTML = `
-                    <td style="color: var(--text-secondary);">${escapeHtml(formattedTime)}</td>
-                    <td style="font-weight: 600;">#${escapeHtml(trade.ticker)}${infoIcon}</td>
-                    <td>${actionBadge}</td>
-                    <td>${trade.price.toFixed(2)} TL</td>
-                    <td>${trade.quantity.toFixed(0)}</td>
-                    <td style="font-weight: 500;">${trade.total_value.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL</td>
+                    <td style="color:var(--text-secondary); font-size:0.75rem;">` + escapeHtml(t.timestamp.split(' ')[1] || t.timestamp) + `</td>
+                    <td style="font-weight:600;">#` + escapeHtml(t.ticker) + `</td>
+                    <td>` + actionBadge + `</td>
+                    <td>` + t.price.toFixed(2) + ` TL</td>
+                    <td>` + t.quantity.toFixed(0) + `</td>
+                    <td>` + t.total_value.toLocaleString('tr-TR') + ` TL</td>
                 `;
                 tableBody.appendChild(tr);
-
-                // Add hidden reasoning row if exists
-                if (trade.reasoning) {
-                    const rTr = document.createElement('tr');
-                    rTr.id = `reasoning-trade-${trade.id}`;
-                    rTr.style.display = 'none';
-                    rTr.innerHTML = `
-                        <td colspan="6" style="padding: 0.8rem 1.5rem; background: rgba(139, 92, 246, 0.03); border-left: 3px solid var(--accent-purple); white-space: normal; line-height: 1.5; color: var(--text-secondary);">
-                            <strong>30 Yıllık Borsacı Yorumu:</strong> <em>${escapeHtml(trade.reasoning)}</em>
-                        </td>
-                    `;
-                    tableBody.appendChild(rTr);
-                }
             });
-        }
-
-        // Son Sinyalleri Ciz
-        function renderSignals(signals) {
-            const tableBody = document.getElementById('signalsTableBody');
-            tableBody.innerHTML = '';
-
-            if (signals.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="5" class="empty-state"><i class="fa-solid fa-tower-broadcast"></i>Henüz sinyal alınmadı.</td></tr>`;
-                return;
-            }
-
-            signals.forEach(sig => {
-                const tr = document.createElement('tr');
-                tr.className = 'clickable-row';
-                tr.setAttribute('onclick', `toggleReasoning('sig-${sig.id}')`);
-
-                const actionBadge = sig.action === 'AL' 
-                    ? '<span class="badge badge-buy"><i class="fa-solid fa-arrow-trend-up"></i> AL</span>'
-                    : '<span class="badge badge-sell"><i class="fa-solid fa-arrow-trend-down"></i> SAT</span>';
-
-                const formattedTime = sig.timestamp.split(' ')[1] || sig.timestamp;
-                const infoIcon = sig.reasoning ? ' <i class="fa-solid fa-circle-info" style="font-size:0.75rem; color:var(--accent-purple); margin-left:4px;"></i>' : '';
-
-                tr.innerHTML = `
-                    <td style="color: var(--text-secondary);">${escapeHtml(formattedTime)}</td>
-                    <td style="font-weight: 600;">#${escapeHtml(sig.ticker)}${infoIcon}</td>
-                    <td>${actionBadge}</td>
-                    <td>${sig.price.toFixed(2)} TL</td>
-                    <td>${sig.quantity.toFixed(0)}</td>
-                `;
-                tableBody.appendChild(tr);
-
-                // Add hidden reasoning row if exists
-                if (sig.reasoning) {
-                    const rTr = document.createElement('tr');
-                    rTr.id = `reasoning-sig-${sig.id}`;
-                    rTr.style.display = 'none';
-                    rTr.innerHTML = `
-                        <td colspan="5" style="padding: 0.8rem 1.5rem; background: rgba(59, 130, 246, 0.03); border-left: 3px solid var(--accent-blue); white-space: normal; line-height: 1.5; color: var(--text-secondary);">
-                            <strong>Teknik Gerekçe:</strong> <em>${escapeHtml(sig.reasoning)}</em>
-                        </td>
-                    `;
-                    tableBody.appendChild(rTr);
-                }
-            });
-        }
-
-        // Toggle details row
-        function toggleReasoning(id) {
-            const element = document.getElementById(`reasoning-${id}`);
-            if (element) {
-                if (element.style.display === 'none') {
-                    element.style.display = 'table-row';
-                } else {
-                    element.style.display = 'none';
-                }
-            }
-        }
-
-        // Manuel Tarama Tetikleme & Raporlama
-        async function triggerMarketScan() {
-            const consoleCard = document.getElementById('scanConsoleCard');
-            const consoleOut = document.getElementById('consoleOutput');
-            const scanBtn = document.getElementById('scanBtn');
-            const scanIcon = document.querySelector('#scanBtn i');
-
-            // Konsolu göster ve temizle
-            consoleCard.style.display = 'block';
-            consoleOut.innerHTML = '';
-            
-            // Buton durumunu ayarla
-            scanBtn.disabled = true;
-            scanBtn.style.opacity = '0.7';
-            scanBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Tarama Yapılıyor...';
-
-            writeToConsole("INFO", "BIST 30 hisseleri için teknik analiz taraması başlatıldı (EMA, RSI, MACD, Bollinger, Hacim)...");
-            writeToConsole("INFO", "Yahoo Finance üzerinden veriler çekiliyor. Lütfen bekleyin, bu işlem yaklaşık 5-10 saniye sürebilir...");
-
-            try {
-                const start = Date.now();
-                // Secili mod: Rapor (DB'ye yazmaz) veya Canli (bot.db'ye yazar)
-                if (currentScanMode === 'live') {
-                    writeToConsole("WARN", "CANLI MOD aktif: sinyaller bot.db'ye yazılacak ve portföy güncellenecek.");
-                } else {
-                    writeToConsole("INFO", "RAPOR MODU aktif: sonuçlar yalnızca raporlanacak, bot.db'ye yazılmayacak.");
-                }
-                const res = await fetch('/scan?report_only=' + (currentScanMode === 'live' ? 'false' : 'true'));
-                const data = await res.json();
-                const duration = ((Date.now() - start) / 1000).toFixed(2);
-
-                writeToConsole("SUCCESS", `Tarama tamamlandı! Süre: ${duration} saniye. Taranan Hisse: ${data.total_scanned}. Üretilen Sinyal: ${data.signals_generated_count}`);
-
-                // Rapor modu bildirimi
-                if (data.report_only) {
-                    writeToConsole("WARN", "⚠ RAPOR MODU: Tarama sonuçları yalnızca raporlandı, bot.db'ye HİÇBİR işlem yazılmadı.");
-                    if (data.simulation) {
-                        writeToConsole("INFO", `Simülasyon: ${data.simulation.executable_signals}/${data.signals_generated_count} sinyal icra edilebilir. Uygulanırsa tahmini nakit: ${data.simulation.final_cash.toLocaleString('tr-TR')} TL, pozisyon sayısı: ${data.simulation.position_count}.`);
-                    }
-                }
-
-                // Sinyal listesini yaz
-                if (data.signals_generated_count > 0) {
-                    data.signals.forEach(sig => {
-                        const style = sig.action === "AL" ? "SUCCESS" : "ERROR";
-                        let execNote;
-                        if (data.report_only) {
-                            execNote = sig.would_execute ? " — icra edilebilir (rapor)" : ` — REDDEDİLİR: ${sig.rejected_reason || 'risk kontrolü'}`;
-                        } else {
-                            execNote = " işlemi gerçekleştirildi.";
-                        }
-                        writeToConsole(style, `[SİNYAL] #${sig.ticker} için ${sig.action} sinyali: Fiyat ${sig.price.toFixed(2)} TL | Miktar ${sig.quantity.toFixed(0)} Lot${execNote}`);
-                        writeToConsole("TEXT", `└ Gerekçe: "${sig.reasoning}"`);
-                    });
-                } else {
-                    writeToConsole("WARN", "BIST 50 üzerinde alım veya satım koşullarını sağlayan aktif hisse senedi bulunamadı (Tüm hisseler beklemede).");
-                }
-
-                // Hisse detaylarının özetini konsola dök
-                writeToConsole("INFO", "--- Detaylı İndikatör Raporu ---");
-                data.details.forEach(item => {
-                    const statusText = item.action === "HOLD" ? "NÖTR" : item.action;
-                    const statusClass = item.action === "AL" ? "SUCCESS" : (item.action === "SAT" ? "ERROR" : "TEXT");
-                    writeToConsole(statusClass, `Hisse: #${item.ticker} | Karar: ${statusText} | Detay: ${item.reasoning}`);
-                });
-
-                // Dashboard verilerini anında yenile
-                updateDashboardData();
-
-            } catch (e) {
-                console.error(e);
-                writeToConsole("ERROR", "Tarama işlemi sırasında sunucu hatası oluştu: " + e.message);
-            } finally {
-                scanBtn.disabled = false;
-                scanBtn.style.opacity = '1';
-                scanBtn.innerHTML = '<i class="fa-solid fa-magnifying-glass-chart"></i> Analiz Başlat';
-            }
-        }
-
-        // Console logger helper
-        function writeToConsole(type, message) {
-            const consoleOut = document.getElementById('consoleOutput');
-            const line = document.createElement('div');
-            line.className = 'console-line';
-            
-            const timestamp = new Date().toLocaleTimeString('tr-TR');
-            const timeSpan = `<span style="color: var(--text-secondary); margin-right: 8px;">[${timestamp}]</span>`;
-            
-            let colorClass = 'console-text';
-            if (type === "INFO") colorClass = 'console-info';
-            if (type === "SUCCESS") colorClass = 'console-success';
-            if (type === "WARN") colorClass = 'console-warn';
-            if (type === "ERROR") colorClass = 'console-error';
-
-            line.innerHTML = `${timeSpan}<span class="${colorClass}">${escapeHtml(message)}</span>`;
-            consoleOut.appendChild(line);
-            
-            // Auto scroll to bottom
-            consoleOut.scrollTop = consoleOut.scrollHeight;
-        }
-
-        // ---- Derin Analiz (bist-stock-analysis) ----
-        // Guvenli minimal Markdown renderer: once escape, sonra inline bicimlendirme
-        function mdInline(text) {
-            return text
-                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                .replace(/`([^`]+)`/g, '<code>$1</code>');
-        }
-
-        function renderMarkdown(md) {
-            const lines = md.split(/\r?\n/);
-            let html = '';
-            let i = 0;
-            const parseRow = r => r.replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => mdInline(c.trim()));
-            while (i < lines.length) {
-                const t = lines[i].trim();
-                if (!t) { i++; continue; }
-                if (t.startsWith('|')) {
-                    const rows = [];
-                    while (i < lines.length && lines[i].trim().startsWith('|')) { rows.push(lines[i].trim()); i++; }
-                    const header = parseRow(rows[0]);
-                    const body = rows.slice(2); // 2. satir ayrac (|---|)
-                    html += '<table><thead><tr>' + header.map(c => '<th>' + c + '</th>').join('') + '</tr></thead><tbody>';
-                    body.forEach(r => { html += '<tr>' + parseRow(r).map(c => '<td>' + c + '</td>').join('') + '</tr>'; });
-                    html += '</tbody></table>';
-                    continue;
-                }
-                if (t.startsWith('### ')) { html += '<h4>' + mdInline(escapeHtml(t.slice(4))) + '</h4>'; i++; continue; }
-                if (t.startsWith('## ')) { html += '<h3>' + mdInline(escapeHtml(t.slice(3))) + '</h3>'; i++; continue; }
-                if (t.startsWith('# ')) { html += '<h2>' + mdInline(escapeHtml(t.slice(2))) + '</h2>'; i++; continue; }
-                if (/^---$/.test(t)) { html += '<hr>'; i++; continue; }
-                if (t.startsWith('> ')) { html += '<blockquote>' + mdInline(escapeHtml(t.slice(2))) + '</blockquote>'; i++; continue; }
-                if (t.startsWith('- ')) {
-                    const items = [];
-                    while (i < lines.length && /^- /.test(lines[i].trim())) { items.push(mdInline(escapeHtml(lines[i].trim().slice(2)))); i++; }
-                    html += '<ul><li>' + items.join('</li><li>') + '</li></ul>';
-                    continue;
-                }
-                html += '<p>' + mdInline(escapeHtml(t)) + '</p>';
-                i++;
-            }
-            return html;
         }
 
         async function startDeepAnalysis() {
-            const tickerInput = document.getElementById('deepTicker');
-            const ticker = tickerInput.value.trim().toUpperCase().replace(/\.IS$/, '');
-            if (!ticker) { alert('Lütfen geçerli bir hisse kodu girin!'); return; }
+            const ticker = document.getElementById('deepTicker').value.trim().toUpperCase();
+            if (!ticker) return;
             const report = document.getElementById('deepReport');
             const loading = document.getElementById('deepLoading');
-            const errorBox = document.getElementById('deepError');
-            const btn = document.getElementById('startDeepBtn');
-
-            report.style.display = 'none';
-            errorBox.style.display = 'none';
-            loading.style.display = 'block';
-            btn.disabled = true;
-            btn.style.opacity = '0.7';
+            const err = document.getElementById('deepError');
+            report.style.display = 'none'; err.style.display = 'none'; loading.style.display = 'block';
 
             try {
-                const res = await fetch('/api/deep-analysis?ticker=' + encodeURIComponent(ticker));
+                const res = await fetch('/api/deep-analysis?ticker=' + ticker);
                 const data = await res.json();
-                if (!res.ok) throw new Error(data.detail || ('HTTP ' + res.status));
-                report.innerHTML = renderMarkdown(data.markdown);
+                if (!res.ok) throw new Error(data.detail || 'Hata');
+                report.innerHTML = '<pre style="white-space:pre-wrap; font-family:inherit; background:rgba(0,0,0,0.2); padding:1rem; border-radius:8px;">' + escapeHtml(data.markdown) + '</pre>';
                 report.style.display = 'block';
             } catch (e) {
-                console.error(e);
-                errorBox.textContent = 'Derin analiz oluşturulamadı: ' + e.message;
-                errorBox.style.display = 'block';
+                err.innerText = 'Rapor olusturulamadi: ' + e.message;
+                err.style.display = 'block';
             } finally {
                 loading.style.display = 'none';
-                btn.disabled = false;
-                btn.style.opacity = '1';
             }
         }
-
-        let backtestChart = null;
-
-        function startBacktesting() {
-            const ticker = document.getElementById('backtestTicker').value.trim().toUpperCase();
-            const period = document.getElementById('backtestPeriod').value;
-            const capital = document.getElementById('backtestCapital').value;
-            const maxAlloc = document.getElementById('backtestMaxAlloc').value;
-            const fillMode = document.getElementById('backtestFillMode').value;
-
-            if (!ticker) {
-                alert('Lütfen geçerli bir hisse kodu girin!');
-                return;
-            }
-
-            // UI state
-            document.getElementById('backtestResults').style.display = 'none';
-            document.getElementById('backtestLoading').style.display = 'block';
-
-            fetch(`/api/backtest?ticker=${ticker}&period=${period}&capital=${capital}&max_alloc=${maxAlloc}&fill_mode=${fillMode}`)
-                .then(res => {
-                    if (!res.ok) {
-                        return res.json().then(err => { throw new Error(err.detail || 'Bilinmeyen hata') });
-                    }
-                    return res.json();
-                })
-                .then(data => {
-                    document.getElementById('backtestLoading').style.display = 'none';
-                    document.getElementById('backtestResults').style.display = 'flex';
-
-                    // Update metrics
-                    const netProfit = data.net_profit;
-                    const netProfitEl = document.getElementById('btNetProfit');
-                    netProfitEl.innerText = `${netProfit.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL`;
-                    if (netProfit >= 0) {
-                        netProfitEl.style.color = '#10b981';
-                    } else {
-                        netProfitEl.style.color = '#f87171';
-                    }
-
-                    document.getElementById('btReturnPct').innerText = `${netProfit >= 0 ? '+' : ''}${data.total_return.toFixed(2)}%`;
-                    document.getElementById('btProfitFactor').innerText = data.profit_factor.toFixed(2);
-                    document.getElementById('btWinRate').innerText = `${data.win_rate.toFixed(2)}%`;
-                    document.getElementById('btTotalTrades').innerText = data.total_trades;
-                    document.getElementById('btMaxDrawdown').innerText = `-${data.max_drawdown.toFixed(2)}%`;
-
-                    // Populate trades table
-                    const tbody = document.getElementById('backtestTradesTableBody');
-                    tbody.innerHTML = '';
-                    
-                    if (data.trades.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-secondary);">İşlem bulunamadı.</td></tr>';
-                    } else {
-                        data.trades.forEach(trade => {
-                            const pnl = trade.pnl !== undefined ? trade.pnl : 0;
-                            const pnlPct = trade.pnl_pct !== undefined ? trade.pnl_pct : 0;
-                            const isWin = pnl >= 0;
-                            
-                            let pnlText = '-';
-                            if (trade.pnl !== undefined) {
-                                pnlText = `<span style="color: ${isWin ? '#10b981' : '#f87171'}; font-weight:bold;">
-                                    ${pnl >= 0 ? '+' : ''}${pnl.toFixed(2)} TL (${pnlPct >= 0 ? '+' : ''}${pnlPct.toFixed(2)}%)
-                                </span>`;
-                            }
-
-                            const tr = document.createElement('tr');
-                            tr.innerHTML = `
-                                <td>
-                                    <div style="font-size:0.75rem; color:var(--text-secondary);">${trade.entry_time}</div>
-                                    <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:2px;">${trade.exit_time || 'Açık Pozisyon'}</div>
-                                </td>
-                                <td>${trade.qty} Lot</td>
-                                <td>
-                                    <div>Giriş: ${trade.entry_price.toFixed(2)}</div>
-                                    <div style="margin-top:2px;">Çıkış: ${trade.exit_price ? trade.exit_price.toFixed(2) : '-'}</div>
-                                </td>
-                                <td>${pnlText}</td>
-                                <td><span style="font-size:0.75rem; color:var(--text-secondary);">${trade.exit_reason || trade.reason || '-'}</span></td>
-                            `;
-                            tbody.appendChild(tr);
-                        });
-                    }
-
-                    // Render chart
-                    renderBacktestChart(data.trades, data.initial_capital);
-                })
-                .catch(err => {
-                    document.getElementById('backtestLoading').style.display = 'none';
-                    alert(`Hata: ${err.message}`);
-                });
-        }
-
-        function renderBacktestChart(trades, initialCapital) {
-            const ctx = document.getElementById('backtestChart').getContext('2d');
-            if (backtestChart) {
-                backtestChart.destroy();
-            }
-
-            let currentVal = 0;
-            const labels = ['Başlangıç'];
-            const dataPoints = [0];
-
-            trades.forEach((trade, idx) => {
-                if (trade.pnl !== undefined) {
-                    currentVal += trade.pnl;
-                    labels.push(trade.exit_time ? trade.exit_time.split(' ')[0] : `İşlem ${idx + 1}`);
-                    dataPoints.push(currentVal);
-                }
-            });
-
-            backtestChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Net Kâr/Zarar (TL)',
-                        data: dataPoints,
-                        borderColor: '#8b5cf6',
-                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                            ticks: { color: '#9ca3af' }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#9ca3af', maxRotation: 45, minRotation: 45 }
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false }
-                    }
-                }
-            });
-        }
-
-        // Sayfayi her 10 saniyede bir otomatik yenile
-        setInterval(updateDashboardData, 10000);
     </script>
 </body>
 </html>
