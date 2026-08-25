@@ -1,33 +1,25 @@
 """
-auto_analyst.py — Kisa Vadeli Vizyon (v2)
-------------------------------------------
-BIST50 hisselerini cift zaman dilimli teknik analiz, temel analiz ve 
-haber duyarliligi kullanarak tarar. Kompozit skor sistemiyle (0-100)
-yalnizca yuksek kaliteli kisa vadeli (1-5 gun) firsatlarda sinyal uretir.
-
-Karar Mantigi:
-    Kompozit Skor = (Teknik x 0.50) + (Temel x 0.25) + (Haber x 0.25)
-    Sinyal Esigi  = >= 65 (LONG), <= 30 pozisyon cikisi
-    Kar Hedefleri = +5% (TP1), +10% (TP2), +15% (TP3)
-    Stop-Loss     = -5%
+auto_analyst.py — Multi-Timeframe BIST Otomatik Analiz ve Sinyal Motoru (v2)
+----------------------------------------------------------------------------
+4 Zaman Dilimi (15m, 1h, 4h, 1d) + Temel Analiz + Haber Analizi
+3 Kisa Vadeli Strateji (Kademeli, Swing, Momentum) Entegrasyonu
 """
 
 import time
 import logging
 import asyncio
 import os
-import yfinance as yf
-import pandas as pd
-import numpy as np
 import database
 import trade_manager
 import news_analyst
 import market_data
 import bist_fundamentals
+import mtf_data
+import strategy_engine
 
 logger = logging.getLogger("BistScalpBot")
 
-# BIST50 genisletilmis tarama listesi
+# BIST50 Tarama Listesi
 BIST50_TICKERS = [
     "THYAO", "EREGL", "ASELS", "YKBNK", "AKBNK", "TUPRS", "KCHOL", "SAHOL", "GARAN", "ISCTR",
     "BIMAS", "SISE", "PGSUS", "EKGYO", "TCELL", "FROTO", "TOASO", "PETKM", "KOZAA", "KOZAL",
@@ -36,651 +28,205 @@ BIST50_TICKERS = [
     "TKFEN", "MGROS", "CCOLA", "AEFES", "SOKM", "OTKAR", "KORDS", "BRISA", "SELEC", "ALBRK"
 ]
 
-# TP/SL seviyeleri
-TP1_PCT = 0.05   # +%5 — pozisyonun %40'i satilir
-TP2_PCT = 0.10   # +%10 — pozisyonun %40'i satilir
-TP3_PCT = 0.15   # +%15 — kalan %20 satilir
-SL_PCT  = 0.05   # -%5  — tam pozisyon satilir
-
-# Sinyal esikleri
-BUY_THRESHOLD  = 65   # Kompozit skor >= 65 → AL
-SELL_THRESHOLD = 30   # Kompozit skor <= 30 → SAT (tutuldugunda)
-
-# Tarama araligi (saniye)
+BUY_THRESHOLD = 65.0    # Kompozit skor >= 65 -> AL
 SCAN_INTERVAL_SECONDS = 900  # 15 dakika
 
 
-# ---------------------------------------------------------------------------
-# Teknik Analiz: Gunluk + Saatlik cift zaman dilimi
-# ---------------------------------------------------------------------------
+def calculate_fundamental_score(ticker: str) -> tuple[float, dict]:
+    """BIST sirketleri icin uzmanpara/yfinance temel skorunu hesaplar (0-100)."""
+    clean_ticker = ticker.upper().replace(".IS", "")
+    data = bist_fundamentals.get_fundamentals(clean_ticker)
+    
+    score = 50.0  # Notr baslangic
+    details = {"source": "none"}
 
-def calculate_technical_score(df_daily: pd.DataFrame, df_hourly: pd.DataFrame) -> tuple[float, dict]:
-    """
-    Gunluk ve saatlik grafik verilerinden teknik skor hesaplar (0-100).
-    Donulen tuple: (skor, gostergeler_dict)
-    """
-    score = 0.0
-    details = {}
+    if data and len(data) > 1:
+        details["source"] = "uzmanpara"
+        score = 0.0
 
-    # --- GUNLUK VERI ANALIZI ---
-    if df_daily is None or len(df_daily) < 50:
-        return 0.0, {"error": "Gunluk veri yetersiz"}
-
-    df_d = df_daily.copy()
-    df_d['EMA9']  = df_d['Close'].ewm(span=9, adjust=False).mean()
-    df_d['EMA21'] = df_d['Close'].ewm(span=21, adjust=False).mean()
-    df_d['EMA50'] = df_d['Close'].ewm(span=50, adjust=False).mean()
-    df_d['EMA200']= df_d['Close'].ewm(span=200, adjust=False).mean()
-
-    # RSI (14)
-    delta = df_d['Close'].diff()
-    gain  = delta.where(delta > 0, 0.0)
-    loss  = -delta.where(delta < 0, 0.0)
-    avg_g = gain.ewm(alpha=1/14, adjust=False).mean()
-    avg_l = loss.ewm(alpha=1/14, adjust=False).mean()
-    rs    = avg_g / np.where(avg_l == 0, 1e-10, avg_l)
-    df_d['RSI'] = 100 - (100 / (1 + rs))
-
-    # MACD (12, 26, 9)
-    ema12 = df_d['Close'].ewm(span=12, adjust=False).mean()
-    ema26 = df_d['Close'].ewm(span=26, adjust=False).mean()
-    df_d['MACD']       = ema12 - ema26
-    df_d['MACD_Signal']= df_d['MACD'].ewm(span=9, adjust=False).mean()
-    df_d['MACD_Hist']  = df_d['MACD'] - df_d['MACD_Signal']
-
-    # Bollinger Bands (20, 2)
-    df_d['BB_Mid'] = df_d['Close'].rolling(20).mean()
-    df_d['BB_Std'] = df_d['Close'].rolling(20).std()
-    df_d['BB_Upper'] = df_d['BB_Mid'] + 2 * df_d['BB_Std']
-    df_d['BB_Lower'] = df_d['BB_Mid'] - 2 * df_d['BB_Std']
-    df_d['BB_Width'] = (df_d['BB_Upper'] - df_d['BB_Lower']) / df_d['BB_Mid']
-
-    # Hacim
-    df_d['Vol_SMA20'] = df_d['Volume'].rolling(20).mean()
-
-    curr  = df_d.iloc[-1]
-    prev  = df_d.iloc[-2]
-    prev2 = df_d.iloc[-3]
-
-    close   = float(curr['Close'])
-    ema9    = float(curr['EMA9'])
-    ema21   = float(curr['EMA21'])
-    ema50   = float(curr['EMA50'])
-    ema200  = float(curr['EMA200']) if not pd.isna(curr['EMA200']) else close
-    rsi     = float(curr['RSI'])
-    macd    = float(curr['MACD'])
-    macd_s  = float(curr['MACD_Signal'])
-    macd_h  = float(curr['MACD_Hist'])
-    prev_h  = float(prev['MACD_Hist'])
-    prev2_h = float(prev2['MACD_Hist'])
-    bb_up   = float(curr['BB_Upper'])
-    bb_low  = float(curr['BB_Lower'])
-    bb_mid  = float(curr['BB_Mid'])
-    bb_wid  = float(curr['BB_Width'])
-    vol     = float(curr['Volume'])
-    vol_sma = float(curr['Vol_SMA20']) if curr['Vol_SMA20'] > 0 else 1.0
-    vol_r   = vol / vol_sma
-
-    # 52 haftalik dusuk hesapla
-    low_52w = df_d['Close'].min() if len(df_d) >= 252 else df_d['Close'].min()
-    high_52w= df_d['Close'].max() if len(df_d) >= 252 else df_d['Close'].max()
-    dist_from_low  = (close - low_52w) / low_52w * 100
-    dist_from_high = (high_52w - close) / high_52w * 100
-
-    details.update({
-        "close": close, "ema9": ema9, "ema21": ema21, "ema50": ema50,
-        "rsi": rsi, "macd": macd, "macd_signal": macd_s, "macd_hist": macd_h,
-        "bb_upper": bb_up, "bb_lower": bb_low, "bb_mid": bb_mid,
-        "vol_ratio": vol_r, "dist_from_52w_low": dist_from_low,
-        "dist_from_52w_high": dist_from_high,
-    })
-
-    # --- PUAN HESAPLAMA ---
-
-    # 1. EMA Dizilimi: 30 puan max
-    #    Guclu yukari trend: EMA9 > EMA21 > EMA50 ve fiyat EMA50 uzerinde
-    if close > ema50 and ema9 > ema21:
-        score += 30
-    elif close > ema21 and ema9 > ema21:
-        score += 20
-    elif close > ema9:
-        score += 10
-
-    # 2. RSI Zonu: 20 puan max
-    #    Ideal: RSI 40-60 (momentum var ama asirilık yok)
-    #    Cok iyi: 30-40 arasinda (asilim dipten don)
-    if 45 <= rsi <= 60:
-        score += 20
-    elif 35 <= rsi < 45 or 60 < rsi <= 65:
-        score += 14
-    elif 30 <= rsi < 35:
-        score += 10  # Asilim dip bolgesinden geri donus firsati
-    elif rsi > 70:
-        score -= 5   # Asiri alim — cazip degil
-
-    # 3. MACD Momentum: 20 puan max
-    #    Histogram boluyor ve pozitif, momentum artiyor
-    macd_growing = macd_h > prev_h > prev2_h
-    macd_positive = macd_h > 0 and macd > macd_s
-    if macd_growing and macd_positive:
-        score += 20
-    elif macd_growing:
-        score += 12
-    elif macd_positive:
-        score += 8
-    elif macd_h < prev_h:  # Momentum dusuyor
-        score -= 5
-
-    # 4. Bollinger Pozisyonu: 15 puan max
-    #    Fiyat orta bant uzerinde ve bant genisliyorsa momentum var
-    if close > bb_mid and bb_wid > 0.05:
-        score += 15
-    elif close > bb_mid:
-        score += 8
-    elif close <= bb_low * 1.01:
-        score += 5   # Alt banda yakin — potansiyel destek
-    elif close >= bb_up * 0.99:
-        score -= 5   # Ust banda yakin — baskı bolgesinde
-
-    # 5. Hacim Teyidi: 15 puan max
-    if vol_r >= 2.0:
-        score += 15
-    elif vol_r >= 1.5:
-        score += 10
-    elif vol_r >= 1.2:
-        score += 5
-    elif vol_r < 0.7:
-        score -= 5  # Cok dusuk hacim — guvenilmez hareket
-
-    # --- SAATLIK TEYIT (+/- 10 bonus) ---
-    if df_hourly is not None and len(df_hourly) >= 20:
-        df_h = df_hourly.copy()
-        df_h['EMA9'] = df_h['Close'].ewm(span=9, adjust=False).mean()
-        df_h['EMA21']= df_h['Close'].ewm(span=21, adjust=False).mean()
-        h_curr = df_h.iloc[-1]
-        h_close = float(h_curr['Close'])
-        h_ema9  = float(h_curr['EMA9'])
-        h_ema21 = float(h_curr['EMA21'])
-        if h_close > h_ema9 > h_ema21:
-            score += 10   # Saatlik de yukari trend → guclu teyit
-            details["hourly_trend"] = "yukari"
-        elif h_close < h_ema9 < h_ema21:
-            score -= 10   # Saatlik karsi trend → zayiflama
-            details["hourly_trend"] = "asagi"
+        fk = data.get("fk")
+        if fk is not None and fk > 0:
+            details["fk"] = fk
+            if fk < 5:
+                score += 30.0
+            elif fk < 8:
+                score += 25.0
+            elif fk < 12:
+                score += 15.0
+            elif fk < 20:
+                score += 5.0
         else:
-            details["hourly_trend"] = "yatay"
+            score += 10.0
 
-    final_score = max(0.0, min(100.0, float(score)))
-    details["technical_score"] = final_score
-    return final_score, details
-
-
-def calculate_fundamental_score(ticker_info: dict, dist_from_52w_low: float, bist: dict | None = None) -> float:
-    """
-    Temel analiz skoru (0-100).
-
-    bist parametresi verildiginde GERCEK BIST oranlari (bist_fundamentals /
-    uzmanpara-Foreks: F/K, PD/DD, ROE, net kar, senet sayisi) kullanilir;
-    yoksa Yahoo Finance verisiyle (ticker_info) fallback yapilir.
-    """
-    score = 50.0  # Baslangic notr skor
-
-    try:
-        pe  = ticker_info.get("trailingPE") or ticker_info.get("forwardPE")
-        eps = ticker_info.get("trailingEps")
-        roe = ticker_info.get("returnOnEquity")
-
-        if bist:
-            # --- GERCEK BIST ORANLARI (uzmanpara/Foreks) onceliklidir ---
-            bist_pe = bist.get("fk")
-            if bist_pe is not None:
-                pe = bist_pe
-            bist_roe = bist.get("roe")
-            if bist_roe is not None:
-                roe = bist_roe
-            # EPS = Net Kar / Senet Sayisi (BIST'te dogrudan EPS verilmez)
-            nk, ss = bist.get("net_kar"), bist.get("senet_sayisi")
-            if nk is not None and ss and ss > 0:
-                eps = nk / ss
-
-            # F/K (BIST bandi: F/K 6-12 makul, <6 cok ucuz)
-            if pe is not None:
-                if 0 < pe < 6:
-                    score += 20   # Cok ucuz (BIST degeri firsati)
-                elif 6 <= pe < 12:
-                    score += 10   # Makul
-                elif 12 <= pe < 20:
-                    score += 5
-                elif pe > 30:
-                    score -= 10   # Pahali
-                elif pe < 0:
-                    score -= 15   # Zarar ediyor
-
-            # PD/DD (yalnizca BIST verisinde var; THYAO gibi <1 deger firsati)
-            pd_dd = bist.get("pd_dd")
-            if pd_dd is not None:
-                if 0 < pd_dd < 1:
-                    score += 10   # Defter degerinin altinda
-                elif pd_dd < 2:
-                    score += 5    # Makul
-                elif pd_dd > 4:
-                    score -= 5    # Pahali
+        pd_dd = data.get("pd_dd")
+        if pd_dd is not None and pd_dd > 0:
+            details["pd_dd"] = pd_dd
+            if pd_dd < 1.0:
+                score += 30.0
+            elif pd_dd < 2.0:
+                score += 20.0
+            elif pd_dd < 4.0:
+                score += 10.0
         else:
-            # --- YFINANCE FALLBACK (mevcut davranis) ---
-            if pe is not None:
-                if 5 < pe < 12:
-                    score += 20   # Ucuz
-                elif 12 <= pe < 20:
-                    score += 10   # Makul
-                elif pe > 30:
-                    score -= 10   # Pahali
-                elif pe < 0:
-                    score -= 15   # Zarar ediyor
+            score += 10.0
 
-        # ROE (Ozsermaye Karliligi) — her iki kaynak icin ortak
+        roe = data.get("roe")
         if roe is not None:
-            if roe > 0.25:
-                score += 15   # Cok iyi (>%25)
-            elif roe > 0.15:
-                score += 8
-            elif roe < 0:
-                score -= 15   # Zarar ediyor
-
-        # EPS Pozitiflik
-        if eps is not None:
-            if eps > 0:
-                score += 10
-            else:
-                score -= 10
-
-        # 52 haftalik dip yakinligi (alim firsati)
-        if 0 <= dist_from_52w_low <= 15:
-            score += 15   # Diplere yakin, potansiyel dip yapma
-        elif dist_from_52w_low <= 30:
-            score += 5
-
-    except Exception as e:
-        logger.debug(f"Temel analiz skoru hesaplanamadi: {str(e)}")
-
-    return max(0.0, min(100.0, score))
-
-
-# ---------------------------------------------------------------------------
-# Ana Analiz Fonksiyonu
-# ---------------------------------------------------------------------------
-
-def _fetch_history(stock, period, interval):
-    """Thread pool icinde calisacak senkron veri indirici."""
-    return stock.history(period=period, interval=interval)
-
-
-def _fetch_info(stock):
-    """Thread pool icinde calisacak senkron info indirici."""
-    try:
-        return stock.info
-    except Exception:
-        return {}
-
-
-async def analyze_ticker(ticker: str, semaphore: asyncio.Semaphore) -> dict:
-    """
-    Tek bir BIST hissesi icin:
-      1. Gunluk + saatlik fiyat verisi indir
-      2. Teknik skor hesapla (0-100)
-      3. Temel analiz skoru hesapla (0-100)
-      4. Haber duyarliligi skoru al (0-100)
-      5. Kompozit skor hesapla ve sinyal uret
-    """
-    yahoo_ticker = f"{ticker}.IS"
-    async with semaphore:
-        try:
-            logger.info(f"Analiz baslatiliyor -> {yahoo_ticker}")
-            stock = yf.Ticker(yahoo_ticker)
-
-            # Veri indir — thread pool ile (blocking IO)
-            # bist: gercek BIST temel oranlari (uzmanpara/Foreks, 30 dk onbellek)
-            df_daily, df_hourly, info, bist = await asyncio.gather(
-                asyncio.to_thread(_fetch_history, stock, "6mo", "1d"),
-                asyncio.to_thread(_fetch_history, stock, "1mo", "1h"),
-                asyncio.to_thread(_fetch_info, stock),
-                asyncio.to_thread(bist_fundamentals.get_fundamentals, ticker),
-            )
-
-            # Haber skoru (ayri, non-blocking)
-            news_score = await news_analyst.get_news_score(ticker)
-
-            # Veri kontrolu
-            if df_daily is None or df_daily.empty or len(df_daily) < 50:
-                logger.warning(f"{ticker}: Yetersiz gunluk veri ({len(df_daily) if df_daily is not None else 0} satir)")
-                return _hold_result(ticker, 0.0, "Yetersiz piyasa verisi.")
-
-            # Skor hesapla — temel skorda gercek BIST oranlari oncelikli
-            # (yoksa yfinance fallback)
-            tech_score, tech_details = calculate_technical_score(df_daily, df_hourly)
-            fund_source = "BIST/uzmanpara" if bist else "yfinance"
-            fund_score = calculate_fundamental_score(
-                info, tech_details.get("dist_from_52w_low", 50), bist=bist
-            )
-
-            # Kompozit Skor: Teknik %50, Temel %25, Haber %25
-            composite = (tech_score * 0.50) + (fund_score * 0.25) + (news_score * 0.25)
-
-            # Canli fiyat: seans sirasinda gunluk barin son kapanisi bayat kalabilir
-            # (genellikle dunku kapanis). SL/TP kontrolleri ve islem icra fiyati
-            # icin canli fiyat kullanilir; alinamazsa gunluk kapanis fallback olur.
-            live_price = await market_data.get_stock_price(ticker)
-            close = live_price if live_price and live_price > 0 else tech_details.get("close", 0.0)
-
-            rsi    = tech_details.get("rsi", 50.0)
-            vol_r  = tech_details.get("vol_ratio", 1.0)
-            macd_h = tech_details.get("macd_hist", 0.0)
-            dist_low = tech_details.get("dist_from_52w_low", 50.0)
-
-            logger.info(
-                f"{ticker} | Teknik={tech_score:.1f} Temel={fund_score:.1f} "
-                f"[{fund_source}] Haber={news_score:.1f} -> Kompozit={composite:.1f}"
-            )
-
-            # --- Portfoy durumu ---
-            conn = await database.get_async_db_connection()
-            try:
-                async with conn.execute("SELECT quantity FROM portfolio WHERE ticker = 'TRY'") as cur:
-                    row = await cur.fetchone()
-                    cash = row["quantity"] if row else 0.0
-
-                async with conn.execute("SELECT quantity, average_cost FROM portfolio WHERE ticker = ?", (ticker,)) as cur:
-                    stock_row = await cur.fetchone()
-                    held_qty  = stock_row["quantity"]   if stock_row else 0.0
-                    avg_cost  = stock_row["average_cost"] if stock_row else 0.0
-            finally:
-                await conn.close()
-
-            action   = "HOLD"
-            quantity = 0.0
-            reasoning = ""
-
-            # --- SATIS KARARI: Tutulu pozisyon + zarar durdur veya zayif skor ---
-            if held_qty > 0:
-                current_return = (close - avg_cost) / avg_cost * 100 if avg_cost > 0 else 0.0
-
-                # Stop-Loss tetiklendi
-                if current_return <= -(SL_PCT * 100):
-                    action   = "SAT"
-                    quantity = held_qty
-                    reasoning = (
-                        f"[STOP-LOSS] #{ticker} stop-loss seviyesine ulasti! "
-                        f"Giris fiyati: {avg_cost:.2f} TL, Mevcut: {close:.2f} TL, "
-                        f"Kayip: %{current_return:.1f}. "
-                        f"Zararı durdur kurali geregi {held_qty:.0f} lot tamamen satilmali."
-                    )
-
-                # TP1 — +5% kar al, pozisyonun %40'ini sat
-                elif current_return >= TP1_PCT * 100 and current_return < TP2_PCT * 100:
-                    sell_qty = int(held_qty * 0.4)
-                    if sell_qty >= 1:
-                        action   = "SAT"
-                        quantity = float(sell_qty)
-                        reasoning = (
-                            f"[KAR AL - TP1] #{ticker} ilk kar hedefine ulasti (+%{current_return:.1f}). "
-                            f"Pozisyonun %%40'i ({sell_qty:.0f} lot) satilarak kar realize ediliyor. "
-                            f"Kalan pozisyon TP2 (+%%10) hedefine tasiniyor."
-                        )
-
-                # TP2 — +10% kar al, pozisyonun %40'ini sat
-                elif current_return >= TP2_PCT * 100 and current_return < TP3_PCT * 100:
-                    sell_qty = int(held_qty * 0.4)
-                    if sell_qty >= 1:
-                        action   = "SAT"
-                        quantity = float(sell_qty)
-                        reasoning = (
-                            f"[KAR AL - TP2] #{ticker} ikinci kar hedefine ulasti (+%{current_return:.1f}). "
-                            f"%%40 daha ({sell_qty:.0f} lot) satiliyor. "
-                            f"Kalan pozisyon TP3 (+%%15) hedefine tasiniyor."
-                        )
-
-                # TP3 — +15% veya ustu, tamamen cik
-                elif current_return >= TP3_PCT * 100:
-                    action   = "SAT"
-                    quantity = held_qty
-                    reasoning = (
-                        f"[KAR AL - TP3] #{ticker} tam kar hedefine ulasti (+%{current_return:.1f}). "
-                        f"Tum pozisyon ({held_qty:.0f} lot) satilarak kar realize ediliyor. "
-                        f"Mükemmel ticaret tamamlandi!"
-                    )
-
-                # Skor cok duste, cikis sinyali
-                elif composite <= SELL_THRESHOLD and current_return > -2:
-                    action   = "SAT"
-                    quantity = held_qty
-                    reasoning = (
-                        f"[POZISYON KAPAT] #{ticker} analiz skoru kritik seviyeye dustu "
-                        f"(Kompozit: {composite:.1f}/100). "
-                        f"Mevcut getiri: %{current_return:.1f}. "
-                        f"Tum pozisyon likide ediliyor."
-                    )
-
-            # --- ALIM KARARI: Yuksek skor + nakit yeterli ---
-            elif composite >= BUY_THRESHOLD and held_qty == 0:
-                # Negatif haber baskisi varsa sinyal bloke et
-                if news_score < 30:
-                    action    = "HOLD"
-                    reasoning = (
-                        f"{ticker}: Teknik skor yeterli ({composite:.1f}) ancak "
-                        f"haber ortami negatif ({news_score:.1f}/100). "
-                        f"Sinyal bloke edildi."
-                    )
-                else:
-                    # Pozisyon buyuklugu: nakit x %15, maks 15.000 TL
-                    target_amount = min(cash * 0.15, 15000.0)
-                    if target_amount < 500.0:
-                        target_amount = min(cash, 500.0)
-
-                    quantity = float(int(target_amount / close)) if close > 0 else 0.0
-
-                    if quantity >= 1.0:
-                        action = "AL"
-                        news_headlines = await news_analyst.get_news_headlines(ticker)
-                        haber_ozet = " | ".join(news_headlines[:2]) if news_headlines else "Haberler yükleniyor..."
-                        reasoning = (
-                            f"[KISA VADELI FIRSAT] #{ticker} kuvvetli kompozit skor: {composite:.1f}/100 "
-                            f"(Teknik: {tech_score:.1f}, Temel: {fund_score:.1f}, Haber: {news_score:.1f}). "
-                            f"Fiyat: {close:.2f} TL | RSI: {rsi:.1f} | Hacim: {vol_r:.1f}x ortalama | "
-                            f"MACD Hist: {macd_h:+.3f} | 52H Dipten Uzaklik: %{dist_low:.1f}. "
-                            f"Haberler: {haber_ozet}. "
-                            f"1-5 gunluk pozisyon. TP1:+%%5 TP2:+%%10 TP3:+%%15 SL:-%%5."
-                        )
-                    else:
-                        reasoning = f"{ticker}: AL sinyali var ({composite:.1f}) ancak bakiye yetersiz."
-
-            # HOLD durumu
-            if action == "HOLD" and not reasoning:
-                trend  = "Yukari" if tech_details.get("close", 0) > tech_details.get("ema50", 0) else "Asagi"
-                reasoning = (
-                    f"{ticker} | Kompozit: {composite:.1f}/100 | "
-                    f"Teknik: {tech_score:.1f} | Temel: {fund_score:.1f} | Haber: {news_score:.1f} | "
-                    f"Trend: {trend} | RSI: {rsi:.1f} | "
-                    f"Sinyal esigine ({BUY_THRESHOLD}) ulasilamadi."
-                )
-
-            return {
-                "ticker":    ticker,
-                "action":    action,
-                "price":     close,
-                "quantity":  quantity,
-                "reasoning": reasoning,
-                "scores": {
-                    "composite": round(composite, 1),
-                    "technical": round(tech_score, 1),
-                    "fundamental": round(fund_score, 1),
-                    "news": round(news_score, 1),
-                    "fund_source": fund_source,
-                }
-            }
-
-        except Exception as e:
-            logger.error(f"{ticker} analiz hatasi: {str(e)}")
-            return _hold_result(ticker, 0.0, f"Hata: {str(e)}")
-
-
-def _hold_result(ticker: str, price: float, reason: str) -> dict:
-    """Hata veya eksik veri durumunda standart HOLD sonucu dondurur."""
-    return {
-        "ticker": ticker, "action": "HOLD",
-        "price": price, "quantity": 0.0,
-        "reasoning": reason,
-        "scores": {"composite": 0, "technical": 0, "fundamental": 0, "news": 0}
-    }
-
-
-# ---------------------------------------------------------------------------
-# Asenkron Tarama Dongusu
-# ---------------------------------------------------------------------------
-
-def _report_only_default() -> bool:
-    """Periyodik taramanin varsayilan modu: SCAN_MODE=report ise raporlama modu."""
-    return os.getenv("SCAN_MODE", "live").strip().lower() == "report"
-
-
-def _simulate_signal(sig: dict, state: dict) -> tuple:
-    """
-    RAPOR MODU icin salt-okunur simulasyon.
-
-    trade_manager.process_trade_signal ile AYNI risk kurallarini uygular
-    (AL: bakiye yeterli mi; SAT: elde hisse var mi) ama DB'ye HICBIR SEY
-    yazmaz. state = {"cash": float, "portfolio": {ticker: {"qty", "avg_cost"}}}
-    sinyallerin SIRALI etkisi dogru hesaplansin diye guncellenir.
-
-    NOT: Bu bilincli bir kopyadir — canli icradaki tek dogruluk kaynagi
-    trade_manager'dir; burasi yalnizca 'ne olurdu' tahminidir.
-    """
-    ticker = sig["ticker"]
-    cost = sig["price"] * sig["quantity"]
-    cash = state["cash"]
-    portfolio = state["portfolio"]
-
-    if sig["action"] == "AL":
-        if cash < cost:
-            return False, f"Bakiye yetersiz: {cost:.2f} TL gerekli, {cash:.2f} TL mevcut"
-        cash -= cost
-        pos = portfolio.get(ticker)
-        if pos:
-            new_qty = pos["qty"] + sig["quantity"]
-            pos["avg_cost"] = (pos["qty"] * pos["avg_cost"] + cost) / new_qty
-            pos["qty"] = new_qty
+            details["roe"] = roe
+            if roe > 0.35:
+                score += 25.0
+            elif roe > 0.20:
+                score += 18.0
+            elif roe > 0.10:
+                score += 10.0
         else:
-            portfolio[ticker] = {"qty": sig["quantity"], "avg_cost": sig["price"]}
-        state["cash"] = cash
-        return True, None
+            score += 10.0
 
-    # SAT
-    pos = portfolio.get(ticker)
-    held = pos["qty"] if pos else 0.0
-    if held < sig["quantity"]:
-        return False, f"Yetersiz hisse: {sig['quantity']:.0f} lot isteniyor, {held:.0f} lot mevcut"
-    new_qty = held - sig["quantity"]
-    if new_qty == 0:
-        del portfolio[ticker]
-    else:
-        pos["qty"] = new_qty
-    state["cash"] = cash + cost
-    return True, None
+        temettu = data.get("temettu_verimi_pct")
+        if temettu is not None and temettu > 0:
+            details["temettu_verimi_pct"] = temettu
+            if temettu > 5.0:
+                score += 15.0
+            elif temettu > 2.0:
+                score += 10.0
+        else:
+            score += 5.0
+
+        score = max(0.0, min(100.0, score))
+        return round(score, 1), details
+
+    return 50.0, {"source": "neutral_fallback"}
+
+
+async def analyze_single_ticker(ticker: str) -> dict:
+    """Tek bir BIST hissesi icin 4 timeframe MTF + Temel + Haber analizi yapar."""
+    clean_ticker = ticker.upper().replace(".IS", "")
+
+    # 1. Multi-Timeframe Teknik Analiz
+    mtf_res = await mtf_data.fetch_all_mtf_data(clean_ticker)
+    mtf_score = mtf_res.get("mtf_score", 50.0)
+
+    # 2. Temel Analiz
+    fund_score, fund_details = calculate_fundamental_score(clean_ticker)
+
+    # 3. Haber Duyarlilik Analizi
+    try:
+        news_score = await news_analyst.get_news_score(clean_ticker)
+    except Exception:
+        news_score = 50.0
+
+    # 4. Kompozit Skor (Teknik %50, Temel %25, Haber %25)
+    composite_score = round((mtf_score * 0.50) + (fund_score * 0.25) + (news_score * 0.25), 1)
+
+    # 5. Strateji Onerisi
+    strategy_mode = await database.get_setting("strategy_mode", "auto")
+    strategy_plan = strategy_engine.select_best_strategy(mtf_res, preferred_mode=strategy_mode)
+
+    confluence_count = mtf_res.get("confluence_count", 0)
+    current_price = mtf_res.get("current_price", 0.0)
+
+    # Sinyal Karari
+    signal = "NOTR"
+    if composite_score >= BUY_THRESHOLD and confluence_count >= 2:
+        signal = "AL"
+    elif composite_score <= 35.0:
+        signal = "SAT"
+
+    return {
+        "ticker": clean_ticker,
+        "current_price": current_price,
+        "composite_score": composite_score,
+        "technical_score": mtf_score,
+        "fundamental_score": fund_score,
+        "news_score": news_score,
+        "signal": signal,
+        "confluence_status": mtf_res.get("confluence_status", "NEUTRAL"),
+        "confluence_count": confluence_count,
+        "bullish_tfs": mtf_res.get("bullish_tfs", []),
+        "bearish_tfs": mtf_res.get("bearish_tfs", []),
+        "strategy_plan": strategy_plan,
+        "mtf_details": mtf_res.get("timeframes", {}),
+        "fundamental_details": fund_details
+    }
 
 
 async def scan_all_and_report(report_only: bool = None) -> dict:
     """
-    BIST50 hisselerini asenkron olarak tarar (Semaphore=3 ile hiz sinirlamasi).
-
-    report_only=True  -> Sadece RAPORLAMA: sonuclar donulur, bot.db'ye hicbir
-                         sinyal/islem yazilmaz. Sinyallerin gercekte isleme
-                         gecip gecmeyecegi trade_manager kurallariyla
-                         salt-okunur simule edilir (would_execute/rejected_reason).
-    report_only=False -> Sinyaller trade_manager uzerinden islenir (mevcut davranis).
-    report_only=None  -> SCAN_MODE env degiskenine bakar (report ise raporlama).
+    BIST50 listesini tarar, acik pozisyonlari kontrol eder ve gerekiyorsa yeni pozisyon acar.
     """
     if report_only is None:
-        report_only = _report_only_default()
+        scan_mode_env = os.getenv("SCAN_MODE", "trade").strip().lower()
+        report_only = (scan_mode_env == "report")
 
-    logger.info(
-        "BIST50 kisa vadeli tarama baslatiliyor..."
-        + (" [RAPOR MODU - bot.db'ye yazilmaz]" if report_only else "")
-    )
-    start_time = time.time()
+    logger.info(f"BIST50 Multi-Timeframe Taramasi Baslatildi (report_only={report_only})...")
 
-    # Ayni anda max 3 istek (gunluk veri + fundamentals icin daha ihtiyatli)
-    sem = asyncio.Semaphore(3)
-    tasks = [analyze_ticker(ticker, sem) for ticker in BIST50_TICKERS]
-    results = await asyncio.gather(*tasks)
+    # 1. Once mevcut acik pozisyonlarin TP/SL ve seans sonu kontrollerini yap
+    await trade_manager.evaluate_open_positions()
 
-    signals = [a for a in results if a["action"] in ["AL", "SAT"] and a["quantity"] > 0]
+    # 2. Hisseleri gruplar halinde tara (rate-limit asmamak icin 5'erli chunk'lar)
+    chunk_size = 5
+    all_results = []
+    
+    for i in range(0, len(BIST50_TICKERS), chunk_size):
+        chunk = BIST50_TICKERS[i:i + chunk_size]
+        tasks = [analyze_single_ticker(t) for t in chunk]
+        chunk_res = await asyncio.gather(*tasks, return_exceptions=True)
+        for r in chunk_res:
+            if isinstance(r, dict):
+                all_results.append(r)
+        await asyncio.sleep(0.5)
 
-    simulation = None
-    if report_only:
-        # Mevcut portfoyu salt-okunur oku ve sinyallerin sirali etkisini simule et
-        conn = await database.get_async_db_connection()
-        try:
-            state = {"cash": 0.0, "portfolio": {}}
-            async with conn.execute("SELECT ticker, quantity, average_cost FROM portfolio") as cur:
-                rows = await cur.fetchall()
-                for r in rows:
-                    if r["ticker"] == "TRY":
-                        state["cash"] = r["quantity"]
-                    else:
-                        state["portfolio"][r["ticker"]] = {
-                            "qty": r["quantity"], "avg_cost": r["average_cost"]
-                        }
-        finally:
-            await conn.close()
+    # Sonuclari skora gore sirala
+    all_results.sort(key=lambda x: x.get("composite_score", 0), reverse=True)
 
-        for sig in signals:
-            would_execute, note = _simulate_signal(sig, state)
-            sig["executed"] = False
-            sig["would_execute"] = would_execute
-            if note:
-                sig["rejected_reason"] = note
+    # 3. AL Sinyali Ureten Hisseler
+    buy_signals = [r for r in all_results if r.get("signal") == "AL"]
+    open_count = await trade_manager.get_active_open_positions_count()
 
-        simulation = {
-            "mode": "report_only",
-            "final_cash": round(state["cash"], 2),
-            "position_count": len(state["portfolio"]),
-            "executable_signals": sum(1 for s in signals if s["would_execute"]),
-        }
-        logger.info(
-            f"RAPOR MODU: {len(signals)} sinyal uretildi, "
-            f"{simulation['executable_signals']} tanesi isleme girebilir. DB'ye yazilmadi."
-        )
-    else:
-        for sig in signals:
-            await inject_signal_to_bot(sig)
+    # 4. Eger Canli Moddaysa ve pozisyon limiti asilmadiysa en iyi sinyaller icin pozisyon ac
+    executed_trades = []
+    if not report_only and buy_signals and open_count < strategy_engine.MAX_CONCURRENT_POSITIONS:
+        for candidate in buy_signals:
+            if open_count >= strategy_engine.MAX_CONCURRENT_POSITIONS:
+                break
+            
+            ticker = candidate["ticker"]
+            price = candidate["current_price"]
+            strat_info = candidate.get("strategy_plan", {})
+            reasoning = (
+                f"MTF Confluence: {candidate.get('confluence_status')} "
+                f"({candidate.get('confluence_count')}/4 TF Onayli) | "
+                f"Skor: {candidate.get('composite_score')}/100"
+            )
 
-    scan_duration = time.time() - start_time
-    summary = {
-        "timestamp":               time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
-        "scan_duration_seconds":   round(scan_duration, 2),
-        "total_scanned":           len(BIST50_TICKERS),
-        "signals_generated_count": len(signals),
-        "report_only":             report_only,
-        "simulation":              simulation,
-        "signals":                 signals,
-        "details":                 results,
+            try:
+                trade_res = await trade_manager.open_strategy_position(
+                    ticker=ticker,
+                    price=price,
+                    strategy_info=strat_info,
+                    reasoning=reasoning
+                )
+                executed_trades.append(trade_res)
+                open_count += 1
+                logger.info(f"[{ticker}] Yeni kisa vadeli pozisyon acildi -> Strateji: {strat_info.get('strategy')}")
+            except Exception as ex:
+                logger.debug(f"[{ticker}] Pozisyon acilamadi: {ex}")
+
+    # 5. Guncel Acik Pozisyonlari Al
+    current_open_positions = await trade_manager.get_all_open_positions()
+
+    report = {
+        "status": "success",
+        "timestamp": time.time(),
+        "report_only": report_only,
+        "total_scanned": len(all_results),
+        "buy_signals_count": len(buy_signals),
+        "open_positions_count": len(current_open_positions),
+        "top_picks": all_results[:10],
+        "all_results": all_results,
+        "open_positions": current_open_positions,
+        "executed_trades": executed_trades
     }
-    logger.info(
-        f"Tarama tamamlandi. Taranan: {len(BIST50_TICKERS)} | "
-        f"Sinyal: {len(signals)} | Sure: {scan_duration:.1f} sn"
-    )
-    return summary
 
-
-async def inject_signal_to_bot(analysis: dict):
-    """AL/SAT sinyalini trade_manager uzerinden veritabanina iletir."""
-    try:
-        await trade_manager.process_trade_signal(
-            ticker=analysis["ticker"],
-            action=analysis["action"],
-            price=analysis["price"],
-            quantity=analysis["quantity"],
-            reasoning=analysis["reasoning"],
-        )
-    except trade_manager.TradeExecutionError as e:
-        logger.warning(f"Auto-Analyst islem iptal edildi [{analysis['ticker']}]: {str(e)}")
-    except Exception as e:
-        logger.error(f"Auto-Analyst sinyal iletiminde hata [{analysis['ticker']}]: {str(e)}")
+    logger.info(f"BIST50 Taramasi Tamamlandi. {len(buy_signals)} AL Sinyali, {len(current_open_positions)} Acik Pozisyon.")
+    return report
