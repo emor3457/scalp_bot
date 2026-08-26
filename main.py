@@ -1,4 +1,4 @@
-﻿import os
+import os
 import logging
 import sys
 import asyncio
@@ -48,7 +48,8 @@ DASHBOARD_AUTH_TOKEN = os.getenv("DASHBOARD_AUTH_TOKEN", "").strip()
 PROTECTED_PATHS = (
     "/dashboard", "/portfolio", "/trades", "/signals",
     "/scan", "/api/backtest", "/api/deep-analysis", "/config",
-    "/api/mtf-analysis", "/api/strategies", "/api/positions"
+    "/api/mtf-analysis", "/api/strategies", "/api/positions",
+    "/api/reset-history", "/api/update-capital", "/api/full-reset"
 )
 
 
@@ -139,6 +140,10 @@ class StrategySelectRequest(BaseModel):
     strategy_mode: Literal["auto", "scaling", "swing", "momentum"]
 
 
+class CapitalUpdateRequest(BaseModel):
+    amount: float = Field(..., gt=0, description="Yeni sermaye/bakiye miktari (TL)")
+
+
 @app.get("/")
 def read_root():
     return {"status": "running", "message": "BIST Scalp Bot v2 Multi-Timeframe Webhook Receiver is active."}
@@ -199,7 +204,10 @@ async def get_portfolio():
             })
             portfolio.append(item)
             
-        return {"status": "success", "portfolio": portfolio}
+        # Baslangic sermayesini al (PnL hesabi icin)
+        initial_capital = float(await database.get_setting("initial_capital", "100000.0"))
+
+        return {"status": "success", "portfolio": portfolio, "initial_capital": initial_capital}
     except Exception as e:
         logger.error(f"Portfoy okunurken ve degerlenirken hata: {str(e)}")
         raise HTTPException(status_code=500, detail="Portfoy bilgisi alinamadi.")
@@ -317,6 +325,109 @@ async def select_strategy_mode_api(req: StrategySelectRequest):
     except Exception as e:
         logger.error(f"Strateji secilemedi: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ---------------------------------------------------------------------------
+# Yonetim Endpoint'leri (Gecmis Silme, Bakiye Guncelleme, Tam Reset)
+# ---------------------------------------------------------------------------
+
+@app.post("/api/reset-history")
+async def reset_history():
+    """Trade ve sinyal gecmisini siler, kapali pozisyonlari temizler. Acik pozisyonlar korunur."""
+    try:
+        conn = await database.get_async_db_connection()
+        try:
+            await conn.execute("DELETE FROM trades")
+            await conn.execute("DELETE FROM signals")
+            await conn.execute("DELETE FROM open_positions WHERE status = 'CLOSED'")
+            await conn.commit()
+        finally:
+            await conn.close()
+
+        logger.info("Islem gecmisi, sinyal gecmisi ve kapali pozisyonlar temizlendi.")
+        try:
+            await asyncio.to_thread(
+                telegram_utils.send_telegram_message,
+                "🗑️ <b>Gecmis Temizlendi</b>\n\nTum islem gecmisi, sinyal gecmisi ve kapali pozisyon kayitlari silindi."
+            )
+        except Exception:
+            pass
+
+        return {"status": "success", "message": "Islem gecmisi, sinyal gecmisi ve kapali pozisyonlar basariyla temizlendi."}
+    except Exception as e:
+        logger.error(f"Gecmis temizlenirken hata: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Gecmis temizlenemedi: {str(e)}")
+
+
+@app.post("/api/update-capital")
+async def update_capital(req: CapitalUpdateRequest):
+    """TRY bakiyesini ve baslangic sermayesini gunceller."""
+    try:
+        conn = await database.get_async_db_connection()
+        try:
+            # TRY bakiyesini guncelle
+            await conn.execute("UPDATE portfolio SET quantity = ? WHERE ticker = 'TRY'", (req.amount,))
+            await conn.commit()
+        finally:
+            await conn.close()
+
+        # Baslangic sermayesini kaydet
+        await database.set_setting("initial_capital", str(req.amount))
+
+        logger.info(f"Bakiye ve baslangic sermayesi guncellendi -> {req.amount:.2f} TL")
+        return {
+            "status": "success",
+            "message": f"Bakiye {req.amount:,.2f} TL olarak guncellendi.",
+            "new_balance": req.amount,
+            "initial_capital": req.amount
+        }
+    except Exception as e:
+        logger.error(f"Bakiye guncellenirken hata: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Bakiye guncellenemedi: {str(e)}")
+
+
+@app.post("/api/full-reset")
+async def full_reset(req: CapitalUpdateRequest = None):
+    """Tum verileri sifirlar: trades, signals, open_positions, portfolio (TRY haric). Bakiyeyi resetler."""
+    try:
+        # Baslangic sermayesini belirle
+        if req and req.amount:
+            reset_amount = req.amount
+        else:
+            reset_amount = float(await database.get_setting("initial_capital", "100000.0"))
+
+        conn = await database.get_async_db_connection()
+        try:
+            await conn.execute("DELETE FROM trades")
+            await conn.execute("DELETE FROM signals")
+            await conn.execute("DELETE FROM open_positions")
+            await conn.execute("DELETE FROM portfolio WHERE ticker != 'TRY'")
+            await conn.execute("UPDATE portfolio SET quantity = ? WHERE ticker = 'TRY'", (reset_amount,))
+            await conn.commit()
+        finally:
+            await conn.close()
+
+        # Baslangic sermayesini kaydet
+        await database.set_setting("initial_capital", str(reset_amount))
+
+        logger.info(f"Tam reset yapildi. Bakiye: {reset_amount:.2f} TL")
+        try:
+            await asyncio.to_thread(
+                telegram_utils.send_telegram_message,
+                f"🔄 <b>TAM RESET</b>\n\nTum veriler sifirlandi.\n💰 Yeni bakiye: {reset_amount:,.2f} TL"
+            )
+        except Exception:
+            pass
+
+        return {
+            "status": "success",
+            "message": f"Tam reset tamamlandi. Bakiye: {reset_amount:,.2f} TL",
+            "new_balance": reset_amount,
+            "initial_capital": reset_amount
+        }
+    except Exception as e:
+        logger.error(f"Tam reset sirasinda hata: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Tam reset yapilamadi: {str(e)}")
 
 
 @app.get("/api/deep-analysis")

@@ -1,4 +1,4 @@
-﻿"""
+"""
 trade_manager.py — Portfoy, Risk ve Kisa Vadeli Pozisyon Motoru (v2)
 ---------------------------------------------------------------------
 - Maksimum 5 eszamanli pozisyon kontrolu
@@ -94,7 +94,8 @@ async def get_all_open_positions() -> list:
                 "current_price": round(curr_price, 2),
                 "pnl_value": round(pnl_val, 2),
                 "pnl_percent": round(pnl_pct, 2),
-                "total_current_value": round(curr_qty * curr_price, 2)
+                "total_current_value": round(curr_qty * curr_price, 2),
+                "total_cost": round(entry_price * pos["initial_quantity"], 2)
             })
             positions.append(pos)
 
