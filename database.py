@@ -1,4 +1,4 @@
-﻿import sqlite3
+import sqlite3
 import aiosqlite
 import os
 
@@ -103,12 +103,17 @@ def init_db():
     # Baslangic bakiyesi "TRY" tanimlama (eger yoksa)
     cursor.execute("SELECT * FROM portfolio WHERE ticker = 'TRY'")
     if not cursor.fetchone():
-        cursor.execute("INSERT INTO portfolio (ticker, quantity, average_cost) VALUES ('TRY', 500000.0, 1.0)")
+        cursor.execute("INSERT INTO portfolio (ticker, quantity, average_cost) VALUES ('TRY', 100000.0, 1.0)")
 
     # Varsayilan Strateji Modu ('auto')
     cursor.execute("SELECT * FROM bot_settings WHERE key = 'strategy_mode'")
     if not cursor.fetchone():
         cursor.execute("INSERT INTO bot_settings (key, value) VALUES ('strategy_mode', 'auto')")
+
+    # Baslangic sermayesi (PnL hesabi icin referans deger)
+    cursor.execute("SELECT * FROM bot_settings WHERE key = 'initial_capital'")
+    if not cursor.fetchone():
+        cursor.execute("INSERT INTO bot_settings (key, value) VALUES ('initial_capital', '100000.0')")
         
     conn.commit()
     conn.close()

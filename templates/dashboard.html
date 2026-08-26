@@ -120,12 +120,12 @@
         <div class="metrics-grid">
             <div class="metric-card blue">
                 <span class="metric-label"><i class="fa-solid fa-wallet"></i> Toplam Portfoy (NAV)</span>
-                <span class="metric-value" id="navVal">500,000.00 TL</span>
-                <span class="metric-subtext">Baslangic: 500k TL</span>
+                <span class="metric-value" id="navVal">100,000.00 TL</span>
+                <span class="metric-subtext" id="initialCapitalText">Baslangic: 100k TL</span>
             </div>
             <div class="metric-card purple">
                 <span class="metric-label"><i class="fa-solid fa-money-bill-wave"></i> Bakiye (TRY)</span>
-                <span class="metric-value" id="cashVal">500,000.00 TL</span>
+                <span class="metric-value" id="cashVal">100,000.00 TL</span>
                 <span class="metric-subtext">Kullanilabilir Nakit</span>
             </div>
             <div class="metric-card amber">
@@ -157,6 +157,7 @@
                             <th>Guncel</th>
                             <th>Kar / Zarar (%)</th>
                             <th>Miktar</th>
+                            <th>Tutar</th>
                             <th>TP1</th>
                             <th>TP2 / Trailing</th>
                             <th>Stop-Loss</th>
@@ -166,7 +167,7 @@
                         </tr>
                     </thead>
                     <tbody id="openPositionsTableBody">
-                        <tr><td colspan="12" style="text-align: center; color: var(--text-secondary); padding: 1.5rem;">Aktif acik pozisyon bulunmuyor.</td></tr>
+                        <tr><td colspan="13" style="text-align: center; color: var(--text-secondary); padding: 1.5rem;">Aktif acik pozisyon bulunmuyor.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -271,6 +272,38 @@
             <div id="deepError" style="display: none; color: #f87171; padding: 0.8rem; margin-top: 1rem; background: rgba(239, 68, 68, 0.08); border-radius: 6px;"></div>
             <div id="deepReport" style="display: none; margin-top: 1rem; line-height: 1.7; font-size: 0.88rem;"></div>
         </div>
+
+        <div class="dashboard-card" style="margin-top: 1rem; border-color: rgba(148, 163, 184, 0.2);">
+            <div class="card-header">
+                <h2 class="card-title"><i class="fa-solid fa-gear" style="color: var(--text-secondary);"></i> Yonetim Paneli</h2>
+            </div>
+            <div style="display: flex; gap: 1.5rem; align-items: flex-end; flex-wrap: wrap;">
+                <!-- Gecmis Temizle -->
+                <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                    <span style="font-size: 0.78rem; color: var(--text-secondary);">Trade ve sinyal gecmisini sil</span>
+                    <button class="btn-refresh" id="btnResetHistory" style="background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.3); color: #fbbf24; padding: 0.5rem 1rem;">
+                        <i class="fa-solid fa-trash-can"></i> Gecmisi Temizle
+                    </button>
+                </div>
+                <!-- Bakiye Guncelle -->
+                <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                    <span style="font-size: 0.78rem; color: var(--text-secondary);">Bakiye ve baslangic sermayesi (TL)</span>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <input type="number" id="capitalInput" value="100000" min="1" step="1000" style="background: rgba(0, 0, 0, 0.3); border: 1px solid var(--card-border); color: #fff; padding: 0.5rem 0.8rem; border-radius: 6px; width: 140px; font-size: 0.85rem;">
+                        <button class="btn-refresh" id="btnUpdateCapital" style="background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; padding: 0.5rem 1rem;">
+                            <i class="fa-solid fa-coins"></i> Guncelle
+                        </button>
+                    </div>
+                </div>
+                <!-- Tam Reset -->
+                <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                    <span style="font-size: 0.78rem; color: var(--text-secondary);">Her seyi sifirla (dikkatli!)</span>
+                    <button class="btn-refresh" id="btnFullReset" style="background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; padding: 0.5rem 1rem;">
+                        <i class="fa-solid fa-rotate"></i> Tam Reset
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="modal" id="mtfModal">
@@ -314,6 +347,11 @@
 
             document.getElementById('scanBtn').addEventListener('click', triggerMtfScan);
             document.getElementById('startDeepBtn').addEventListener('click', startDeepAnalysis);
+
+            // Yonetim Paneli butonlari
+            document.getElementById('btnResetHistory').addEventListener('click', resetHistory);
+            document.getElementById('btnUpdateCapital').addEventListener('click', updateCapital);
+            document.getElementById('btnFullReset').addEventListener('click', fullReset);
 
             setInterval(() => {
                 updateDashboardData();
@@ -370,7 +408,7 @@
                 document.getElementById('openPosCount').innerText = positions.length + ' / 5';
 
                 if (positions.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="12" style="text-align: center; color: var(--text-secondary); padding: 1.5rem;">Aktif acik pozisyon bulunmuyor.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="13" style="text-align: center; color: var(--text-secondary); padding: 1.5rem;">Aktif acik pozisyon bulunmuyor.</td></tr>';
                     return;
                 }
 
@@ -379,6 +417,7 @@
                     const isWin = p.pnl_percent >= 0;
                     const pnlClass = isWin ? 'text-green' : 'text-red';
                     const stratClass = 'badge-strat-' + p.strategy;
+                    const totalCost = p.total_cost || (p.entry_price * p.initial_quantity);
 
                     let stageBadge = '<span class="badge" style="background:rgba(255,255,255,0.05);">Baslangic</span>';
                     if (p.stage === 'TP1_HIT') stageBadge = '<span class="badge" style="background:rgba(16,185,129,0.2); color:#34d399;">🎯 TP1 Alindi (SL Basabas)</span>';
@@ -392,6 +431,7 @@
                         <td style="font-weight: 600;">` + p.current_price.toFixed(2) + ` TL</td>
                         <td class="` + pnlClass + `">` + (p.pnl_percent >= 0 ? '+' : '') + p.pnl_percent.toFixed(2) + `% (` + p.pnl_value.toFixed(2) + ` TL)</td>
                         <td>` + p.current_quantity.toFixed(0) + ` Lot</td>
+                        <td style="color: var(--accent-amber); font-weight: 600;">` + totalCost.toLocaleString('tr-TR', {minimumFractionDigits: 2}) + ` TL</td>
                         <td style="color: #34d399;">` + (p.tp1 ? p.tp1.toFixed(2) + ' TL' : '-') + `</td>
                         <td style="color: #c084fc;">` + (p.tp2 ? p.tp2.toFixed(2) + ' TL' : (p.trailing_sl ? p.trailing_sl.toFixed(2) + ' TL' : '-')) + `</td>
                         <td style="color: #f87171;">` + p.sl.toFixed(2) + ` TL</td>
@@ -533,12 +573,12 @@
                 const portData = await portRes.json();
                 const tradeData = await tradeRes.json();
 
-                renderPortfolio(portData.portfolio || []);
+                renderPortfolio(portData.portfolio || [], portData.initial_capital);
                 renderTrades(tradeData.trades || []);
             } catch (e) { console.error(e); }
         }
 
-        function renderPortfolio(portfolio) {
+        function renderPortfolio(portfolio, initialCapital) {
             const tableBody = document.getElementById('portfolioTableBody');
             tableBody.innerHTML = '';
             let cashVal = 0;
@@ -546,6 +586,7 @@
             const chartLabels = [];
             const chartValues = [];
             const chartColors = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899', '#14b8a6'];
+            const baseCapital = initialCapital || 100000.0;
 
             portfolio.forEach(item => {
                 if (item.ticker === 'TRY') {
@@ -573,8 +614,12 @@
             document.getElementById('navVal').innerText = totalNav.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) + ' TL';
             document.getElementById('cashVal').innerText = cashVal.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) + ' TL';
 
-            const netPnl = totalNav - 500000.0;
-            const netPct = (netPnl / 500000.0) * 100;
+            // Baslangic sermayesi metnini guncelle
+            const capText = baseCapital >= 1000 ? (baseCapital / 1000).toFixed(0) + 'k' : baseCapital.toFixed(0);
+            document.getElementById('initialCapitalText').innerText = 'Baslangic: ' + capText + ' TL';
+
+            const netPnl = totalNav - baseCapital;
+            const netPct = (netPnl / baseCapital) * 100;
             const pnlEl = document.getElementById('totalPnl');
             const pnlPctEl = document.getElementById('totalPnlPercent');
             pnlEl.innerText = (netPnl >= 0 ? '+' : '') + netPnl.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) + ' TL';
@@ -640,6 +685,70 @@
             } finally {
                 loading.style.display = 'none';
             }
+        }
+
+        // ==========================================
+        // Yonetim Paneli Fonksiyonlari
+        // ==========================================
+
+        async function resetHistory() {
+            if (!confirm('Tum islem gecmisi, sinyal gecmisi ve kapali pozisyon kayitlari silinecek.\n\nAcik pozisyonlar etkilenmez.\n\nDevam edilsin mi?')) return;
+            try {
+                const res = await fetch('/api/reset-history', { method: 'POST' });
+                const d = await res.json();
+                if (res.ok) {
+                    alert('Gecmis basariyla temizlendi.');
+                    updateDashboardData();
+                } else {
+                    alert('Hata: ' + (d.detail || 'Temizlenemedi'));
+                }
+            } catch (e) { alert('Hata: ' + e.message); }
+        }
+
+        async function updateCapital() {
+            const amount = parseFloat(document.getElementById('capitalInput').value);
+            if (!amount || amount <= 0) {
+                alert('Gecerli bir tutar giriniz.');
+                return;
+            }
+            if (!confirm('Bakiye ' + amount.toLocaleString('tr-TR') + ' TL olarak guncellenecek.\n\nBaslangic sermayesi de bu deger olarak kaydedilecek.\n\nDevam edilsin mi?')) return;
+            try {
+                const res = await fetch('/api/update-capital', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: amount })
+                });
+                const d = await res.json();
+                if (res.ok) {
+                    alert('Bakiye basariyla guncellendi: ' + amount.toLocaleString('tr-TR') + ' TL');
+                    updateDashboardData();
+                    loadOpenPositions();
+                } else {
+                    alert('Hata: ' + (d.detail || 'Guncellenemedi'));
+                }
+            } catch (e) { alert('Hata: ' + e.message); }
+        }
+
+        async function fullReset() {
+            if (!confirm('DIKKAT: Tum islem gecmisi, sinyaller, acik ve kapali pozisyonlar, portfoydeki hisseler silinecek.\n\nBu islem geri alinamaz!\n\nDevam edilsin mi?')) return;
+            if (!confirm('IKINCI ONAY: Gercekten HER SEYI sifirlamak istediginize emin misiniz?')) return;
+
+            const amount = parseFloat(document.getElementById('capitalInput').value) || 100000;
+            try {
+                const res = await fetch('/api/full-reset', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ amount: amount })
+                });
+                const d = await res.json();
+                if (res.ok) {
+                    alert('Tam reset tamamlandi. Bakiye: ' + amount.toLocaleString('tr-TR') + ' TL');
+                    updateDashboardData();
+                    loadOpenPositions();
+                } else {
+                    alert('Hata: ' + (d.detail || 'Reset yapilamadi'));
+                }
+            } catch (e) { alert('Hata: ' + e.message); }
         }
     </script>
 </body>
