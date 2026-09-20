@@ -425,6 +425,30 @@ async def evaluate_open_positions():
                     await close_position_partial_or_full(pos_id, ticker, curr_qty, current_price, "TP3_TRAILING")
                     continue
 
+            # --- STRATEJI: DIP AVCISI ---
+            elif strategy == "dip_avcisi":
+                # 1. Stop-Loss
+                if current_price <= sl:
+                    logger.info(f"[{ticker}] Dip Avcisi SL tetiklendi -> Fiyat: {current_price}, SL: {sl}")
+                    await close_position_partial_or_full(pos_id, ticker, curr_qty, current_price, "STOP_LOSS")
+                    continue
+
+                # 2. TP1 Kontrolu (Ilk %50 satis)
+                if stage == "STAGE_INITIAL" and tp1 and current_price >= tp1:
+                    sell_lot = math.floor(initial_qty * 0.50)
+                    if sell_lot >= 1:
+                        logger.info(f"[{ticker}] Dip Avcisi TP1 ulasildi -> %50 satiliyor, SL basabas seviyesine cekiliyor")
+                        await close_position_partial_or_full(pos_id, ticker, sell_lot, current_price, "TP1", new_stage="TP1_HIT")
+                    else:
+                        await close_position_partial_or_full(pos_id, ticker, curr_qty, current_price, "TP1")
+                    continue
+
+                # 3. TP2 Kontrolu (Kalan %50 satis)
+                if stage == "TP1_HIT" and tp2 and current_price >= tp2:
+                    logger.info(f"[{ticker}] Dip Avcisi TP2 ulasildi -> Tamami satiliyor")
+                    await close_position_partial_or_full(pos_id, ticker, curr_qty, current_price, "TP2")
+                    continue
+
             # --- STRATEJI 2: SWING TRADE ---
             elif strategy == "swing":
                 if current_price <= sl:
