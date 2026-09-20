@@ -1,4 +1,4 @@
-﻿"""
+"""
 strategy_engine.py — Borsa Scalper Kisa Vadeli Kar Alma ve Pozisyon Motoru (v2)
 ---------------------------------------------------------------------------------
 3 Farkli Kisa Vadeli Strateji:
@@ -38,7 +38,8 @@ STRATEGY_DESCRIPTIONS = {
     "auto": "Akilli Otomatik (Piyasa dinamiklerine gore secilir)",
     "scaling": "Kademeli Kar Alma (%40 TP1 + %40 TP2 + %20 Trailing Stop)",
     "swing": "Swing Trade (1-3 Gun, Direnc Hedefli %5-8)",
-    "momentum": "Momentum Scalp (Gun Ici %3.5 Hizli, 17:50 Kapanis)"
+    "momentum": "Momentum Scalp (Gun Ici %3.5 Hizli, 17:50 Kapanis)",
+    "dip_avcisi": "Dip Avcısı (Aşırı Satım, TP1 %2, TP2 %4, SL %3)"
 }
 
 
@@ -71,7 +72,7 @@ def select_best_strategy(mtf_data: dict, preferred_mode: str = "auto") -> dict:
     Piyasa verilerini analiz ederek en uygun stratejiyi ve TP/SL seviyelerini belirler.
     """
     mode = preferred_mode.lower()
-    if mode not in ["auto", "scaling", "swing", "momentum"]:
+    if mode not in ["auto", "scaling", "swing", "momentum", "dip_avcisi"]:
         mode = "auto"
 
     current_price = mtf_data.get("current_price", 0.0)
@@ -89,8 +90,11 @@ def select_best_strategy(mtf_data: dict, preferred_mode: str = "auto") -> dict:
 
     # Otomatik Strateji Secim Mantigi
     if mode == "auto":
+        # 0. Asiri Satim -> Dip Avcisi
+        if rsi_15m <= 30.0:
+            chosen_strategy = "dip_avcisi"
         # 1. Yuksek Hacim + Guclu Trend -> Momentum
-        if adx >= 25.0 and vol_15m >= 1.4 and rsi_15m >= 52.0 and confluence_count >= 3:
+        elif adx >= 25.0 and vol_15m >= 1.4 and rsi_15m >= 52.0 and confluence_count >= 3:
             chosen_strategy = "momentum"
         # 2. Orta-Yuksek Volatilite veya Coklu Onay -> Kademeli Cikis
         elif atr_pct >= 2.2 or confluence_count >= 3:
@@ -100,7 +104,14 @@ def select_best_strategy(mtf_data: dict, preferred_mode: str = "auto") -> dict:
             chosen_strategy = "swing"
 
     # Seviye Hesaplamalari
-    if chosen_strategy == "momentum":
+    if chosen_strategy == "dip_avcisi":
+        tp1 = round(current_price * 1.02, 2)
+        tp2 = round(current_price * 1.04, 2)
+        tp3 = None
+        sl = round(current_price * 0.97, 2)
+        trailing_sl_pct = 0.015
+        expected_hold = "1 - 2 Gun (Tepki Yukselisi)"
+    elif chosen_strategy == "momentum":
         tp1_pct = 0.035
         tp1 = round(current_price * (1 + tp1_pct), 2)
         tp2 = None
