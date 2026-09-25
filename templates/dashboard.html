@@ -67,7 +67,11 @@
         .badge-strat-scaling { background: rgba(139, 92, 246, 0.15); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.3); }
         .badge-strat-swing { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
         .badge-strat-momentum { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .badge-strat-dip_avcisi, .badge-strat-dip { background: rgba(236, 72, 153, 0.15); color: #f472b6; border: 1px solid rgba(236, 72, 153, 0.3); }
         .btn-action-close { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; padding: 0.3rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+        .btn-action-buy { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.35); color: #34d399; padding: 0.3rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
+        .btn-action-buy:hover { background: rgba(16, 185, 129, 0.3); transform: translateY(-1px); }
+        .btn-action-detail { background: rgba(56, 189, 248, 0.12); border: 1px solid rgba(56, 189, 248, 0.3); color: #38bdf8; padding: 0.3rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
         .text-green { color: var(--accent-green) !important; font-weight: 600; }
         .text-red { color: var(--accent-red) !important; font-weight: 600; }
         .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
@@ -75,6 +79,14 @@
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px); align-items: center; justify-content: center; }
         .modal-content { background: #0f172a; border: 1px solid var(--card-border); border-radius: 16px; max-width: 800px; width: 90%; max-height: 85vh; overflow-y: auto; padding: 1.5rem; position: relative; }
         .modal-close { position: absolute; top: 1rem; right: 1rem; background: transparent; border: none; color: var(--text-secondary); font-size: 1.3rem; cursor: pointer; }
+        .form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.1rem; }
+        .form-label { font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between; }
+        .form-input, .form-select { background: rgba(0, 0, 0, 0.35); border: 1px solid var(--card-border); color: #fff; padding: 0.55rem 0.85rem; border-radius: 8px; font-size: 0.88rem; width: 100%; transition: border-color 0.2s; }
+        .form-input:focus, .form-select:focus { outline: none; border-color: var(--accent-blue); }
+        .form-hint { font-size: 0.74rem; color: var(--text-secondary); margin-top: 0.2rem; }
+        .api-input-wrap { display: flex; gap: 0.5rem; align-items: center; width: 100%; }
+        .btn-toggle-eye { background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border); color: var(--text-secondary); padding: 0.55rem 0.85rem; border-radius: 8px; cursor: pointer; }
+        .btn-toggle-eye:hover { color: #fff; background: rgba(255, 255, 255, 0.1); }
     </style>
 </head>
 <body>
@@ -92,6 +104,7 @@
                     <i class="fa-solid fa-brain" style="color: var(--accent-blue); font-size: 0.85rem;"></i>
                     <select class="strategy-select" id="globalStrategySelect">
                         <option value="auto">🤖 Akilli Otomatik</option>
+                        <option value="dip_avcisi">🎯 Dip Avcısı (%2 TP1 / %4 TP2 / %3 SL)</option>
                         <option value="scaling">📊 Kademeli Kar Alma</option>
                         <option value="swing">🔄 Swing Trade (1-3G)</option>
                         <option value="momentum">⚡ Momentum Scalp</option>
@@ -108,6 +121,9 @@
                         <i class="fa-solid fa-bolt"></i> Canli
                     </button>
                 </div>
+                <button class="btn-refresh" id="btnOpenLlmModal" title="LLM & Yapay Zeka Ayarları" style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399;">
+                    <i class="fa-solid fa-microchip"></i> <span id="headerLlmBadge">LLM Ayarları</span>
+                </button>
                 <button class="btn-refresh" id="scanBtn" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.15)); border: 1px solid rgba(139, 92, 246, 0.3); color: #c084fc;">
                     <i class="fa-solid fa-magnifying-glass-chart"></i> MTF Analiz
                 </button>
@@ -173,14 +189,27 @@
             </div>
         </div>
 
-        <div class="dashboard-card">
-            <div class="card-header">
-                <h2 class="card-title">
-                    <i class="fa-solid fa-cubes" style="color: var(--accent-green);"></i> Multi-Timeframe Confluence Matrisi (15m, 1h, 4h, 1d)
-                </h2>
-                <span style="font-size: 0.8rem; color: var(--text-secondary);">Detaylar icin hisseye tiklayin</span>
+        <div class="dashboard-card" style="border-color: rgba(16, 185, 129, 0.25);">
+            <div class="card-header" style="flex-wrap: wrap; gap: 0.8rem;">
+                <div>
+                    <h2 class="card-title">
+                        <i class="fa-solid fa-radar" style="color: var(--accent-green);"></i> Tüm BIST Piyasa Radarı & MTF Fırsat Havuzu
+                    </h2>
+                    <span style="font-size: 0.78rem; color: var(--text-secondary);">
+                        650 Hisse Makro Tarama ➔ Likidite Filtresi (>20M TL) ➔ 4 TF Mikro Derin Analiz (15m, 1h, 4h, 1d)
+                    </span>
+                </div>
+                <div style="display: flex; gap: 0.8rem; align-items: center; flex-wrap: wrap;">
+                    <div id="radarStatsBadge" style="display: none; align-items: center; gap: 0.6rem; font-size: 0.8rem; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.25); padding: 0.4rem 0.8rem; border-radius: 50px;">
+                        <span id="statScanned"><i class="fa-solid fa-globe"></i> 650 Taranan</span>
+                        <span>•</span>
+                        <span id="statLiquid" style="color: #34d399;"><i class="fa-solid fa-droplet"></i> Likit</span>
+                        <span>•</span>
+                        <span id="statBuys" style="color: #fbbf24;"><i class="fa-solid fa-bolt"></i> AL Sinyalleri</span>
+                    </div>
+                </div>
             </div>
-            <div class="table-responsive" style="max-height: 420px; overflow-y: auto;">
+            <div class="table-responsive" style="max-height: 440px; overflow-y: auto;">
                 <table>
                     <thead>
                         <tr>
@@ -190,14 +219,15 @@
                             <th>1 Saat 📈</th>
                             <th>4 Saat 📊</th>
                             <th>Gunluk 🌍</th>
-                            <th>MTF Skoru</th>
+                            <th>Kompozit Skor</th>
                             <th>Confluence</th>
                             <th>Onerilen Strateji</th>
                             <th>Sinyal</th>
+                            <th>Hizli Aksiyon</th>
                         </tr>
                     </thead>
                     <tbody id="mtfMatrixTableBody">
-                        <tr><td colspan="10" style="text-align: center; color: var(--text-secondary); padding: 1.5rem;">Tarama baslatilmadi. 'MTF Analiz' butonuna basin.</td></tr>
+                        <tr><td colspan="11" style="text-align: center; color: var(--text-secondary); padding: 1.5rem;">Tarama baslatilmadi. 'MTF Analiz' butonuna basin.</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -302,6 +332,13 @@
                         <i class="fa-solid fa-rotate"></i> Tam Reset
                     </button>
                 </div>
+                <!-- LLM & API Ayarlari -->
+                <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                    <span style="font-size: 0.78rem; color: var(--text-secondary);">Yapay zeka model ve API ayarı</span>
+                    <button class="btn-refresh" id="btnManageLlmModal" style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399; padding: 0.5rem 1rem;">
+                        <i class="fa-solid fa-sliders"></i> LLM / API Ayarları
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -313,6 +350,74 @@
             <div id="modalContentBody"></div>
         </div>
     </div>
+
+    <!-- LLM & API Ayarları Modalı -->
+    <div class="modal" id="llmSettingsModal">
+        <div class="modal-content" style="max-width: 580px;">
+            <button class="modal-close" onclick="closeLlmModal()">&times;</button>
+            <div style="display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.8rem;">
+                <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-green); font-size: 1.15rem;">
+                    <i class="fa-solid fa-microchip"></i>
+                </div>
+                <div>
+                    <h3 style="font-size: 1.15rem; margin: 0; color: #fff;">LLM & Yapay Zeka API Ayarları</h3>
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 2px 0 0 0;">Otomatik haber ve derin analizde kullanılacak global LLM motoru</p>
+                </div>
+            </div>
+
+            <div id="llmAlertBox" style="display: none; padding: 0.7rem 1rem; border-radius: 8px; font-size: 0.82rem; margin-bottom: 1rem;"></div>
+
+            <div class="form-group">
+                <label class="form-label" for="llmProviderSelect"><span><i class="fa-solid fa-server"></i> Sağlayıcı (Provider)</span></label>
+                <select class="form-select" id="llmProviderSelect">
+                    <option value="gemini">Google Gemini (Gemini 2.5 Flash / Pro)</option>
+                    <option value="openai">OpenAI (GPT-4o / GPT-4o-mini)</option>
+                </select>
+                <span class="form-hint">Kullanmak istediğiniz yapay zeka servisini seçin.</span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="llmApiKeyInput">
+                    <span><i class="fa-solid fa-key"></i> API Anahtarı</span>
+                    <span id="apiKeyStatusBadge" style="font-size: 0.72rem; color: var(--accent-green);"></span>
+                </label>
+                <div class="api-input-wrap">
+                    <input type="password" class="form-input" id="llmApiKeyInput" placeholder="API Anahtarı (örn: AIzaSy... veya sk-...)">
+                    <button type="button" class="btn-toggle-eye" id="btnToggleApiKey" onclick="toggleApiKeyVisibility()" title="Göster / Gizle">
+                        <i class="fa-solid fa-eye" id="eyeIcon"></i>
+                    </button>
+                    <button type="button" class="btn-refresh" id="btnFetchModels" onclick="fetchLlmModels()" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.2)); border: 1px solid rgba(139, 92, 246, 0.4); color: #c084fc; white-space: nowrap; height: 38px; padding: 0 0.9rem;">
+                        <i class="fa-solid fa-cloud-arrow-down"></i> Modelleri Getir
+                    </button>
+                </div>
+                <span class="form-hint">API anahtarınızı girdikten sonra <b>"Modelleri Getir"</b> butonuna basarak hesabınızdaki aktif tüm modelleri çekebilirsiniz.</span>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="llmModelSelect"><span><i class="fa-solid fa-brain"></i> Aktif Model (Global LLM)</span></label>
+                <select class="form-select" id="llmModelSelect">
+                    <option value="">(Önce API anahtarınızı girip modelleri çekin)</option>
+                </select>
+                <span class="form-hint">Haber puanlama ve hisse analizlerinde arka planda çalışacak aktif model.</span>
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 0.75rem 1rem; margin-top: 1rem; margin-bottom: 1.2rem; font-size: 0.78rem; color: var(--text-secondary); display: flex; gap: 0.6rem; align-items: flex-start;">
+                <i class="fa-solid fa-shield-halved" style="color: var(--accent-blue); margin-top: 2px;"></i>
+                <div>
+                    <b>Güvenli Saklama:</b> API anahtarınız yerel SQLite veritabanında saklanır. <i>"Tam Reset"</i> atıldığında işlemler sıfırlansa dahi API anahtarınız ve seçili model tercihiniz silinmez.
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.7rem;">
+                <button type="button" class="btn-refresh" onclick="closeLlmModal()" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); padding: 0.55rem 1.1rem;">
+                    İptal
+                </button>
+                <button type="button" class="btn-refresh" id="btnSaveLlmSettings" onclick="saveLlmSettings()" style="background: linear-gradient(135deg, #10b981, #059669); border: none; color: white; padding: 0.55rem 1.3rem; font-weight: 600;">
+                    <i class="fa-solid fa-floppy-disk"></i> Ayarları Kaydet
+                </button>
+            </div>
+        </div>
+    </div>
     <script>
         let myChart = null;
         let currentScanMode = 'report';
@@ -320,6 +425,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             updateConfig();
             loadStrategySettings();
+            loadLlmSettings();
             updateDashboardData();
             loadOpenPositions();
 
@@ -330,6 +436,11 @@
                     setTimeout(() => icon.classList.remove('fa-spin'), 500);
                 });
             });
+
+            const btnOpenLlm = document.getElementById('btnOpenLlmModal');
+            if (btnOpenLlm) btnOpenLlm.addEventListener('click', openLlmModal);
+            const btnManageLlm = document.getElementById('btnManageLlmModal');
+            if (btnManageLlm) btnManageLlm.addEventListener('click', openLlmModal);
 
             document.getElementById('modeReportBtn').addEventListener('click', () => setScanMode('report'));
             document.getElementById('modeLiveBtn').addEventListener('click', () => setScanMode('live'));
@@ -459,37 +570,72 @@
             } catch (e) { alert('Hata: ' + e.message); }
         }
 
+        function renderRadarStats(meta, buyCount) {
+            const badge = document.getElementById('radarStatsBadge');
+            if (!meta || !badge) return;
+            badge.style.display = 'inline-flex';
+            document.getElementById('statScanned').innerHTML = '<i class="fa-solid fa-globe"></i> ' + (meta.total_scanned || 650) + ' Taranan';
+            document.getElementById('statLiquid').innerHTML = '<i class="fa-solid fa-droplet"></i> ' + (meta.liquid_count || 0) + ' Likit';
+            document.getElementById('statBuys').innerHTML = '<i class="fa-solid fa-bolt"></i> ' + (buyCount || 0) + ' AL Sinyali';
+        }
+
+        async function openPositionManual(ticker, strategy) {
+            if (!confirm('#' + ticker + ' hissesi icin [' + (strategy || 'AUTO').toUpperCase() + '] stratejisiyle pozisyon acilsin mi?')) return;
+            try {
+                const res = await fetch('/api/positions/open-manual', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ticker: ticker, strategy_mode: strategy || 'auto' })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert('✅ ' + ticker + ' pozisyonu basariyla acildi!');
+                    loadOpenPositions();
+                    updateDashboardData();
+                } else {
+                    alert('❌ Hata: ' + (data.detail || 'Pozisyon acilamadi'));
+                }
+            } catch (err) {
+                alert('Islem hatasi: ' + err.message);
+            }
+        }
+
         async function triggerMtfScan() {
             const btn = document.getElementById('scanBtn');
             btn.disabled = true;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> MTF Taraniyor...';
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> BIST Taranıyor (650 Hisse)...';
 
             try {
                 const isReport = currentScanMode === 'report';
                 const res = await fetch('/scan?report_only=' + isReport);
                 const data = await res.json();
 
-                renderMtfMatrix(data.all_results || []);
+                renderRadarStats(data.screener_meta, data.buy_signals_count);
+                renderMtfMatrix(data.top_picks || data.all_results || []);
                 loadOpenPositions();
                 updateDashboardData();
             } catch (e) {
                 alert('Tarama hatasi: ' + e.message);
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-magnifying-glass-chart"></i> MTF Analiz';
+                btn.innerHTML = '<i class="fa-solid fa-satellite-dish"></i> Tüm BIST\'i Tara';
             }
         }
+
+        let mtfStocksCache = {};
 
         function renderMtfMatrix(results) {
             const tbody = document.getElementById('mtfMatrixTableBody');
             tbody.innerHTML = '';
+            mtfStocksCache = {};
 
             if (results.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="10" style="text-align: center; color: var(--text-secondary); padding: 1.5rem;">Sonuc bulunamadi.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="11" style="text-align: center; color: var(--text-secondary); padding: 1.5rem;">Sonuc bulunamadi.</td></tr>';
                 return;
             }
 
             results.forEach(r => {
+                mtfStocksCache[r.ticker] = r;
                 const tfs = r.mtf_details || {};
                 const tfBadge = (tfName) => {
                     const info = tfs[tfName];
@@ -504,14 +650,15 @@
                     : (r.signal === 'SAT' ? '<span class="badge badge-sell">SAT</span>' : '<span class="badge" style="background:rgba(255,255,255,0.05);">BEKLE</span>');
 
                 const stratPlan = r.strategy_plan || {};
-                const stratBadge = '<span class="badge badge-strat-' + (stratPlan.strategy || 'scaling') + '">' + (stratPlan.strategy || 'auto').toUpperCase() + '</span>';
+                const stratName = stratPlan.strategy || 'auto';
+                const stratBadge = '<span class="badge badge-strat-' + stratName + '">' + stratName.toUpperCase() + '</span>';
 
                 const tr = document.createElement('tr');
                 tr.style.cursor = 'pointer';
                 tr.onclick = () => showMtfDetails(r);
                 tr.innerHTML = `
                     <td style="font-weight: 700;">#` + escapeHtml(r.ticker) + `</td>
-                    <td>` + r.current_price.toFixed(2) + ` TL</td>
+                    <td>` + (r.current_price ? r.current_price.toFixed(2) + ' TL' : '-') + `</td>
                     <td>` + tfBadge('15m') + `</td>
                     <td>` + tfBadge('1h') + `</td>
                     <td>` + tfBadge('4h') + `</td>
@@ -520,6 +667,16 @@
                     <td>` + r.confluence_count + `/4 TF Onay</td>
                     <td>` + stratBadge + `</td>
                     <td>` + signalBadge + `</td>
+                    <td>
+                        <div style="display:flex; gap:0.35rem; align-items:center;">
+                            <button class="btn-action-detail" onclick="event.stopPropagation(); showMtfDetails(mtfStocksCache['` + escapeHtml(r.ticker) + `'])" title="Detay">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                            </button>
+                            <button class="btn-action-buy" onclick="event.stopPropagation(); openPositionManual('` + escapeHtml(r.ticker) + `', '` + stratName + `')" title="Sanal Pozisyon Ac">
+                                <i class="fa-solid fa-bolt"></i> Al
+                            </button>
+                        </div>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -653,8 +810,12 @@
                 const actionBadge = t.action === 'AL' 
                     ? '<span class="badge badge-buy">AL</span>' 
                     : '<span class="badge badge-sell">SAT</span>';
+                let timeStr = t.timestamp || '';
+                if (timeStr.includes('T')) {
+                    timeStr = timeStr.replace('T', ' ').split('.')[0];
+                }
                 tr.innerHTML = `
-                    <td style="color:var(--text-secondary); font-size:0.75rem;">` + escapeHtml(t.timestamp.split(' ')[1] || t.timestamp) + `</td>
+                    <td style="color:var(--text-secondary); font-size:0.75rem;" title="${escapeHtml(timeStr)} (TR Saati)">` + escapeHtml(timeStr) + `</td>
                     <td style="font-weight:600;">#` + escapeHtml(t.ticker) + `</td>
                     <td>` + actionBadge + `</td>
                     <td>` + t.price.toFixed(2) + ` TL</td>
@@ -750,6 +911,220 @@
                 }
             } catch (e) { alert('Hata: ' + e.message); }
         }
+
+        // ==========================================
+        // LLM & API Yonetim Fonksiyonlari
+        // ==========================================
+        let currentLlmSettings = null;
+
+        function showLlmAlert(msg, type = 'success') {
+            const box = document.getElementById('llmAlertBox');
+            if (!box) return;
+            box.style.display = 'block';
+            if (type === 'success') {
+                box.style.background = 'rgba(16, 185, 129, 0.15)';
+                box.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+                box.style.color = '#34d399';
+                box.innerHTML = '<i class="fa-solid fa-circle-check"></i> ' + escapeHtml(msg);
+            } else {
+                box.style.background = 'rgba(239, 68, 68, 0.15)';
+                box.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+                box.style.color = '#f87171';
+                box.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> ' + escapeHtml(msg);
+            }
+        }
+
+        function hideLlmAlert() {
+            const box = document.getElementById('llmAlertBox');
+            if (box) box.style.display = 'none';
+        }
+
+        function openLlmModal() {
+            hideLlmAlert();
+            document.getElementById('llmSettingsModal').style.display = 'flex';
+            loadLlmSettings();
+        }
+
+        function closeLlmModal() {
+            document.getElementById('llmSettingsModal').style.display = 'none';
+        }
+
+        function toggleApiKeyVisibility() {
+            const input = document.getElementById('llmApiKeyInput');
+            const icon = document.getElementById('eyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        async function loadLlmSettings() {
+            try {
+                const res = await fetch('/api/llm/settings');
+                if (!res.ok) return;
+                const data = await res.json();
+                currentLlmSettings = data;
+
+                // Provider
+                if (data.provider) {
+                    document.getElementById('llmProviderSelect').value = data.provider;
+                }
+
+                // API Key
+                const apiKeyInput = document.getElementById('llmApiKeyInput');
+                const badge = document.getElementById('apiKeyStatusBadge');
+                if (data.api_key) {
+                    apiKeyInput.value = data.api_key;
+                    if (badge) badge.innerText = '✓ Kayıtlı Anahtar Mevcut';
+                } else {
+                    if (badge) badge.innerText = '';
+                }
+
+                // Model dropdown populate
+                const modelSelect = document.getElementById('llmModelSelect');
+                modelSelect.innerHTML = '';
+                const models = data.available_models || [];
+                if (models.length > 0) {
+                    models.forEach(m => {
+                        const opt = document.createElement('option');
+                        opt.value = m;
+                        opt.innerText = m;
+                        if (m === data.active_model) opt.selected = true;
+                        modelSelect.appendChild(opt);
+                    });
+                } else if (data.active_model) {
+                    const opt = document.createElement('option');
+                    opt.value = data.active_model;
+                    opt.innerText = data.active_model;
+                    opt.selected = true;
+                    modelSelect.appendChild(opt);
+                }
+
+                // Update Header Badge
+                const headerBadge = document.getElementById('headerLlmBadge');
+                if (headerBadge) {
+                    const modelName = data.active_model ? data.active_model : 'Ayarlanmadı';
+                    headerBadge.innerText = 'LLM: ' + modelName;
+                }
+            } catch (err) {
+                console.error('LLM ayarlari yuklenemedi:', err);
+            }
+        }
+
+        async function fetchLlmModels() {
+            const provider = document.getElementById('llmProviderSelect').value;
+            const apiKey = document.getElementById('llmApiKeyInput').value.trim();
+            const btn = document.getElementById('btnFetchModels');
+
+            if (!apiKey) {
+                showLlmAlert('Lütfen önce API anahtarınızı giriniz.', 'error');
+                return;
+            }
+
+            hideLlmAlert();
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Modeller Alınıyor...';
+
+            try {
+                const res = await fetch('/api/llm/fetch-models', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ provider: provider, api_key: apiKey })
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data.detail || 'Modeller alınamadı');
+                }
+
+                const models = data.models || [];
+                const modelSelect = document.getElementById('llmModelSelect');
+                modelSelect.innerHTML = '';
+
+                if (models.length === 0) {
+                    showLlmAlert('Bu API anahtarı için uygun model bulunamadı.', 'error');
+                    return;
+                }
+
+                const currentModel = currentLlmSettings ? currentLlmSettings.active_model : '';
+                let selectedMatched = false;
+
+                models.forEach(m => {
+                    const opt = document.createElement('option');
+                    opt.value = m;
+                    opt.innerText = m;
+                    if (m === currentModel) {
+                        opt.selected = true;
+                        selectedMatched = true;
+                    }
+                    modelSelect.appendChild(opt);
+                });
+
+                if (!selectedMatched && modelSelect.options.length > 0) {
+                    modelSelect.selectedIndex = 0;
+                }
+
+                showLlmAlert(`Başarılı! ${models.length} adet aktif model bulundu. Dilediğinizi seçip 'Ayarları Kaydet'e basabilirsiniz.`, 'success');
+            } catch (err) {
+                showLlmAlert('Hata: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-down"></i> Modelleri Getir';
+            }
+        }
+
+        async function saveLlmSettings() {
+            const provider = document.getElementById('llmProviderSelect').value;
+            const apiKey = document.getElementById('llmApiKeyInput').value.trim();
+            const model = document.getElementById('llmModelSelect').value;
+            const btn = document.getElementById('btnSaveLlmSettings');
+
+            if (!model) {
+                showLlmAlert('Lütfen aktif bir model seçiniz (önce Modelleri Getir butonunu kullanabilirsiniz).', 'error');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Kaydediliyor...';
+
+            try {
+                const res = await fetch('/api/llm/save-settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ provider: provider, api_key: apiKey, model: model })
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data.detail || 'Kaydedilemedi');
+                }
+
+                showLlmAlert('Ayarlar başarıyla kaydedildi! Aktif model: ' + model, 'success');
+                const headerBadge = document.getElementById('headerLlmBadge');
+                if (headerBadge) {
+                    headerBadge.innerText = 'LLM: ' + model;
+                }
+                loadLlmSettings();
+                setTimeout(() => {
+                    closeLlmModal();
+                }, 1200);
+            } catch (err) {
+                showLlmAlert('Hata: ' + err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Ayarları Kaydet';
+            }
+        }
+
+        window.addEventListener('click', (event) => {
+            const mtfModal = document.getElementById('mtfModal');
+            const llmModal = document.getElementById('llmSettingsModal');
+            if (event.target === mtfModal) closeMtfModal();
+            if (event.target === llmModal) closeLlmModal();
+        });
     </script>
 </body>
 </html>

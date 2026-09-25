@@ -20,6 +20,8 @@ import auto_analyst
 import trade_manager
 import mtf_data
 import strategy_engine
+import market_hours
+import llm_manager
 from dotenv import load_dotenv
 
 # .env yukle
@@ -49,6 +51,8 @@ PROTECTED_PATHS = (
     "/dashboard", "/portfolio", "/trades", "/signals",
     "/scan", "/api/backtest", "/api/deep-analysis", "/config",
     "/api/mtf-analysis", "/api/strategies", "/api/positions",
+    "/api/positions/open-manual",
+    "/api/llm/settings", "/api/llm/fetch-models", "/api/llm/save-settings",
     "/api/reset-history", "/api/update-capital", "/api/full-reset"
 )
 
@@ -87,21 +91,16 @@ async def periodic_position_evaluator():
 
 
 async def periodic_scan_loop():
-    """Periyodik BIST50 Multi-Timeframe tarama dongusu (Her 15 dakikada bir)."""
+    """Periyodik Tum BIST Multi-Timeframe tarama dongusu (Her 15 dakikada bir, 10:00 - 18:10 TR Saati)."""
     await asyncio.sleep(10)
     while True:
         try:
-            import datetime
-            import pytz
-            tz = pytz.timezone("Europe/Istanbul")
-            now = datetime.datetime.now(tz)
-            # Hafta ici mi ve borsa acik mi kontrol et (Pazartesi=0, Cuma=4)
-            # BIST seans saatleri 10:00 - 18:10
-            if now.weekday() < 5 and (10 <= now.hour < 18):
-                logger.info("Periyodik BIST Multi-Timeframe taramasi baslatiliyor...")
+            now_tr = market_hours.get_tr_now()
+            if market_hours.is_bist_open(now_tr):
+                logger.info(f"[{market_hours.get_tr_now_str()}] Periyodik BIST MTF taramasi baslatiliyor...")
                 await auto_analyst.scan_all_and_report()
             else:
-                logger.debug("BIST kapali oldugu icin periyodik tarama atlandi.")
+                logger.debug(f"[{market_hours.get_tr_now_str()}] BIST seans saatleri disinda (10:00 - 18:10 TR) oldugu icin tarama atlandi.")
         except Exception as e:
             logger.error(f"Periyodik tarama dongusunde hata: {str(e)}")
         
@@ -137,11 +136,27 @@ class WebhookAlert(BaseModel):
 
 
 class StrategySelectRequest(BaseModel):
-    strategy_mode: Literal["auto", "scaling", "swing", "momentum"]
+    strategy_mode: Literal["auto", "scaling", "swing", "momentum", "dip_avcisi"]
+
+
+class ManualOpenPositionRequest(BaseModel):
+    ticker: str = Field(..., description="Hisse kodu (Orn: THYAO, ASGYO)")
+    strategy_mode: Literal["auto", "scaling", "swing", "momentum", "dip_avcisi"] = "auto"
 
 
 class CapitalUpdateRequest(BaseModel):
     amount: float = Field(..., gt=0, description="Yeni sermaye/bakiye miktari (TL)")
+
+
+class LlmFetchModelsRequest(BaseModel):
+    provider: str = Field("gemini", description="gemini veya openai")
+    api_key: str = Field(..., description="API Anahtari")
+
+
+class LlmSaveSettingsRequest(BaseModel):
+    provider: str = Field("gemini", description="gemini veya openai")
+    api_key: str = Field("", description="API Anahtari")
+    model: str = Field(..., description="Secilen model adi")
 
 
 @app.get("/")
@@ -282,6 +297,37 @@ async def close_position_api(ticker: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.post("/api/positions/open-manual")
+async def open_position_manual_api(req: ManualOpenPositionRequest):
+    """Dashboard veya API uzerinden manuel olarak tek tikla pozisyon acar."""
+    try:
+        clean_ticker = req.ticker.upper().replace(".IS", "").strip()
+        mtf_res = await mtf_data.fetch_all_mtf_data(clean_ticker)
+        current_price = mtf_res.get("current_price", 0.0) or (await market_data.get_stock_price(clean_ticker))
+        if not current_price or current_price <= 0:
+            raise HTTPException(status_code=400, detail=f"{clean_ticker} icin guncel fiyat verisi alinamadi.")
+
+        strat_info = strategy_engine.select_best_strategy(mtf_res, preferred_mode=req.strategy_mode)
+        trade_res = await trade_manager.open_strategy_position(
+            ticker=clean_ticker,
+            price=current_price,
+            strategy_info=strat_info,
+            reasoning=f"Manuel Panel Tetiklemesi ({req.strategy_mode})"
+        )
+        return {
+            "status": "success",
+            "message": f"{clean_ticker} icin pozisyon basariyla acildi.",
+            "trade": trade_res
+        }
+    except trade_manager.TradeExecutionError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Manuel pozisyon acilirken hata [{req.ticker}]: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Pozisyon acilamadi: {str(e)}")
+
+
 @app.get("/api/mtf-analysis")
 async def get_mtf_analysis_api(ticker: str = "THYAO"):
     """Belirtilen hisse icin 4 zaman dilimi detayli analiz sonucunu dondurur."""
@@ -325,6 +371,39 @@ async def select_strategy_mode_api(req: StrategySelectRequest):
     except Exception as e:
         logger.error(f"Strateji secilemedi: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# ---------------------------------------------------------------------------
+# LLM (Yapay Zeka) Yonetim Endpoint'leri
+# ---------------------------------------------------------------------------
+
+@app.get("/api/llm/settings")
+async def get_llm_settings_api():
+    """Mevcut LLM saglayici, maskelenmis anahtar ve aktif model bilgilerini doner."""
+    try:
+        return await llm_manager.get_llm_settings()
+    except Exception as e:
+        logger.error(f"LLM ayarlari okunurken hata: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"LLM ayarlari okunamadi: {str(e)}")
+
+
+@app.post("/api/llm/fetch-models")
+async def fetch_llm_models_api(req: LlmFetchModelsRequest):
+    """Girilen API anahtari icin saglayicidan tum aktif modelleri anlik ceker."""
+    res = await llm_manager.fetch_available_models(req.provider, req.api_key)
+    if res.get("status") == "error":
+        raise HTTPException(status_code=400, detail=res.get("message"))
+    return res
+
+
+@app.post("/api/llm/save-settings")
+async def save_llm_settings_api(req: LlmSaveSettingsRequest):
+    """LLM saglayici, anahtar ve model secimini kalici kaydeder."""
+    try:
+        return await llm_manager.save_llm_settings(req.provider, req.api_key, req.model)
+    except Exception as e:
+        logger.error(f"LLM ayarlari kaydedilirken hata: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"LLM ayarlari kaydedilemedi: {str(e)}")
 
 
 # ---------------------------------------------------------------------------
@@ -436,6 +515,25 @@ async def get_deep_analysis(ticker: str = "THYAO"):
         from bist_analysis import build_markdown
         ticker = ticker.upper().replace(".IS", "")
         md = await build_markdown(ticker)
+
+        # Eger LLM yapilandirilmissa yapay zeka ozeti ekle
+        llm_stat = await llm_manager.get_llm_settings()
+        if llm_stat.get("has_key"):
+            prompt = (
+                f"Asagidaki Borsa Istanbul hisse senedi ({ticker}) teknik ve temel analiz verilerini incele.\n"
+                f"Kisa ve oz (en fazla 3 paragraf) bir profesyonel AI Yatirim Degerlendirmesi ve kisa vadeli risk/hedef ozeti cikar:\n\n{md[:2500]}"
+            )
+            ai_res = await llm_manager.generate_text(
+                prompt=prompt,
+                system_prompt="Sen Borsa Istanbul (BIST) alaninda uzman, kisa vadeli risk ve firsat odakli profesyonel bir finansal analistsin."
+            )
+            if ai_res.get("status") == "success" and ai_res.get("text"):
+                ai_section = (
+                    f"\n\n---\n### 🤖 Yapay Zeka ({ai_res.get('model')}) Stratejik Değerlendirmesi\n\n"
+                    f"{ai_res.get('text')}\n"
+                )
+                md += ai_section
+
         return {"ticker": ticker, "markdown": md}
     except Exception as e:
         logger.error(f"Derin analiz hatasi [{ticker}]: {str(e)}")
