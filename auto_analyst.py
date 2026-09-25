@@ -16,6 +16,7 @@ import market_data
 import bist_fundamentals
 import mtf_data
 import strategy_engine
+import bist_screener
 
 logger = logging.getLogger("BistScalpBot")
 
@@ -127,7 +128,14 @@ async def analyze_single_ticker(ticker: str) -> dict:
 
     # Sinyal Karari
     signal = "NOTR"
-    if composite_score >= BUY_THRESHOLD and confluence_count >= 2:
+    chosen_strat = strategy_plan.get("strategy")
+    rsi_15m = mtf_res.get("timeframes", {}).get("15m", {}).get("rsi", 50.0)
+    rsi_1h = mtf_res.get("timeframes", {}).get("1h", {}).get("rsi", 50.0)
+
+    # Dip Avcısı: Aşırı satım dönüşü (RSI <= 32)
+    if chosen_strat == "dip_avcisi" and (rsi_15m <= 32.0 or rsi_1h <= 32.0):
+        signal = "AL"
+    elif composite_score >= BUY_THRESHOLD and confluence_count >= 2:
         signal = "AL"
     elif composite_score <= 35.0:
         signal = "SAT"
@@ -150,40 +158,68 @@ async def analyze_single_ticker(ticker: str) -> dict:
     }
 
 
-async def scan_all_and_report(report_only: bool = None) -> dict:
+async def scan_all_and_report(report_only: bool = None, force_tickers: list = None) -> dict:
     """
-    BIST50 listesini tarar, acik pozisyonlari kontrol eder ve gerekiyorsa yeni pozisyon acar.
+    2 Aşamalı Hibrit Huni (Two-Stage Funnel):
+    1. Aşama: Tüm Borsa (~650 hisse) TradingView motoru ile taranır ve min. 20M TL hacim filtresinden
+       geçirilerek en yüksek potansiyelli 20 hisse seçilir.
+    2. Aşama: Bu 20 hisseye 4 timeframe MTF, temel veri ve haber analizi uygulanarak nihai skorlar hesaplanır.
     """
     if report_only is None:
         scan_mode_env = os.getenv("SCAN_MODE", "trade").strip().lower()
         report_only = (scan_mode_env == "report")
 
-    logger.info(f"BIST50 Multi-Timeframe Taramasi Baslatildi (report_only={report_only})...")
+    logger.info(f"Tüm Borsa 2 Aşamalı Tarama Başlatıldı (report_only={report_only})...")
 
-    # 1. Once mevcut acik pozisyonlarin TP/SL ve seans sonu kontrollerini yap
+    # 1. Önce mevcut açık pozisyonların TP/SL ve seans sonu kontrollerini yap
     await trade_manager.evaluate_open_positions()
 
-    # 2. Hisseleri gruplar halinde tara (rate-limit asmamak icin 5'erli chunk'lar)
+    # 2. Aşama 1: Makro Tarama (TradingView Screener)
+    screener_meta = {}
+    if force_tickers:
+        candidate_tickers = force_tickers
+        screener_meta = {
+            "source": "manual_override",
+            "total_scanned": len(force_tickers),
+            "liquid_count": len(force_tickers),
+            "dip_candidates_count": 0,
+            "momentum_candidates_count": 0
+        }
+    else:
+        screen_res = await asyncio.to_thread(bist_screener.get_screened_candidates, 20_000_000.0, 20)
+        candidate_tickers = [c["ticker"] for c in screen_res.get("candidates", [])]
+        screener_meta = {
+            "source": screen_res.get("source", "tradingview_scanner"),
+            "total_scanned": screen_res.get("total_scanned", 0),
+            "liquid_count": screen_res.get("liquid_count", 0),
+            "dip_candidates_count": screen_res.get("dip_candidates_count", 0),
+            "momentum_candidates_count": screen_res.get("momentum_candidates_count", 0)
+        }
+
+    if not candidate_tickers:
+        candidate_tickers = BIST50_TICKERS[:20]
+
+    # 3. Aşama 2: Mikro MTF & Temel Analiz (5'erli chunk'lar)
     chunk_size = 5
     all_results = []
-    
-    for i in range(0, len(BIST50_TICKERS), chunk_size):
-        chunk = BIST50_TICKERS[i:i + chunk_size]
+
+    for i in range(0, len(candidate_tickers), chunk_size):
+        chunk = candidate_tickers[i:i + chunk_size]
         tasks = [analyze_single_ticker(t) for t in chunk]
         chunk_res = await asyncio.gather(*tasks, return_exceptions=True)
         for r in chunk_res:
-            if isinstance(r, dict):
+            if isinstance(r, dict) and r.get("ticker"):
                 all_results.append(r)
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.3)
 
-    # Sonuclari skora gore sirala
+    # Sonuçları skora göre sırala
     all_results.sort(key=lambda x: x.get("composite_score", 0), reverse=True)
 
-    # 3. AL Sinyali Ureten Hisseler
+    # 4. AL Sinyali Üreten Hisseler
     buy_signals = [r for r in all_results if r.get("signal") == "AL"]
     open_count = await trade_manager.get_active_open_positions_count()
 
-    # 4. Eger Canli Moddaysa ve pozisyon limiti asilmadiysa en iyi sinyaller icin pozisyon ac
+    # 5. Eğer Canlı Moddaysa ve pozisyon limiti aşılmadıysa en iyi sinyaller için pozisyon aç
     executed_trades = []
     if not report_only and buy_signals and open_count < strategy_engine.MAX_CONCURRENT_POSITIONS:
         for candidate in buy_signals:
@@ -193,9 +229,10 @@ async def scan_all_and_report(report_only: bool = None) -> dict:
             ticker = candidate["ticker"]
             price = candidate["current_price"]
             strat_info = candidate.get("strategy_plan", {})
+            strat_name = strat_info.get("strategy", "scaling")
             reasoning = (
-                f"MTF Confluence: {candidate.get('confluence_status')} "
-                f"({candidate.get('confluence_count')}/4 TF Onayli) | "
+                f"[{strat_name.upper()}] Confluence: {candidate.get('confluence_status')} "
+                f"({candidate.get('confluence_count')}/4 TF) | "
                 f"Skor: {candidate.get('composite_score')}/100"
             )
 
@@ -208,25 +245,32 @@ async def scan_all_and_report(report_only: bool = None) -> dict:
                 )
                 executed_trades.append(trade_res)
                 open_count += 1
-                logger.info(f"[{ticker}] Yeni kisa vadeli pozisyon acildi -> Strateji: {strat_info.get('strategy')}")
+                logger.info(f"[{ticker}] Yeni kısa vadeli pozisyon açıldı -> Strateji: {strat_name}")
             except Exception as ex:
-                logger.debug(f"[{ticker}] Pozisyon acilamadi: {ex}")
+                logger.debug(f"[{ticker}] Pozisyon açılamadı: {ex}")
 
-    # 5. Guncel Acik Pozisyonlari Al
+    # 6. Güncel Açık Pozisyonları Al
     current_open_positions = await trade_manager.get_all_open_positions()
 
     report = {
         "status": "success",
         "timestamp": time.time(),
         "report_only": report_only,
-        "total_scanned": len(all_results),
+        "screener_meta": screener_meta,
+        "total_scanned": screener_meta.get("total_scanned", len(all_results)),
+        "liquid_count": screener_meta.get("liquid_count", len(all_results)),
+        "analyzed_count": len(all_results),
         "buy_signals_count": len(buy_signals),
         "open_positions_count": len(current_open_positions),
-        "top_picks": all_results[:10],
+        "top_picks": all_results[:15],
         "all_results": all_results,
         "open_positions": current_open_positions,
         "executed_trades": executed_trades
     }
 
-    logger.info(f"BIST50 Taramasi Tamamlandi. {len(buy_signals)} AL Sinyali, {len(current_open_positions)} Acik Pozisyon.")
+    logger.info(
+        f"Tarama Tamamlandı. {screener_meta.get('total_scanned', 0)} Hisse -> "
+        f"{screener_meta.get('liquid_count', 0)} Likit -> {len(all_results)} Detaylı Analiz -> "
+        f"{len(buy_signals)} AL Sinyali."
+    )
     return report

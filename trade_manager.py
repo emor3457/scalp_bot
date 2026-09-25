@@ -9,6 +9,7 @@ trade_manager.py — Portfoy, Risk ve Kisa Vadeli Pozisyon Motoru (v2)
 
 import os
 import time
+import math
 import datetime
 import pytz
 import logging
@@ -17,6 +18,7 @@ import database
 import telegram_utils
 import market_data
 import strategy_engine
+import market_hours
 
 logger = logging.getLogger("BistScalpBot")
 
@@ -164,13 +166,14 @@ async def open_strategy_position(
         else:
             await conn.execute("INSERT INTO portfolio (ticker, quantity, average_cost) VALUES (?, ?, ?)", (clean_ticker, quantity, price))
 
-        # 5. Trades tablosuna kaydet
+        # 5. Trades tablosuna kaydet (TR Saati)
+        now_tr = market_hours.get_tr_now_str()
         await conn.execute(
-            "INSERT INTO trades (ticker, action, price, quantity, total_value, reasoning) VALUES (?, ?, ?, ?, ?, ?)",
-            (clean_ticker, "AL", price, quantity, total_cost, f"[{strategy_info.get('strategy', 'auto').upper()}] {reasoning or ''}")
+            "INSERT INTO trades (timestamp, ticker, action, price, quantity, total_value, reasoning) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            (now_tr, clean_ticker, "AL", price, quantity, total_cost, f"[{strategy_info.get('strategy', 'auto').upper()}] {reasoning or ''}")
         )
 
-        # 6. Open Positions tablosuna kaydet
+        # 6. Open Positions tablosuna kaydet (TR Saati)
         strat_name = strategy_info.get("strategy", "scaling")
         tp1 = strategy_info.get("tp1")
         tp2 = strategy_info.get("tp2")
@@ -180,10 +183,10 @@ async def open_strategy_position(
 
         await conn.execute("""
             INSERT INTO open_positions (
-                ticker, strategy, entry_price, initial_quantity, current_quantity,
+                ticker, strategy, entry_price, entry_time, initial_quantity, current_quantity,
                 tp1, tp2, tp3, sl, trailing_sl, highest_price, stage, expire_time, status, reasoning
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'STAGE_INITIAL', ?, 'OPEN', ?)
-        """, (clean_ticker, strat_name, price, quantity, quantity, tp1, tp2, tp3, sl, sl, price, expire_time, reasoning))
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'STAGE_INITIAL', ?, 'OPEN', ?)
+        """, (clean_ticker, strat_name, price, now_tr, quantity, quantity, tp1, tp2, tp3, sl, sl, price, expire_time, reasoning))
 
         await conn.commit()
 
@@ -281,22 +284,23 @@ async def close_position_partial_or_full(
         else:
             await conn.execute("UPDATE portfolio SET quantity = ? WHERE ticker = ?", (remaining_qty, ticker))
 
-        # 3. Trades Tablosuna Kaydet
+        # 3. Trades Tablosuna Kaydet (TR Saati)
+        now_tr = market_hours.get_tr_now_str()
         trade_reason = f"[{strategy.upper()} - {close_type}] Kar/Zarar: %{pnl_pct:.2f} ({realized_pnl:+.2f} TL)"
         await conn.execute(
-            "INSERT INTO trades (ticker, action, price, quantity, total_value, reasoning) VALUES (?, 'SAT', ?, ?, ?, ?)",
-            (ticker, current_price, sell_qty, total_gain, trade_reason)
+            "INSERT INTO trades (timestamp, ticker, action, price, quantity, total_value, reasoning) VALUES (?, ?, 'SAT', ?, ?, ?, ?)",
+            (now_tr, ticker, current_price, sell_qty, total_gain, trade_reason)
         )
 
-        # 4. Open Positions Guncellemesi
+        # 4. Open Positions Guncellemesi (TR Saati)
         if is_fully_closed:
             await conn.execute("""
                 UPDATE open_positions
                 SET current_quantity = 0, status = 'CLOSED', stage = 'CLOSED',
-                    close_time = datetime('now'), close_price = ?,
+                    close_time = ?, close_price = ?,
                     realized_pnl = realized_pnl + ?
                 WHERE id = ?
-            """, (current_price, realized_pnl, pos_id))
+            """, (now_tr, current_price, realized_pnl, pos_id))
         else:
             stage_to_set = new_stage or pos["stage"]
             # Kademeli cikista TP1 gelince SL basabas seviyesine cekilir
@@ -350,10 +354,8 @@ async def evaluate_open_positions():
         if not positions:
             return
 
-        tz = pytz.timezone("Europe/Istanbul")
-        now = datetime.datetime.now(tz)
-        is_weekday = now.weekday() < 5
-        is_session_end = is_weekday and (now.hour == 17 and now.minute >= 50 or now.hour >= 18)
+        now = market_hours.get_tr_now()
+        is_session_end = market_hours.is_session_closing(now)
 
         for p in positions:
             pos_id = p["id"]
@@ -385,11 +387,11 @@ async def evaluate_open_positions():
                 )
                 await conn.commit()
 
-            # Vade sonu kontrolu
+            # Vade sonu kontrolu (TR Saati)
             is_expired = False
             if expire_time_str:
                 try:
-                    exp_dt = datetime.datetime.strptime(expire_time_str, "%Y-%m-%d %H:%M:%S").replace(tzinfo=tz)
+                    exp_dt = datetime.datetime.strptime(expire_time_str, "%Y-%m-%d %H:%M:%S").replace(tzinfo=market_hours.TR_TIMEZONE)
                     if now >= exp_dt:
                         is_expired = True
                 except Exception:
@@ -486,6 +488,21 @@ async def evaluate_open_positions():
 async def process_trade_signal(ticker: str, action: str, price: float, quantity: float, reasoning: str = None) -> dict:
     """Webhook veya genel API cagrilari icin uyumluluk katmani."""
     clean_ticker = ticker.upper().replace(".IS", "")
+    now_tr = market_hours.get_tr_now_str()
+
+    # Sinyali veritabanina kaydet (TR Saati)
+    conn = await database.get_async_db_connection()
+    try:
+        await conn.execute(
+            "INSERT INTO signals (timestamp, ticker, action, price, quantity, reasoning) VALUES (?, ?, ?, ?, ?, ?)",
+            (now_tr, clean_ticker, action, price, quantity, reasoning or "Webhook / API Sinyali")
+        )
+        await conn.commit()
+    except Exception as e:
+        logger.warning(f"Sinyal kaydedilirken hata: {e}")
+    finally:
+        await conn.close()
+
     if action == "AL":
         # Varsayilan strateji ile ac
         strat_info = {

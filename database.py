@@ -23,7 +23,7 @@ def init_db():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS signals (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            timestamp DATETIME DEFAULT (datetime('now')),
+            timestamp DATETIME DEFAULT (datetime('now', '+3 hours')),
             ticker TEXT NOT NULL,
             action TEXT NOT NULL,
             price REAL NOT NULL,
@@ -36,7 +36,7 @@ def init_db():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS trades (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            timestamp DATETIME DEFAULT (datetime('now')),
+            timestamp DATETIME DEFAULT (datetime('now', '+3 hours')),
             ticker TEXT NOT NULL,
             action TEXT NOT NULL,
             price REAL NOT NULL,
@@ -62,7 +62,7 @@ def init_db():
             ticker TEXT NOT NULL,
             strategy TEXT NOT NULL,
             entry_price REAL NOT NULL,
-            entry_time DATETIME DEFAULT (datetime('now')),
+            entry_time DATETIME DEFAULT (datetime('now', '+3 hours')),
             initial_quantity REAL NOT NULL,
             current_quantity REAL NOT NULL,
             tp1 REAL,
@@ -81,7 +81,7 @@ def init_db():
         )
     """)
 
-    # 5. bot_settings tablosu (Aktif strateji modu vb.)
+    # 5. bot_settings tablosu (Aktif strateji modu, LLM API ayarları vb.)
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS bot_settings (
             key TEXT PRIMARY KEY,
@@ -114,6 +114,26 @@ def init_db():
     cursor.execute("SELECT * FROM bot_settings WHERE key = 'initial_capital'")
     if not cursor.fetchone():
         cursor.execute("INSERT INTO bot_settings (key, value) VALUES ('initial_capital', '100000.0')")
+
+    # Varsayilan LLM Ayarlari
+    cursor.execute("SELECT * FROM bot_settings WHERE key = 'llm_provider'")
+    if not cursor.fetchone():
+        cursor.execute("INSERT INTO bot_settings (key, value) VALUES ('llm_provider', 'gemini')")
+
+    cursor.execute("SELECT * FROM bot_settings WHERE key = 'llm_model'")
+    if not cursor.fetchone():
+        cursor.execute("INSERT INTO bot_settings (key, value) VALUES ('llm_model', 'gemini-2.5-flash')")
+
+    cursor.execute("SELECT * FROM bot_settings WHERE key = 'llm_api_key'")
+    if not cursor.fetchone():
+        env_key = os.getenv("GEMINI_API_KEY", "")
+        cursor.execute("INSERT INTO bot_settings (key, value) VALUES ('llm_api_key', ?)", (env_key,))
+
+    cursor.execute("SELECT * FROM bot_settings WHERE key = 'llm_available_models'")
+    if not cursor.fetchone():
+        import json
+        default_models = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-1.5-flash", "gemini-1.5-pro"]
+        cursor.execute("INSERT INTO bot_settings (key, value) VALUES ('llm_available_models', ?)", (json.dumps(default_models),))
         
     conn.commit()
     conn.close()

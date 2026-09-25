@@ -120,7 +120,30 @@ async def get_news_score(ticker: str) -> float:
             logger.debug(f"{ticker} icin haber bulunamadi, notr skor (50) donuluyor.")
             return 50.0
 
-        # Her baslik icin puan hesapla
+        # Eger LLM yapilandirilmissa LLM ile duyarlilik puanla
+        try:
+            import llm_manager
+            llm_stat = await llm_manager.get_llm_settings()
+            if llm_stat.get("has_key") and headlines:
+                prompt = (
+                    f"{ticker} hissesi ile ilgili su haber basliklarini analiz et:\n"
+                    + "\n".join([f"- {h}" for h in headlines[:8]])
+                    + "\n\nBu hisse icin kisa vadeli haber duyarliligini sadece 0 ile 100 arasinda tek bir sayisal puan olarak yaz (0=Cok Negatif, 50=Notr, 100=Cok Pozitif). Sadece rakam dondur."
+                )
+                ai_res = await llm_manager.generate_text(prompt=prompt, system_prompt="Sen finansal haber duyarliligi puanlayan bir yapay zekasin.")
+                if ai_res.get("status") == "success":
+                    import re
+                    match = re.search(r"\b([0-9]{1,3}(?:\.[0-9]+)?)\b", ai_res.get("text", ""))
+                    if match:
+                        llm_score = float(match.group(1))
+                        if 0.0 <= llm_score <= 100.0:
+                            NEWS_CACHE[ticker] = (llm_score, now)
+                            logger.info(f"[{ticker}] LLM Haber Duyarlilik Skoru ({ai_res.get('model')}): {llm_score:.1f}/100")
+                            return llm_score
+        except Exception as e:
+            logger.debug(f"LLM haber analizi atlandi, klasik hesaplamaya gecildi: {e}")
+
+        # Klasik Yontem: Her baslik icin anahtar kelime puani hesapla
         raw_scores = [_score_headline(h) for h in headlines]
         total_raw = sum(raw_scores)
         n = len(raw_scores)

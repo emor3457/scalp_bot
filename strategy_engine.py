@@ -28,6 +28,7 @@ import time
 import datetime
 import pytz
 import logging
+import market_hours
 
 logger = logging.getLogger("BistScalpBot")
 
@@ -44,9 +45,8 @@ STRATEGY_DESCRIPTIONS = {
 
 
 def calculate_session_expire_time(strategy: str) -> str:
-    """Stratejiye gore pozisyon vade sonu tarih/saatini hesaplar (Europe/Istanbul)."""
-    tz = pytz.timezone("Europe/Istanbul")
-    now = datetime.datetime.now(tz)
+    """Stratejiye gore pozisyon vade sonu tarih/saatini hesaplar (TR Saati - Europe/Istanbul)."""
+    now = market_hours.get_tr_now()
 
     if strategy == "momentum":
         # Ayni gun seans sonu (17:50)
@@ -54,6 +54,15 @@ def calculate_session_expire_time(strategy: str) -> str:
         if now >= expire_dt:
             # Eger seans sonrasinda olustuysa bir sonraki seans kapanisi
             expire_dt += datetime.timedelta(days=1)
+    elif strategy == "dip_avcisi":
+        # 2 is gunu sonra 17:50
+        days_added = 0
+        cur = now
+        while days_added < 2:
+            cur += datetime.timedelta(days=1)
+            if cur.weekday() < 5:
+                days_added += 1
+        expire_dt = cur.replace(hour=17, minute=50, second=0, microsecond=0)
     else:
         # Swing veya Scaling icin 3 is gunu sonra 17:50
         days_added = 0
