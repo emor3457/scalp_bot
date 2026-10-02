@@ -6,3 +6,15 @@ bot.db
 trades.db
 bot.log
 .gemini/
+.env.*
+.git/
+.github/
+tg_init_data.txt
+*.session
+*.session-journal
+veri_terminal_session*
+*.db
+*.log
+.planning/
+.agents/
+backtesting/results/

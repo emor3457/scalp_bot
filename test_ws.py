@@ -7,10 +7,17 @@ import json
 import ssl
 import urllib.parse
 import sys
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Auth token'i oku
-with open("tg_init_data.txt", "r", encoding="utf-8") as f:
-    INIT_DATA = f.read().strip()
+# Not: tg_init_data.txt gizli bir oturum verisidir, .gitignore'dadir; asla commit'lemeyin.
+INIT_DATA = ""
+if os.path.exists("tg_init_data.txt"):
+    with open("tg_init_data.txt", "r", encoding="utf-8") as f:
+        INIT_DATA = f.read().strip()
 
 WS_BASE = "wss://ws.7k2v9x1r0z8t4m3n5p7w.com"
 
@@ -111,8 +118,11 @@ async def get_fresh_token_and_connect(symbol="ASELS"):
     from telethon import TelegramClient
     from telethon.tl.functions.messages import RequestWebViewRequest
     
-    API_ID = 0  # REDACTED
-    API_HASH = "REDACTED_API_HASH"
+    API_ID = os.getenv("API_ID", "").strip()
+    API_HASH = os.getenv("API_HASH", "").strip()
+    if not API_ID or not API_HASH:
+        raise RuntimeError("API_ID ve API_HASH .env dosyasinda tanimli olmali.")
+    API_ID = int(API_ID)
     
     client = TelegramClient("veri_terminal_session", API_ID, API_HASH)
     await client.start()

@@ -41,41 +41,48 @@ logger = logging.getLogger("BistScalpBot")
 app = FastAPI(title="BIST Scalp Bot v2 | Multi-Timeframe (15m, 1h, 4h, 1d) + Kar Alma Stratejileri")
 
 # ---------------------------------------------------------------------------
-# Dashboard/API kimlik dogrulama (Basic Auth)
-# - Sadece DASHBOARD_AUTH_TOKEN acikca set edildiyse aktif olur.
-# - Bos ise tarayici kullanici adi / sifre sormaz.
+# Dashboard/API kimlik dogrulama (Basic / Bearer Auth) - FAIL-CLOSED
+# - DASHBOARD_AUTH_TOKEN kullanilir; bos ise WEBHOOK_SECRET_TOKEN'a duser.
+# - Ikisi de bos ise korumali uclar 503 doner (acik birakilmaz).
+# - Varsayilan olarak HER yol korumalidir; sadece PUBLIC_PATHS haric tutulur.
+#   (/webhook kendi WEBHOOK_SECRET_TOKEN dogrulamasini yapar.)
 # ---------------------------------------------------------------------------
-DASHBOARD_AUTH_TOKEN = os.getenv("DASHBOARD_AUTH_TOKEN", "").strip()
-
-PROTECTED_PATHS = (
-    "/dashboard", "/portfolio", "/trades", "/signals",
-    "/scan", "/api/backtest", "/api/deep-analysis", "/config",
-    "/api/mtf-analysis", "/api/strategies", "/api/positions",
-    "/api/positions/open-manual",
-    "/api/llm/settings", "/api/llm/fetch-models", "/api/llm/save-settings",
-    "/api/reset-history", "/api/update-capital", "/api/full-reset"
+DASHBOARD_AUTH_TOKEN = (
+    os.getenv("DASHBOARD_AUTH_TOKEN", "").strip()
+    or os.getenv("WEBHOOK_SECRET_TOKEN", "").strip()
 )
+
+PUBLIC_PATHS = ("/", "/webhook")
 
 
 @app.middleware("http")
 async def dashboard_auth_middleware(request: Request, call_next):
-    path = request.url.path
-    if path in PROTECTED_PATHS and DASHBOARD_AUTH_TOKEN:
-        auth = request.headers.get("Authorization", "")
-        expected_basic = "Basic " + base64.b64encode(
-            f"borsa:{DASHBOARD_AUTH_TOKEN}".encode("utf-8")
-        ).decode("ascii")
-        expected_bearer = "Bearer " + DASHBOARD_AUTH_TOKEN
-        valid = (
-            secrets.compare_digest(auth, expected_basic)
-            or secrets.compare_digest(auth, expected_bearer)
+    path = request.url.path.rstrip("/") or "/"
+    if path in PUBLIC_PATHS:
+        return await call_next(request)
+
+    if not DASHBOARD_AUTH_TOKEN:
+        logger.error("DASHBOARD_AUTH_TOKEN / WEBHOOK_SECRET_TOKEN tanimli degil; korumali uclar kapatildi.")
+        return JSONResponse(
+            status_code=503,
+            content={"detail": "Sunucu kimlik dogrulama yapilandirilmamis. .env icinde DASHBOARD_AUTH_TOKEN tanimlayin."},
         )
-        if not valid:
-            return JSONResponse(
-                status_code=401,
-                content={"detail": "Yetkisiz erisim. Gecersiz kimlik bilgisi."},
-                headers={"WWW-Authenticate": 'Basic realm="BIST Bot"'},
-            )
+
+    auth = request.headers.get("Authorization", "")
+    expected_basic = "Basic " + base64.b64encode(
+        f"borsa:{DASHBOARD_AUTH_TOKEN}".encode("utf-8")
+    ).decode("ascii")
+    expected_bearer = "Bearer " + DASHBOARD_AUTH_TOKEN
+    valid = (
+        secrets.compare_digest(auth.encode("utf-8"), expected_basic.encode("utf-8"))
+        or secrets.compare_digest(auth.encode("utf-8"), expected_bearer.encode("utf-8"))
+    )
+    if not valid:
+        return JSONResponse(
+            status_code=401,
+            content={"detail": "Yetkisiz erisim. Gecersiz kimlik bilgisi."},
+            headers={"WWW-Authenticate": 'Basic realm="BIST Bot"'},
+        )
     return await call_next(request)
 
 
@@ -381,7 +388,10 @@ async def select_strategy_mode_api(req: StrategySelectRequest):
 async def get_llm_settings_api():
     """Mevcut LLM saglayici, maskelenmis anahtar ve aktif model bilgilerini doner."""
     try:
-        return await llm_manager.get_llm_settings()
+        settings = dict(await llm_manager.get_llm_settings())
+        # Guvenlik: tam API anahtari istemciye ASLA gonderilmez, sadece maskeli hali.
+        settings["api_key"] = settings.get("api_key_masked", "")
+        return settings
     except Exception as e:
         logger.error(f"LLM ayarlari okunurken hata: {str(e)}")
         raise HTTPException(status_code=500, detail=f"LLM ayarlari okunamadi: {str(e)}")
@@ -400,7 +410,11 @@ async def fetch_llm_models_api(req: LlmFetchModelsRequest):
 async def save_llm_settings_api(req: LlmSaveSettingsRequest):
     """LLM saglayici, anahtar ve model secimini kalici kaydeder."""
     try:
-        return await llm_manager.save_llm_settings(req.provider, req.api_key, req.model)
+        result = await llm_manager.save_llm_settings(req.provider, req.api_key, req.model)
+        if isinstance(result, dict) and "api_key" in result:
+            result = dict(result)
+            result["api_key"] = result.get("api_key_masked", "")
+        return result
     except Exception as e:
         logger.error(f"LLM ayarlari kaydedilirken hata: {str(e)}")
         raise HTTPException(status_code=500, detail=f"LLM ayarlari kaydedilemedi: {str(e)}")

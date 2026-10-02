@@ -12,3 +12,13 @@ Borsa_Bot.lnk
 
 .freebuff/
 .DS_Store
+
+# --- Guvenlik: gizli oturum / kimlik dosyalari asla commit'lenmez ---
+.env.*
+!.env.example
+tg_init_data.txt
+*.session
+*.session-journal
+veri_terminal_session*
+*.pem
+*.key

@@ -4,11 +4,19 @@ Bu script terminal'de calisir, once telefon numarasi ister.
 """
 import asyncio
 import json
+import os
+import sys
+from dotenv import load_dotenv
 from telethon import TelegramClient
 from telethon.tl.functions.messages import RequestWebViewRequest
 
-API_ID = 0  # REDACTED
-API_HASH = "REDACTED_API_HASH"
+load_dotenv()
+# Kimlik bilgileri ASLA koda yazilmaz; .env dosyasindan okunur.
+API_ID = os.getenv("API_ID", "").strip()
+API_HASH = os.getenv("API_HASH", "").strip()
+if not API_ID or not API_HASH:
+    sys.exit("HATA: API_ID ve API_HASH .env dosyasinda tanimli olmali (bkz. .env.example).")
+API_ID = int(API_ID)
 SESSION_FILE = "veri_terminal_session"
 BOT_USERNAME = "ucretsizderinlikbot"
 APP_URL = "https://7k2v9x1r0z8t4m3n5p7w.com"
@@ -45,7 +53,7 @@ async def main():
             params[k] = unquote(v)
 
     init_data = params.get("tgWebAppData", "")
-    print(f"\ntgWebAppData (ilk 200 karakter):\n{init_data[:200]}")
+    print(f"\ntgWebAppData alindi ({len(init_data)} karakter).")
 
     # Kaydet
     with open("tg_init_data.txt", "w", encoding="utf-8") as f:
